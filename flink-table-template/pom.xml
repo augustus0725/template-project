@@ -20,7 +20,7 @@
         <scala.binary.version>2.11</scala.binary.version>
         <kafka.client.version>2.3.0</kafka.client.version>
         <slf4j.version>1.7.15</slf4j.version>
-        <log4j.version>1.2.17</log4j.version>
+        <log4j.version>1.2.27</log4j.version>
     </properties>
 
     <dependencies>
