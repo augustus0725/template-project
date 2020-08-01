@@ -1,0 +1,19 @@
+---
+
+- name: Install nginx
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - nginx
+
+- name: Override nginx configuration
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: Enable nginx auto-start on restart
+  systemd:
+    name: nginx
+    state: started
+    enabled: True

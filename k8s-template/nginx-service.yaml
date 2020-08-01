@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: helloapp-gateway
+spec:
+  type: NodePort
+  selector:
+    app: helloapp
+  ports:
+  - port: 10080
+    targetPort: 80

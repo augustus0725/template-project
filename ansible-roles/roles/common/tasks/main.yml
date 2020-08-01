@@ -1,0 +1,43 @@
+---
+
+- name: Clean yum repo.
+  command: yum clean all
+
+- name: Install common software
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - vim
+    - expect
+    - tree
+    - telnet
+    - wget
+    - zip
+    - unzip
+    - lsof
+    - tcpdump
+    - iotop
+    - sysstat
+    - net-tools
+    - supervisor
+
+- name: Modify config of selinux
+  template:
+    src: selinux-config.j2
+    dest: /etc/selinux/config
+
+- name: Disable selinux with cmd.
+  command: setenforce 0
+  ignore_errors: True
+
+- name: Config supervisor
+  template:
+    src: supervisord.conf.j2
+    dest: /etc/supervisord.conf
+
+- name: Enable supervisor auto-start on restart
+  systemd:
+    name: supervisord
+    state: started
+    enabled: True

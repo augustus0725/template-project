@@ -1,0 +1,41 @@
+
+#!/bin/bash
+
+echo "Start to run grafana..."
+supervisorctl update grafana
+supervisorctl restart grafana
+
+# check if start successful.
+for i in `seq 10`;
+do
+  sleep 1
+  echo "Wait for grafana to start up...... ${i}s"
+  if (supervisorctl status grafana | grep 'RUNNING'); then
+    echo "grafana web started"
+    break
+  fi
+done
+
+# check status again
+if (supervisorctl status grafana | grep 'RUNNING'); then
+  echo "Check grafana status again, it's now running."
+else
+  echo "Grafana not started in 10s, then just throw panic."
+  exit -1
+fi
+
+curl 'http://admin:admin@{{ grafana.host | default("127.0.0.1") }}:{{ grafana.port | default(3000) }}/grafana/api/datasources' \
+  -X 'POST' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'content-type: application/json' \
+  --data-binary '{"name":"Prometheus","type":"prometheus","access":"proxy","url":"http://{{ prometheus.host }}:{{ prometheus.port }}","basicAuth":false}' \
+  --compressed \
+  --insecure
+
+curl 'http://admin:admin@{{ grafana.host | default("127.0.0.1") }}:{{ grafana.port | default(3000) }}/grafana/api/dashboards/db' \
+  -X 'POST' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data @dashboard.json \
+  --compressed \
+  --insecure

@@ -1,0 +1,56 @@
+---
+
+- name: Create /opt/app/grafana if it does not exist
+  file:
+    path: /opt/app/grafana
+    state: directory
+
+- name: Create /opt/log/grafana if it does not exist
+  file:
+    path: /opt/log/grafana
+    state: directory
+
+- name: Extract grafana-7.0.3.linux-amd64.tar.gz into /opt/app/grafana
+  unarchive:
+    src: "3rd-repo/grafana/grafana-7.0.3.linux-amd64.tar.gz"
+    dest: /opt/app/grafana
+    remote_src: no
+
+- name: Create a grafana symbolic link
+  file:
+    src: /opt/app/grafana/grafana-7.0.3
+    dest: /opt/app/grafana/current
+    state: link
+
+- name: Create /opt/app/grafana/current/init if it does not exist
+  file:
+    path: /opt/app/grafana/current/init
+    state: directory
+
+- name: Config grafana
+  template:
+    src: custom.ini.j2
+    dest: /opt/app/grafana/current/conf/custom.ini
+
+- name: Config suervisor to start grafana
+  template:
+    src: grafana.ini.j2
+    dest: /etc/supervisord.d/grafana.ini
+
+- name: Add grafana dashboard init script.
+  template:
+    src: "{{ item }}.j2"
+    dest: /opt/app/grafana/current/init/{{ item }}
+  with_items:
+    - init-grafana.sh
+
+- name: Copy dashboard.json to remote /opt/app/grafana/current/init/
+  copy:
+    src: 3rd-repo/grafana/dashboard.json
+    dest: /opt/app/grafana/current/init/dashboard.json
+    mode: '0744'
+
+- name: Start grafana and config datasource and dashboard
+  command: bash init-grafana.sh
+  args:
+    chdir: /opt/app/grafana/current/init

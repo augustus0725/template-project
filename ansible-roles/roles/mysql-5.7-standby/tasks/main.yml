@@ -1,0 +1,130 @@
+---
+
+- name: Install mysql server.
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - mysql-community-server
+    - expect
+    - policycoreutils-python
+
+- name: Create mysql data directory if not exist
+  file:
+    path: "{{ mysql_primary.data_dir | default('/opt/data/mysql') }}"
+    state: directory
+    owner: mysql
+    group: mysql
+
+- name: Config mysql
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/etc/{{ item }}"
+  with_items:
+    - my.cnf
+
+- name: Check if mysql is installed.
+  stat: path=/opt/data/mysql_installed
+  register: mysql_installed
+
+- name:  If selinux enabled set access to new data dir.
+  shell: |
+    semanage fcontext -a -t mysqld_db_t "{{ mysql_primary.data_dir | default('/opt/data/mysql') }}(/.*)?"
+    restorecon -Rv {{ mysql_primary.data_dir | default('/opt/data/mysql') }}
+  args:
+    executable: /bin/bash
+    chdir: /tmp
+  ignore_errors: True
+  when: not mysql_installed.stat.exists
+
+- name: Start mysql && enable mysql auto-start on restart
+  systemd:
+    name: mysqld
+    state: started
+    enabled: True
+
+- name:  Get default root password
+  shell: cat /var/log/mysqld.log | grep 'A temporary password is generated for root@localhost:' | cut -d ' ' -f 11
+  register: root_pass
+  when: not mysql_installed.stat.exists
+
+- name: mysql secure installation
+  shell: |
+    set timeout 300
+    spawn mysql_secure_installation -p
+    expect "Enter password:"
+    send "{{ root_pass.stdout }}\n"
+
+    expect "New password:"
+    send "Windows_7\n"
+
+    expect "Re-enter new password:"
+    send "Windows_7\n"
+
+    expect "Change the password for root ? ((Press y|Y for Yes, any other key for No) :"
+    send "n\n"
+
+    expect "Remove anonymous users? (Press y|Y for Yes, any other key for No) :"
+    send "y\n"
+
+    expect "Disallow root login remotely? (Press y|Y for Yes, any other key for No) :"
+    send "y\n"
+
+    expect "Remove test database and access to it? (Press y|Y for Yes, any other key for No) :"
+    send "y\n"
+
+    expect "Reload privilege tables now? (Press y|Y for Yes, any other key for No) :"
+    send "y\n"
+
+    expect "\r\n"
+    expect ""
+    expect ""
+    expect eof
+    
+    exit 0
+  args:
+    executable: /usr/bin/expect
+    chdir: /tmp
+  become: yes
+  become_user: root
+  when: not mysql_installed.stat.exists
+
+- name: Create mysql install mark.
+  file:
+    path: /opt/data/mysql_installed
+    state: directory
+
+- name: Config sql to replica user
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/opt/data/mysql_installed/{{ item }}"
+  with_items:
+    - init.sql
+
+- name: Create replica user repuser with init.sql
+  shell: mysql -u root -pWindows_7 < /opt/data/mysql_installed/init.sql
+  become: yes
+  become_user: root
+  when: not mysql_installed.stat.exists
+
+# config slave server
+- name:  Config slave server
+  shell: |
+    cat > /tmp/find_master_info.sql <<EOF
+    SHOW MASTER STATUS;
+    EOF
+    mysql -u root -pWindows_7 -h {{ mysql_primary.db_host }} < /tmp/find_master_info.sql > /tmp/mysql_master_position
+    log_file=`cat /tmp/mysql_master_position | tail -n 1 | cut -d$'\t' -f 1`
+    position=`cat /tmp/mysql_master_position | tail -n 1 | cut -d$'\t' -f 2`
+    # build sql to config slave server
+    cat > /tmp/config_slave.sql <<EOF
+    STOP SLAVE;
+    CHANGE MASTER TO MASTER_HOST='{{ mysql_primary.db_host }}',MASTER_USER='repuser', MASTER_PASSWORD='Windows_10', MASTER_LOG_FILE="${log_file}", MASTER_LOG_POS=${position};
+    START SLAVE;
+    EOF
+    mysql -u root -pWindows_7 < /tmp/config_slave.sql
+    exit 0
+  args:
+    executable: /bin/bash
+    chdir: /tmp
+  when: not mysql_installed.stat.exists

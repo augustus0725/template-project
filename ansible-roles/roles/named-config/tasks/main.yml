@@ -1,0 +1,5 @@
+---
+
+- name: TODO
+  debug:
+    msg: "named-config not support yet."

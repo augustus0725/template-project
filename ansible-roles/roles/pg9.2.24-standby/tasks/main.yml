@@ -1,0 +1,81 @@
+---
+
+- name: Install postgresql server.
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - postgresql-server
+    - postgresql-contrib
+
+- name: Create pg data directory if not exist
+  file:
+    path: "{{ pg_primary.data_dir }}"
+    state: directory
+    owner: postgres
+    group: postgres
+
+- name: config systemd of pg and change data dir of pg.
+  template:
+    src:  "postgresql.service.j2"
+    dest: "/usr/lib/systemd/system/postgresql.service"
+
+- name: postgres initdb.
+  command: postgresql-setup initdb
+  args:
+    creates: "{{ pg_primary.data_dir }}/pg_log"
+
+- name: backup old data path
+  command: mv {{ pg_primary.data_dir }} {{ pg_primary.data_dir }}-old
+  args:
+    creates: /opt/data/pgsql/pg_backup_done
+
+- name: first backup from primary pg
+  shell: |
+    set timeout 300
+    spawn pg_basebackup -h {{ pg_primary.db_host }} -p {{ pg_primary.pgport }} -D {{ pg_primary.data_dir }} -U repuser -v -P --xlog-method=stream
+
+    expect "Password:"
+    send "123456\n"
+    expect "\r\n"
+    expect ""
+    expect ""
+    expect eof
+    
+    exit 0
+  args:
+    executable: /usr/bin/expect
+    chdir: /tmp
+    creates: /opt/data/pgsql/pg_backup_done
+  become: yes
+  become_user: postgres
+
+- name: backup current pg configuration
+  shell: |
+    mv {{ pg_primary.data_dir }}/postgresql.conf {{ pg_primary.data_dir }}/postgresql.conf.old
+    mv {{ pg_primary.data_dir }}/pg_hba.conf {{ pg_primary.data_dir }}/pg_hba.conf.old
+  args:
+    executable: bash
+    creates: /opt/data/pgsql/pg_backup_done
+
+- name: Create directory to mark that we have done 1st backup
+  file:
+    path: /opt/data/pgsql/pg_backup_done
+    state: directory
+    owner: postgres
+    group: postgres
+
+- name: reconfig this pg and make it be the standby pg.
+  template:
+    src:  "{{ item }}.j2"
+    dest: "{{ pg_primary.data_dir }}/{{ item }}"
+  with_items:
+    - postgresql.conf
+    - pg_hba.conf
+    - recovery.conf
+
+- name: restart standby pg
+  systemd:
+    name: postgresql
+    state: restarted
+

@@ -1,0 +1,70 @@
+---
+# 定义组变量
+
+
+#################### 进程守护  ################################################
+# 配置supervisor
+supervisor:
+  port: 9001
+
+#################### 数据库部分  ###############################################
+# pg的主库
+pg_primary:
+  # 创建一个新的用户pgadmin，有dba权限, 指定数据存放的目录
+  data_dir: /opt/data/pgsql/data
+  db_user: pgadmin
+  pgpass: 123456
+  db_host: 192.168.0.241
+  pgport: 5432
+
+# 配置初始化数据库(pg-load)的配置
+pg_load:
+  db_user: pgadmin
+  db_name: dxp
+  db_host: 192.168.0.241
+  pgpass: 123456
+  pgport: 5432
+
+# 配置Oracle11gR2
+oracle11gr2:
+  data_dir: /opt/oracle
+  sid: orcl
+  hostname: "ora01.bd.sabo.com"
+  # MB
+  memory_limit: 6144
+  password: Oracle_001
+  notification_email: canbin.zhang@qq.com
+
+# 配置primary mysql
+mysql_primary:
+  db_host: 192.168.0.241
+  db_user: myadmin
+  dbpass: Windows_8
+  data_dir: /opt/data/mysql
+
+#################### 监控部分  ###############################################
+# 配置 Prometheus, 单节点或者多节点之后nginx代理的地址
+prometheus:
+  host: 127.0.0.1
+  port: 9090
+
+rules: []
+jobs:
+  - name: job1
+    targets:
+      - host: 127.0.0.1
+        port: 9090
+      - host: 127.0.0.1
+        port: 9100
+    labels:
+      - key: "env"
+        value: "dev"
+
+# 配置node_exporter端口, 默认是9100
+node_exporter:
+  port: 9100
+
+# 配置grafana的端口
+grafana:
+  port: 3000
+  host: 127.0.0.1

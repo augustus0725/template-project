@@ -1,0 +1,5 @@
+---
+
+- name: TODO
+  debug:
+    msg: "ntp-config not support yet."

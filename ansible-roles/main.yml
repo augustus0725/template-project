@@ -1,0 +1,19 @@
+---
+
+- name: Install basic software and do basic config.
+  hosts: all
+  vars:
+   author: canbin.zhang
+  vars_files:
+   - var/global.yml
+  roles:
+   - role: common
+
+- name: install dns master srv, must be deploy srv
+  hosts: deploysrv
+  vars:
+   author: canbin.zhang
+  vars_files:
+   - var/global.yml
+  roles:
+   - role: nginx

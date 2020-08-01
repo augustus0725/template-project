@@ -1,0 +1,5 @@
+[program:node_exporter]
+command           = /opt/app/node_exporter/current/node_exporter --web.listen-address=":{{ node_exporter.port | default(9100) }}"
+directory         = /opt/app/node_exporter/current
+redirect_stderr   = true
+stdout_logfile    = /opt/log/node_exporter/node_exporter.out

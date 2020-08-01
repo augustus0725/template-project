@@ -1,0 +1,15 @@
+# Informational files
+include readme.md
+include VERSION
+
+# Exclude any compile Python files (most likely grafted by tests/ directory).
+global-exclude *.pyc
+
+# executable
+graft bin
+
+# Setup-related things
+include requirements.txt
+include setup.py
+
+

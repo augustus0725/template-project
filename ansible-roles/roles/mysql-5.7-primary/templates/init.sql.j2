@@ -1,0 +1,6 @@
+create database mydb default character set utf8mb4 collate utf8mb4_unicode_ci;
+GRANT ALL ON mydb.* TO '{{ mysql_primary.db_user }}'@'%' IDENTIFIED BY '{{ mysql_primary.dbpass }}';
+-- replica user
+grant replication slave on *.* to 'repuser'@'%' IDENTIFIED BY 'Windows_10';
+-- grant root
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'Windows_7' WITH GRANT OPTION;

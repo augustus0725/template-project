@@ -1,0 +1,3 @@
+这个里面需要安放oracle的安装文件
+linux.x64_11gR2_database_1of2.zip
+linux.x64_11gR2_database_2of2.zip

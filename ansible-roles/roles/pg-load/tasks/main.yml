@@ -1,0 +1,26 @@
+---
+
+- name: Create /opt/data/pgsql/sql if it does not exist
+  file:
+    path: /opt/data/pgsql/sql
+    state: directory
+
+- name: create database "{{ pg_load.db_name }}" && ignore error.
+  command: createdb {{ pg_load.db_name }} -O {{ pg_load.db_user }}
+  become: yes
+  become_user: postgres
+  ignore_errors: True
+
+- name: add pg sql to /opt/data/pgsql/sql
+  template:
+    src: load.sql.j2
+    dest: /opt/data/pgsql/sql/load.sql
+
+- name: execute pg sql with cmd.
+  command: psql -f /opt/data/pgsql/sql/load.sql
+  environment:
+    PGUSER: "{{ pg_load.db_user }}"
+    PGDATABASE: "{{ pg_load.db_name }}"
+    PGHOST: "{{ pg_load.db_host }}"
+    PGPASSWORD: "{{ pg_load.pgpass }}"
+    PGPORT: "{{ pg_load.pgport }}"

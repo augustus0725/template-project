@@ -1,0 +1,153 @@
+---
+
+- name: Prepare the host to install oracle.
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - zip
+    - unzip
+    - wget
+    - oracle-rdbms-server-11gR2-preinstall
+
+- name: Create base directory for oracle.
+  file:
+    path: "{{ oracle11gr2.data_dir }}"
+    state: directory
+    owner: oracle
+    group: oinstall
+
+- name: Create inventory directory for oracle.
+  file:
+    path: "{{ oracle11gr2.data_dir }}/oraInventory"
+    state: directory
+    owner: oracle
+    group: oinstall
+
+- name: Create base data directory for oracle.
+  file:
+    path: "{{ oracle11gr2.data_dir }}/base/data"
+    state: directory
+    owner: oracle
+    group: oinstall
+
+- name: Create data directory for oracle.
+  file:
+    path: "{{ oracle11gr2.data_dir }}/data"
+    state: directory
+    owner: oracle
+    group: oinstall
+
+- name: Create log directory for oracle.
+  file:
+    path: "{{ oracle11gr2.data_dir }}/log"
+    state: directory
+    owner: oracle
+    group: oinstall
+
+- name: To check if oracle is 1st installed.
+  stat: "path={{ oracle11gr2.data_dir }}/oraInventory/logs"
+  register: ora_install_log_path
+
+- name: Create start/stop scripts directory for oracle.
+  file:
+    path: /home/oracle/scripts
+    state: directory
+    owner: oracle
+    group: oinstall
+
+- name: Unarchive part 1 of oracle install files.
+  unarchive:
+    src: 3rd-repo/oracle11gr2/linux.x64_11gR2_database_1of2.zip
+    dest: /home/oracle
+    remote_src: no
+  become: yes
+  become_user: oracle
+  when: not ora_install_log_path.stat.exists
+
+
+- name: Unarchive part 2 of oracle install files.
+  unarchive:
+    src: 3rd-repo/oracle11gr2/linux.x64_11gR2_database_2of2.zip
+    dest: /home/oracle
+    remote_src: no
+  become: yes
+  become_user: oracle
+  when: not ora_install_log_path.stat.exists
+
+- name: Config the response file of oracle.
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/home/oracle/{{ item }}"
+  with_items:
+    - db_install.rsp
+  become: yes
+  become_user: oracle
+
+- name: Run script to install oracle.
+  shell: |
+    ./runInstaller -silent -ignorePrereq -responseFile /home/oracle/db_install.rsp
+    sleep 10
+    # 做多运行半小时, 超时就认为运行出错了
+    for i in `seq 60`;
+    do
+      if tail {{ oracle11gr2.data_dir }}/oraInventory/logs/installActions*.log | grep 'Shutdown Oracle Database 11g Release 2 Installer';then
+        echo "Install success."
+        break
+      else
+        sleep 30
+      fi
+    done
+  args:
+    creates: "{{ oracle11gr2.data_dir }}/oraInventory/logs"
+    chdir: /home/oracle/database
+  become: yes
+  become_user: oracle
+  
+- name: Do some config after the oracle is 1st installed.
+  shell: |
+    {{ oracle11gr2.data_dir }}/oraInventory/orainstRoot.sh
+    {{ oracle11gr2.data_dir }}/base/data/root.sh
+  args:
+    executable: bash
+    chdir: /home/oracle/database
+  become: yes
+  become_user: root
+  when: not ora_install_log_path.stat.exists
+
+- name: Config oratab.
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/etc/{{ item }}"
+  with_items:
+    - oratab
+
+- name: Config start/stop scripts.
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/home/oracle/scripts/{{ item }}"
+    owner: oracle
+    group: oinstall
+    mode: '0744'
+  with_items:
+    - setEnv.sh
+    - start_all.sh
+    - stop_all.sh
+
+- name: config systemd of oracle
+  template:
+    src:  "{{ item }}.j2"
+    dest: /usr/lib/systemd/system/{{ item }}
+  with_items:
+    - dbora.service
+
+- name: Config sqlplus client env when install 1st
+  shell: cat /home/oracle/scripts/setEnv.sh >> /home/oracle/.bashrc
+  when: not ora_install_log_path.stat.exists
+
+- name: Enable dbora auto-start on restart
+  systemd:
+    name: dbora
+    state: started
+    enabled: True
+  ignore_errors: True
