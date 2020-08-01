@@ -20,7 +20,7 @@
         <spring.version>4.3.16.RELEASE</spring.version>
         <dubbo.version>2.7.0</dubbo.version>
         <dubbo.rpc.version>2.7.0</dubbo.rpc.version>
-        <zookeeper.version>3.4.13</zookeeper.version>
+        <zookeeper.version>3.4.14</zookeeper.version>
         <curator.version>4.0.1</curator.version>
         <validation-api.version>1.1.0.Final</validation-api.version>
         <hibernate-validator.version>5.3.5.Final</hibernate-validator.version>
