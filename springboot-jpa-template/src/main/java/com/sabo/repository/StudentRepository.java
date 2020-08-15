@@ -1,7 +1,10 @@
 package com.sabo.repository;
 
 import com.sabo.entity.Student;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 
@@ -26,4 +29,9 @@ public interface StudentRepository extends CrudRepository<Student, Long> {
     Iterable<Student> findByHisFatherOrderById(String hisFather);
     Iterable<Student> findByHisFatherNull();
     Iterable<Student> findByHisFatherNotNullAndId(long id);
+
+
+    @Modifying
+    @Query(nativeQuery = true, value = "update student set firstname = :firstname where id = :id")
+    int updateByIdWithFirstname(@Param("id") long id, @Param("firstname") String firstname);
 }

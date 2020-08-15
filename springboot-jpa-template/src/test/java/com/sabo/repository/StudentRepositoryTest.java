@@ -6,7 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -135,6 +137,21 @@ public class StudentRepositoryTest {
     public void testFindByHisFatherNotNullAndId() {
         Iterable<Student> students = studentRepository.findByHisFatherNotNullAndId(1L);
         assertEquals("[Student{id=1, firstname=sabo, lastname=zhang, hisFather=bigsabo, age=99}]", students.toString());
+    }
+
+    @Test
+    public void testDeleteById() {
+        studentRepository.deleteById(1L);
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false) // junit 环境里默认所有的事务会被rollback
+    public void testUpdateById() {
+        int changed = studentRepository.updateByIdWithFirstname(2L, "sabo1");
+        assertEquals(1, changed);
+        Optional<Student> student = studentRepository.findById(2L);
+        System.out.println();
     }
 
 }
