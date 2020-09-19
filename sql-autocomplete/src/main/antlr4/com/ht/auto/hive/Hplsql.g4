@@ -96,12 +96,12 @@ stmt :
      | truncate_stmt
      | values_into_stmt
      | while_stmt
-     | label    
-     | hive     
-     | host
-     | null_stmt
-     | expr_stmt     
-     | semicolon_stmt      // Placed here to allow null statements ;;...          
+//     | label
+//     | hive
+//     | host
+//     | null_stmt
+//     | expr_stmt
+//     | semicolon_stmt      // Placed here to allow null statements ;;...
      ;
      
 semicolon_stmt :
@@ -399,7 +399,7 @@ dtype :                  // Data types
      | T_VARCHAR
      | T_VARCHAR2
      | T_XML
-     | ident ('%' (T_TYPE | T_ROWTYPE))?             // User-defined or derived data type
+//     | ident ('%' (T_TYPE | T_ROWTYPE))?             // User-defined or derived data type
      ;
      
 dtype_len :             // Data type length or size specification
@@ -1183,7 +1183,8 @@ timestamp_literal :                       // TIMESTAMP 'YYYY-MM-DD HH:MI:SS.FFF'
      ;
      
 ident :
-       '-'? (L_ID | non_reserved_words) ('.' (L_ID | non_reserved_words))*
+//       '-'? (L_ID | non_reserved_words) ('.' (L_ID | non_reserved_words))*
+       '-'? L_ID ('.' L_ID)*
      ;
      
 string :                                   // String literal (single or double quoted)

@@ -8,8 +8,7 @@ import com.ht.auto.dfa.Predictor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author canbin.zhang@qq.com
@@ -33,10 +32,33 @@ public class HiveSqlAutoComplete implements SqlAutoComplete {
 
         Predictor predictor = new Predictor(parser, null, Sets.newHashSet(1, 2, 3, 4, 5));
         Predictor.CandidatesCollection collection = predictor.collectCandidates(tokenStream.size() - 1, startState);
-        List<String> expectedTokens = Lists.newArrayList();
-        for (Integer id : collection.tokens.keySet()) {
-            expectedTokens.add(parser.getVocabulary().getDisplayName(id));
+        return bestMatchTokenByRuleName(parser, collection);
+    }
+
+    private List<String> bestMatchTokenByRuleName(HplsqlParser parser, Predictor.CandidatesCollection collection) {
+        Set<Integer> rules = Sets.newHashSet(collection.tokenRule.values());
+        Set<Integer> matches = Sets.newHashSet(Arrays.asList(
+                HplsqlParser.RULE_insert_stmt,
+                HplsqlParser.RULE_expr,
+                HplsqlParser.RULE_expr_func,
+                HplsqlParser.RULE_create_table_stmt
+        ));
+        boolean hasExpectRules = false;
+        List<String> resultTokenName = Lists.newArrayList();
+        Set<Integer> resultTokenIndex = collection.tokens.keySet();
+
+        for (Integer toMatch : matches) {
+            if (rules.contains(toMatch)) {
+                hasExpectRules = true;
+                break;
+            }
         }
-        return expectedTokens;
+        if (hasExpectRules) {
+            resultTokenIndex = collection.tokenRule.keySet();
+        }
+        for (Integer id : resultTokenIndex) {
+            resultTokenName.add(parser.getVocabulary().getDisplayName(id));
+        }
+        return resultTokenName;
     }
 }

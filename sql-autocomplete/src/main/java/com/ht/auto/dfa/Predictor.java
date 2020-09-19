@@ -1,5 +1,6 @@
 package com.ht.auto.dfa;
 
+import com.google.common.collect.Maps;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.misc.IntervalSet;
@@ -14,10 +15,12 @@ import java.util.*;
 public class Predictor {
     public final static Logger logger = LoggerFactory.getLogger(Predictor.class);
 
+
     public static class CandidatesCollection {
-        public Map<Integer, List<Integer>> tokens = new HashMap<>();
-        public Map<Integer, List<Integer>> rules = new HashMap<>();
-        public Map<Integer, List<Integer>> rulePositions = new HashMap<>();
+        public Map<Integer, List<Integer>> tokens = Maps.newHashMap();
+        public Map<Integer, Integer> tokenRule = Maps.newHashMap();
+        public Map<Integer, List<Integer>> rules = Maps.newHashMap();
+        public Map<Integer, List<Integer>> rulePositions = Maps.newHashMap();
 
         @Override
         public String toString() {
@@ -59,7 +62,7 @@ public class Predictor {
     private final Map<Integer, Map<Integer, Set<Integer>>> shortcutMap = new HashMap<>();
     private final CandidatesCollection candidates = new CandidatesCollection();
 
-    private final static Map<String, Map<Integer, FollowSetsHolder>> followSetsByATN = new HashMap<>();
+    private final Map<String, Map<Integer, FollowSetsHolder>> followSetsByATN = new HashMap<>();
 
     public Predictor(Parser parser, Set<Integer> preferredRules, Set<Integer> ignoredTokens) {
         this.parser = parser;
@@ -399,6 +402,7 @@ public class Predictor {
                                         if (!this.ignoredTokens.contains(symbol)) {
                                             if (addFollowing) {
                                                 this.candidates.tokens.put(symbol, this.getFollowingTokens(transition));
+                                                this.candidates.tokenRule.put(symbol, this.getPreferredRulesOfToken(transition));
                                             } else {
                                                 this.candidates.tokens.put(symbol, new LinkedList<>());
                                             }
@@ -419,5 +423,9 @@ public class Predictor {
         positionMap.put(tokenIndex, result);
 
         return result;
+    }
+
+    private int getPreferredRulesOfToken(Transition transition) {
+        return transition.target.ruleIndex;
     }
 }
