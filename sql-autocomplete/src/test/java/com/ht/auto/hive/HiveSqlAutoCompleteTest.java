@@ -1,11 +1,9 @@
 package com.ht.auto.hive;
 
 import com.ht.auto.SqlAutoComplete;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author crazy
@@ -196,16 +194,97 @@ public class HiveSqlAutoCompleteTest {
         SqlAutoComplete ac = new HiveSqlAutoComplete();
         String sql = "select t.";
 
-        assertEquals("['*', L_ID]",
+        assertEquals("[T_FIELDS_t]",
                 ac.suggest(sql, sql.length() - 1).toString());
     }
 
-    // common test
-
     @Test
-    public void testCommonTokenStream() {
-        HplsqlLexer lexer = new HplsqlLexer(CharStreams.fromString("select id, name from student t"));
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+    public void test022() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "select t. from student t";
+
+        assertEquals("[T_FIELDS_student]",
+                ac.suggest(sql, "select t.".length() - 1).toString());
     }
 
+    @Test
+    public void test023() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "create";
+
+        assertEquals("[T_SET, T_DATABASE, T_LOCAL, T_OR, T_INDEX, T_UNIQUE, T_PACKAGE, T_VOLATILE, T_MULTISET, T_FUNCTION, T_SCHEMA, T_TABLE, T_PROC, T_PROCEDURE]",
+                ac.suggest(sql, sql.length() - 1).toString());
+    }
+
+    @Test
+    public void test024() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "select t2. from student t1, teacher t2";
+
+        assertEquals("[T_FIELDS_teacher]",
+                ac.suggest(sql, "select t2.".length() - 1).toString());
+    }
+
+    @Test
+    public void test025() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "select t1.* from student t1, teacher t2";
+
+        assertEquals("[T_HAVING, T_LEFT, T_LIMIT, T_EXCEPT, '(', T_UNION, T_ORDER, T_INNER, T_RIGHT, T_INTERSECT, T_FULL, T_WHERE, ',', T_WITH, T_JOIN, T_QUALIFY, T_GROUP]",
+                ac.suggest(sql, sql.length() - 1).toString());
+    }
+
+    @Test
+    public void test026() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "select t1.* from student t1, teacher";
+
+        assertEquals("[T_HAVING, T_LEFT, T_LIMIT, T_EXCEPT, T_UNION, T_ORDER, T_INNER, T_RIGHT, T_AS, '-', L_ID, T_INTERSECT, T_FULL, T_WHERE, ',', T_WITH, T_JOIN, T_QUALIFY, T_GROUP]",
+                ac.suggest(sql, sql.length() - 1).toString());
+    }
+
+    @Test
+    public void test027() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "select t1.* from student t1, ";
+
+        assertEquals("['(', T_TABLE, '-', L_ID]",
+                ac.suggest(sql, sql.length() - 1).toString());
+    }
+
+    @Test
+    public void test028() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "select t1.* from default.";
+
+        assertEquals("['(', T_TABLE, '-', L_ID]",
+                ac.suggest(sql, sql.length() - 1).toString());
+    }
+
+    @Test
+    public void test029() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "select t1.* from stu t1 where t1.";
+
+        assertEquals("[T_FIELDS_stu]",
+                ac.suggest(sql, sql.length() - 1).toString());
+    }
+
+    @Test
+    public void test030() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "select t1. from student t1, teacher t2 where t2";
+
+        assertEquals("[T_FIELDS_student]",
+                ac.suggest(sql, "select t1.".length() - 1).toString());
+    }
+
+    @Test
+    public void test031() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "select t1.a, t2. from student t1, teacher t2 where t2";
+
+        assertEquals("[T_FIELDS_teacher]",
+                ac.suggest(sql, "select t1.a, t2.".length() - 1).toString());
+    }
 }
