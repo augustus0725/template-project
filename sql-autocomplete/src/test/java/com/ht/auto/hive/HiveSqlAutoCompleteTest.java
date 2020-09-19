@@ -44,7 +44,7 @@ public class HiveSqlAutoCompleteTest {
         SqlAutoComplete ac = new HiveSqlAutoComplete();
         String sql = "insert into ";
 
-        assertEquals("[T_TABLE]",
+        assertEquals("[T_TABLE, '-', L_ID]",
                 ac.suggest(sql, sql.length() - 1).toString());
     }
 
