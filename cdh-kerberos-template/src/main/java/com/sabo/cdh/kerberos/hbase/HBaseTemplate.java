@@ -6,10 +6,12 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.io.compress.Compression;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * @author canbin.zhang
@@ -30,6 +32,15 @@ public class HBaseTemplate {
     public static void createSchemaTables(Configuration config) throws IOException {
         try (Connection connection = ConnectionFactory.createConnection(config);
              Admin admin = connection.getAdmin()) {
+            List<TableDescriptor> tableDescriptors = admin.listTableDescriptorsByNamespace(Bytes.toBytes("default"));
+            for (TableDescriptor table : tableDescriptors) {
+                System.out.println(table.getTableName());
+                ColumnFamilyDescriptor[] families = table.getColumnFamilies();
+                for (ColumnFamilyDescriptor family : families) {
+                    System.out.println(family.getNameAsString());
+
+                }
+            }
 
             ColumnFamilyDescriptorBuilder.ModifyableColumnFamilyDescriptor newCf = (ColumnFamilyDescriptorBuilder.ModifyableColumnFamilyDescriptor) ColumnFamilyDescriptorBuilder.of(CF_DEFAULT);
             newCf.setCompressionType(Compression.Algorithm.SNAPPY).setMaxVersions(5);
@@ -86,8 +97,8 @@ public class HBaseTemplate {
         config.addResource(new Path("hbase-conf", "hbase-site.xml"));
         config.addResource(new Path("hbase-conf", "core-site.xml"));
         UserGroupInformation.setConfiguration(config);
-        UserGroupInformation.loginUserFromKeytab("hongwang@HONGWANG.COM",
-                "hbase-conf/hongwang-cdh.keytab");
+        UserGroupInformation.loginUserFromKeytab("vagrant@hongwang.com",
+                "hbase-conf/vagrant.keytab");
 
         createSchemaTables(config);
         modifySchema(config);

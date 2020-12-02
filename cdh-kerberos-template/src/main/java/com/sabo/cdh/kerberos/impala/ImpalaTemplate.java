@@ -15,8 +15,8 @@ import java.sql.Statement;
  * date: 2019/12/12
  */
 public class ImpalaTemplate {
-    private final static String CONNECTION_URL = "jdbc:impala://cdh03.hw.com:21050/default;AuthMech=1" +
-             ";KrbRealm=HONGWANG.COM;KrbHostFQDN=cdh03.hw.com;KrbServiceName=impala;principal=impala";
+    private final static String CONNECTION_URL = "jdbc:impala://192.168.0.184:21050/default;AuthMech=1" +
+             ";KrbRealm=hongwang.com;KrbHostFQDN=bd04.hw.com;KrbServiceName=impala;principal=impala";
 
     public static void main(String[] args) throws Exception{
         System.setProperty("java.security.krb5.conf", "hive-conf/krb5.conf");
@@ -25,7 +25,7 @@ public class ImpalaTemplate {
         Configuration config = new Configuration();
         config.addResource(new Path("hive-conf", "core-site.xml"));
         UserGroupInformation.setConfiguration(config);
-        UserGroupInformation.loginUserFromKeytab("hongwang", "hive-conf/hongwang-cdh.keytab");
+        UserGroupInformation.loginUserFromKeytab("vagrant", "hive-conf/vagrant.keytab");
 
         System.out.println(UserGroupInformation.getLoginUser());
         UserGroupInformation loginUser = UserGroupInformation.getLoginUser();
@@ -43,7 +43,7 @@ public class ImpalaTemplate {
             }
         });
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM default.stu ");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM default.t2 ");
 
         System.out.println("\n== Begin Query Results ======================");
 

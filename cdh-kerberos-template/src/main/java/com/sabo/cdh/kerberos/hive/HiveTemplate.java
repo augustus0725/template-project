@@ -16,9 +16,9 @@ import java.sql.Statement;
 public class HiveTemplate {
     private static final String JDBC_DRIVER_NAME = "org.apache.hive.jdbc.HiveDriver";
 
-    private static final String CONNECTION_URL = "jdbc:hive2://" + "192.168.0.110"
+    private static final String CONNECTION_URL = "jdbc:hive2://" + "192.168.0.184"
             + ':' + 10000 + "/default;"
-            + "principal=hive/cdh01.hw.com@HONGWANG.COM";
+            + "principal=hive/bd04.hw.com@hongwang.com";
 
     public static void main(String[] args) throws Exception{
         // kerberos auth as kinit
@@ -27,14 +27,14 @@ public class HiveTemplate {
         System.setProperty("sun.security.krb5.debug", "true");
         config.addResource(new Path("hive-conf", "core-site.xml"));
         UserGroupInformation.setConfiguration(config);
-        UserGroupInformation.loginUserFromKeytab("hongwang@HONGWANG.COM", "hive-conf/hongwang-cdh.keytab");
+        UserGroupInformation.loginUserFromKeytab("vagrant@hongwang.com", "hive-conf/vagrant.keytab");
 
         // JDBC
         Class.forName(JDBC_DRIVER_NAME);
         Connection con = DriverManager.getConnection(CONNECTION_URL);
 
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM default.stu");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM default.t1");
 
         System.out.println("\n== Begin Query Results ======================");
 
