@@ -5,8 +5,8 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - postgresql-server
-    - postgresql-contrib
+    - postgresql11-server
+    - postgresql11-contrib
 
 - name: Create pg data directory if not exist
   file:
@@ -17,11 +17,11 @@
 
 - name: config systemd of pg and change data dir of pg.
   template:
-    src:  "postgresql.service.j2"
-    dest: "/usr/lib/systemd/system/postgresql.service"
+    src:  "postgresql-11.service.j2"
+    dest: "/usr/lib/systemd/system/postgresql-11.service"
 
 - name: postgres initdb.
-  command: postgresql-setup initdb
+  command: postgresql-11-setup initdb
   args:
     creates: "{{ pg_primary.data_dir }}/pg_log"
 
@@ -40,7 +40,7 @@
 
 - name: Start pg && enable postgresql-server auto-start on restart
   systemd:
-    name: postgresql
+    name: postgresql-11
     state: started
     enabled: True
 
@@ -109,5 +109,5 @@
 
 - name: restart primary pg
   systemd:
-    name: postgresql
+    name: postgresql-11
     state: restarted
