@@ -1,0 +1,113 @@
+---
+
+- name: Install postgresql server.
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - postgresql-server
+    - postgresql-contrib
+
+- name: Create pg data directory if not exist
+  file:
+    path: "{{ pg_primary.data_dir }}"
+    state: directory
+    owner: postgres
+    group: postgres
+
+- name: config systemd of pg and change data dir of pg.
+  template:
+    src:  "postgresql.service.j2"
+    dest: "/usr/lib/systemd/system/postgresql.service"
+
+- name: postgres initdb.
+  command: postgresql-setup initdb
+  args:
+    creates: "{{ pg_primary.data_dir }}/pg_log"
+
+- name: stat of pg_archive
+  stat: path=/opt/data/pgsql/pg_archive
+  register: pg_archive_stat
+
+- name: Config postgresql
+  template:
+    src:  "{{ item }}.j2"
+    dest: "{{ pg_primary.data_dir }}/{{ item }}"
+  with_items:
+    - postgresql.conf
+    - pg_hba.conf
+  when: not pg_archive_stat.stat.exists
+
+- name: Start pg && enable postgresql-server auto-start on restart
+  systemd:
+    name: postgresql
+    state: started
+    enabled: True
+
+- name: create replica user repuser
+  shell: |
+    set timeout 300
+    spawn createuser -U postgres repuser -P -c 5 --replication
+
+    expect "Enter password for new role:"
+    send "123456\n"
+
+    expect "Enter it again:"
+    send "123456\n"
+
+    expect "\r\n"
+    expect ""
+    expect ""
+    expect eof
+    
+    exit 0
+  args:
+    executable: /usr/bin/expect
+    chdir: /tmp
+    creates: /opt/data/pgsql/pg_archive
+  become: yes
+  become_user: postgres
+  
+- name: Create postgresql user({{ pg_primary.db_user }}) && set password({{ pg_primary.pgpass }}).
+  shell: |
+    set timeout 300
+    spawn createuser --interactive --password {{ pg_primary.db_user }}
+
+    expect "Shall the new role be a superuser? (y/n)"
+    send "y\n"
+
+    expect "Password:"
+    send "{{ pg_primary.pgpass }}\n"
+
+    expect "\r\n"
+    expect ""
+    expect ""
+    expect eof
+    
+    exit 0
+  args:
+    executable: /usr/bin/expect
+    chdir: /tmp
+    creates: /opt/data/pgsql/pg_archive
+  become: yes
+  become_user: postgres
+
+- name: Create archive directory
+  file:
+    path: /opt/data/pgsql/pg_archive
+    state: directory
+    owner: postgres
+    group: postgres
+
+- name: reconfig this pg and make it be the primary pg.
+  template:
+    src:  "{{ item }}-primary.conf.j2"
+    dest: "{{ pg_primary.data_dir }}/{{ item }}.conf"
+  with_items:
+    - postgresql
+    - pg_hba
+
+- name: restart primary pg
+  systemd:
+    name: postgresql
+    state: restarted
