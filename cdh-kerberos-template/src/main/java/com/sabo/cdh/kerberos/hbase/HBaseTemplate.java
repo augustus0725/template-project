@@ -89,10 +89,10 @@ public class HBaseTemplate {
     public static void main(String... args) throws IOException {
         Configuration config = HBaseConfiguration.create();
         System.setProperty("java.security.krb5.conf", "hbase-conf/krb5.conf");
+        System.setProperty("sun.security.krb5.debug", "true");
 
         //Add any necessary configuration files (hbase-site.xml, core-site.xml)
         // 减少重试次数
-        config.set("java.security.krb5.conf", "hbase-conf/krb5.conf");
         config.setInt("hbase.client.retries.number",2);
         config.addResource(new Path("hbase-conf", "hbase-site.xml"));
         config.addResource(new Path("hbase-conf", "core-site.xml"));
