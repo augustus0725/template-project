@@ -78,4 +78,5 @@
   systemd:
     name: postgresql-11
     state: restarted
+    enabled: True
 

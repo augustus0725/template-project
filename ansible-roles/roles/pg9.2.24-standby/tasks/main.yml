@@ -78,4 +78,4 @@
   systemd:
     name: postgresql
     state: restarted
-
+    enabled: True
