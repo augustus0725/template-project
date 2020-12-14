@@ -23,7 +23,7 @@
 - name: postgres initdb.
   command: postgresql-11-setup initdb
   args:
-    creates: "{{ pg_primary.data_dir }}/pg_log"
+    creates: "{{ pg_primary.data_dir }}/log"
 
 - name: stat of pg_archive
   stat: path=/opt/data/pgsql/pg_archive
