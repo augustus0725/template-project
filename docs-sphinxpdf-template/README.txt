@@ -15,5 +15,6 @@
 make html (linux) 
 
 
-# 构建pdf格式(只有linux支持)
+# 构建pdf格式(只有linux支持, 安装全套依赖比较麻烦, 使用docker)
+# docker pull sphinxdoc/sphinx-latexpdf
 make latexpdf
