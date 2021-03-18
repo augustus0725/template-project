@@ -5,15 +5,17 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.FileInputStream;
 import java.util.Properties;
 
-/**
- * @author crazy
- * date: 2020/12/2
- */
-public class KerberosChecker {
+@SpringBootApplication
+public class KerberosChecker implements CommandLineRunner {
 
     private static Properties properties() throws Exception {
         Properties properties = new Properties();
@@ -22,9 +24,17 @@ public class KerberosChecker {
         return properties;
     }
 
+    private static Logger LOG = LoggerFactory
+            .getLogger(KerberosChecker.class);
 
+    public static void main(String[] args) {
+        LOG.info("STARTING THE APPLICATION");
+        SpringApplication.run(KerberosChecker.class, args);
+        LOG.info("APPLICATION FINISHED");
+    }
 
-    public static void main(String[] args) throws Exception {
+    @Override
+    public void run(String... args) throws Exception {
         Configuration config = HBaseConfiguration.create();
         System.setProperty("sun.security.krb5.debug", "true");
         Properties properties = properties();
