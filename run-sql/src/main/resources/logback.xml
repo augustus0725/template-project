@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- milliseconds, seconds, minutes, or hours, 设置自动重读配置  -->
+<configuration scan="true" scanPeriod="15 seconds">
+    <property name="LOG_DIR" value="logs"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} | %-5p | [%thread] %logger{5}:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_DIR}/logFile.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} | %-5p | [%thread] %logger{5}:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RollingFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            
+        <file>${LOG_DIR}/rolling.log</file>
+            
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <!-- daily rollover -->
+                    
+            <fileNamePattern>rolling.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+             
+                    <!-- keep 30 days' worth of history capped at 3GB total size -->
+                    
+            <maxHistory>30</maxHistory>
+                    
+            <totalSizeCap>3GB</totalSizeCap>
+                
+        </rollingPolicy>
+            
+        <encoder>
+                    
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} | %-5p | [%thread] %logger{5}:%L - %msg%n</pattern>
+                
+        </encoder>
+    </appender>
+
+    <!--    <logger name="com.baeldung.logback" level="INFO" />-->
+    <!--  设置包的日志级别   -->
+    <!--    <logger name="myLogger" level="TRACE"/>-->
+
+    <!--  限制范围  -->
+    <logger name="com.sabo.spring" level="WARN">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!--  限制所有的日志  -->
+    <root level="WARN">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
