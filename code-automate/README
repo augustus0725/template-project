@@ -1,0 +1,12 @@
+配置方法
+
+1. 
+GIT_SOURCE_PATH=/home/darwin/workspace/opensource/elasticsearch_loader-001
+DEST_SOURCE_PATH=/home/darwin/workspace/opensource/dest
+
+GIT_SOURCE_PATH配置gitlab代码的本地目录
+DEST_SOURCE_PATH配置需要将代码copy和自动提交的地址
+
+2. member.list配置提交jira和用户以及邮箱地址
+3. TARGET_LINES配置需要的代码行数
+  
