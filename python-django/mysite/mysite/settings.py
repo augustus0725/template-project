@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'django',
         'USER': 'pgadmin',
-        'PASSWORD': 'Windows_7',
+        'PASSWORD': '******',
         'HOST': '121.36.254.7',
         'PORT': '5432',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
