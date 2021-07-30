@@ -53,3 +53,6 @@ python manage.py createsuperuser --> 创建超级用户
    http://127.0.0.1:8000/admin/
 
 --> 在polls的admin.py里注册model, 之后这个model就可以在admin界面维护（增删改查）
+
+@ 测试 （会自动创建测试库，表，测试完成之后删除，）
+python manage.py test polls
