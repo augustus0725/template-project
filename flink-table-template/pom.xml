@@ -16,7 +16,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <!-- flink -->
-        <flink.version>1.9.0</flink.version>
+        <flink.version>1.9.2</flink.version>
         <scala.binary.version>2.11</scala.binary.version>
         <kafka.client.version>2.3.0</kafka.client.version>
         <slf4j.version>1.7.15</slf4j.version>
