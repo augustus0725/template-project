@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'django',
         'USER': 'pgadmin',
         'PASSWORD': '******',
-        'HOST': '121.36.254.7',
+        'HOST': '121.*.*.*',
         'PORT': '5432',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
@@ -129,3 +129,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+# 使用django的static目录插件，不然static文件显示有问题
+STATIC_ROOT = 'staticfiles'

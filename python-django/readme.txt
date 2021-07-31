@@ -27,7 +27,7 @@ DATABASES = {
         'NAME': 'django',
         'USER': 'pgadmin',
         'PASSWORD': '******',
-        'HOST': '121.36.254.79',
+        'HOST': '121.*.*.*',
         'PORT': '5432',
     }
 }
@@ -56,3 +56,16 @@ python manage.py createsuperuser --> 创建超级用户
 
 @ 测试 （会自动创建测试库，表，测试完成之后删除，）
 python manage.py test polls
+
+
+# 部署相关
+@ centos
+yum install -y libpqxx-devel  # 添加pg驱动的时候需要安装这个
+yum install -y gcc
+yum install -y python3-devel
+pip install psycopg2
+yum install -y python36-gunicorn
+
+运行
+gunicorn <project_name>.wsgi
+gunicorn-3 -w 4 -b 192.168.31.163:8000 mysite.wsgi
