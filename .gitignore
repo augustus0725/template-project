@@ -18,5 +18,21 @@
 *.tar.gz
 *.rar
 
+# IDEs and editors
+/.idea
+.idea
+*.iws
+*.iml
+*.ipr
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Python
+*.py[co]
