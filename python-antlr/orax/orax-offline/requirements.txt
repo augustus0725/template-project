@@ -1,0 +1,6 @@
+antlr4-python3-runtime==4.8
+click==8.0.1
+colorama==0.4.4
+importlib-metadata==4.6.3
+typing-extensions==3.10.0.0
+zipp==3.5.0
