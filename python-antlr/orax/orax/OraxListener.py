@@ -32,6 +32,7 @@ class OraxListener(PlSqlParserListener):
                 self.ignores.append(ctx.getSourceInterval()[0])
                 self.tables.append(ctx.getSourceInterval()[1])
             else:
+                self.ignores.append(ctx.getSourceInterval()[0])
                 self.tables.append(ctx.getSourceInterval()[0])
 
     def get_tables(self):
@@ -41,8 +42,10 @@ class OraxListener(PlSqlParserListener):
 
     def get_fields(self):
         fields = list(set(self.fields_like).difference(set(self.ignores)).difference(set(self.tables)))
+        fields_to_remove = []
         for f in fields:
             if self.__is_table_alias(f):
-                fields.remove(f)
+                fields_to_remove.append(f)
+        fields = list(set(fields).difference(set(fields_to_remove)))
         fields.sort()
         return fields

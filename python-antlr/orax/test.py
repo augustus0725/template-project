@@ -16,7 +16,7 @@ class MyTestCase(unittest.TestCase):
             "'abc',max(t.a),t.a,t.b from ods.my_table t left join your_table p on t.id = p.id where a100 > 2")
         print_tables_and_fields(r)
         self.assertEqual([43, 51], r[0])
-        self.assertEqual([9, 28, 33, 37, 57, 59, 65, 69], r[1])
+        self.assertEqual([9, 28, 33, 37, 59, 65, 69], r[1])
 
 
 if __name__ == '__main__':
