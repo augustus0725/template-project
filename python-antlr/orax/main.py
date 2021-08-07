@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import click
 from antlr4 import InputStream, CommonTokenStream, ParseTreeWalker
 
 from PlSqlLexer import PlSqlLexer
@@ -29,14 +30,17 @@ def print_tables_and_fields(result):
     print(str([result[2][e] for e in result[1]]))
 
 
+@click.command()
+@click.option('-m', default='console', required=True, type=click.Choice(['console', 'file', 'batch']),
+              help="三种运行模式, console表示从命令行传入sql, file表示从文件, batch表示批量也是从文件,要求一行一条sql")
+@click.option('-s', default=None, help='输入需要转换的SQL, console模式')
+@click.option('-f', default=None, type=click.File('r', 'utf-8'), help='sql文件')
+@click.option('--tables', default=None, help='替换的表名, 格式： source_t1:target_t1,source_t2:target_t2')
+@click.option('--fields', default=None, help='替换的字段, 格式： source_f1:target_f1,source_f2:target_f2')
+def main(m, s, f, tables, fields):
+    table_names = dict(table.split(':') for table in tables.split(','))
+    print(str(table_names))
+
+
 if __name__ == '__main__':
-    r = find_tables_and_fields(
-        "select INITCAP('hi  there'),TO_CHAR(ts_col, 'DD-MON-YYYY HH24:MI:SSxFF'),CONCAT('A','BC'),"
-        "'abc',max(t.a),t.a,t.b from ods.my_table t left join your_table p on t.id = p.id where a100 > 2")
-    print_tables_and_fields(r)
-    # main("SELECT 'xxx',INITCAP('hi  there') FROM MY_TABLE WHERE '100'='100'".upper())
-    # main("SELECT 'MAX(T.A)',t.a, t.b from my_table t left join your_table p on t.id = p.id".upper())
-    # main("SELECT MAX(T.A) FROM my_table T LEFT JOIN your_table p ON T.ID = P.ID")
-    # main("select t.a, t.b from my_table t left join your_table p on t.id = p.id".upper())
-    # main("insert into my_table select * from my_table".upper())
-    # main("select a,b,c from my_table".upper())
+    main()
