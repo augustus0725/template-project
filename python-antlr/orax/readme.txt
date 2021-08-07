@@ -6,3 +6,8 @@ pip3 install antlr4-python3-runtime==4.8
 # 3. 添加命令行工具
 pip3 install click==8.0.1
 # 4. 打包
+
+@Windows 打包
+python3 setup.py bdist --format=wininst
+@Linux 打包
+python3 setup.py bdist --format=rpm

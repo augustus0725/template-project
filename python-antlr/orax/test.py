@@ -1,6 +1,6 @@
 import unittest
 
-from main import find_tables_and_fields, print_tables_and_fields
+from orax.OraxImp import find_tables_and_fields, print_tables_and_fields
 
 
 class MyTestCase(unittest.TestCase):
