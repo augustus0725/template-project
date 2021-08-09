@@ -30,6 +30,9 @@ def print_tables_and_fields(result):
 
 
 def run_console_mode(s, table_pairs, fields_pairs):
+    if not s or len(s) == 0:
+        print("SQL 不能为空!!!")
+        exit(1)
     r = find_tables_and_fields(s)
     tokens = r[2]
     tables = r[0]
