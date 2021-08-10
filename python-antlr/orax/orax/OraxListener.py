@@ -8,6 +8,7 @@ class OraxListener(PlSqlParserListener):
         self.tokens = tokens
 
         self.table_alias = []
+        self.alias_table_kv = {}
         self.fields_like = []
         self.tables = []
         self.ignores = []
@@ -23,11 +24,12 @@ class OraxListener(PlSqlParserListener):
         if "table_alias" == self.parser.ruleNames[ctx.getRuleContext().getRuleIndex()]:
             self.table_alias.append(ctx.getText().upper())
             self.ignores.append(ctx.getSourceInterval()[0])
+            self.alias_table_kv[ctx.getText().upper()] = self.tokens[ctx.getSourceInterval()[0] - 2].upper()
         if "function_argument" == self.parser.ruleNames[ctx.getRuleContext().getRuleIndex()]:
             self.ignores.append(ctx.getSourceInterval()[0] - 1)
         if "regular_id" == self.parser.ruleNames[ctx.getRuleContext().getRuleIndex()]:
             self.fields_like.append(ctx.getSourceInterval()[0])
-        if "tableview_name" == self.parser.ruleNames[ctx.getRuleContext().getRuleIndex()]:
+        if self.parser.ruleNames[ctx.getRuleContext().getRuleIndex()] in ("query_name", "tableview_name"):
             if ctx.getSourceInterval()[0] != ctx.getSourceInterval()[1]:
                 self.ignores.append(ctx.getSourceInterval()[0])
                 self.tables.append(ctx.getSourceInterval()[1])
@@ -35,9 +37,20 @@ class OraxListener(PlSqlParserListener):
                 self.ignores.append(ctx.getSourceInterval()[0])
                 self.tables.append(ctx.getSourceInterval()[0])
 
+    def get_alias_table_kv(self):
+        return self.alias_table_kv
+
     def get_tables(self):
         tables = list(set(self.tables))
         tables.sort()
+        # 去掉alias里不是表名的关联
+        table_names = set([self.tokens[p].upper() for p in tables])
+        keys_to_remove = []
+        for k, v in self.alias_table_kv.items():
+            if v not in table_names:
+                keys_to_remove.append(k)
+        for k in keys_to_remove:
+            self.alias_table_kv.pop(k)
         return tables
 
     def get_fields(self):

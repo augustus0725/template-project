@@ -19,7 +19,7 @@ def find_tables_and_fields(sql_clause):
     my_listener = OraxListener(parser, raw_tokens)
     walker = ParseTreeWalker()
     walker.walk(my_listener, parser.unit_statement())
-    return my_listener.get_tables(), my_listener.get_fields(), raw_tokens
+    return my_listener.get_tables(), my_listener.get_fields(), raw_tokens, my_listener.get_alias_table_kv()
 
 
 def print_tables_and_fields(result):
@@ -42,11 +42,25 @@ def run_console_mode(s, table_pairs, fields_pairs):
             tokens[t] = table_pairs[tokens[t]]
     # fields
     fields = r[1]
+    alias_table_kv = r[3]
+    # #准备简单字段映射
+    easy_fields_mapping = {}
+    for k, v in fields_pairs.items():
+        easy_fields_mapping[k[1].upper()] = v
     for f in fields:
-        if tokens[f] in fields_pairs:
-            tokens[f] = fields_pairs[tokens[f]]
-
-    return ' '.join(tokens)
+        # 尝试判断前面有没有 alias
+        if f - 2 >= 0 and tokens[f - 1] == '.':
+            alias = tokens[f - 2].upper()
+            if alias in alias_table_kv:
+                table_name = alias_table_kv[alias]
+                if (table_name, tokens[f].upper()) in fields_pairs:
+                    tokens[f] = fields_pairs[(table_name, tokens[f].upper())]
+                    continue
+        else:
+            # TODO 从key里找可能对应的field,做转换, 可能会不太安全
+            if tokens[f].upper() in easy_fields_mapping:
+                tokens[f] = easy_fields_mapping[tokens[f].upper()]
+    return ''.join(tokens)
 
 
 def run_file_mode(f, table_pairs, fields_pairs):

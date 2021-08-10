@@ -24,14 +24,26 @@ def parse_mapping_from_excel(excel):
     fields_mapping = {}
     while True:
         try:
+            table_from = sheet1.cell(line, 0).value
             field_from = sheet1.cell(line, 1).value
             field_to = sheet1.cell(line, 4).value
         except Exception as e:
             break
         line = 1 + line
-        fields_mapping[field_from] = field_to
+        fields_mapping[(table_from.upper(), field_from.upper())] = field_to
 
     return tables_mapping, fields_mapping
+
+
+def unpack_alias(fields_pairs):
+    new_fields_pairs = {}
+    for k, v in fields_pairs.items():
+        if '.' in k:
+            alias_field = k.split('.', 1)
+            new_fields_pairs[(alias_field[0].upper(), alias_field[1].upper())] = v
+        else:
+            new_fields_pairs[(None, k.upper())] = v
+    return new_fields_pairs
 
 
 @click.command()
@@ -41,7 +53,7 @@ def parse_mapping_from_excel(excel):
 @click.option('-f', default=None, type=click.File('r', 'utf-8'), help='sql文件')
 @click.option('--excel', default=None, help='excel文件,里面有映射规则')
 @click.option('--tables', default=None, help='替换的表名, 格式： source_t1:target_t1,source_t2:target_t2')
-@click.option('--fields', default=None, help='替换的字段, 格式： source_f1:target_f1,source_f2:target_f2')
+@click.option('--fields', default=None, help='替换的字段, 格式：source_t1.source_f1:target_t1.target_f1,source_f2:target_f2')
 def main(m, s, f, excel, tables, fields):
     if not tables and not excel:
         print("缺少映射规则, 可以用--excel指定excel文件, 或者用--tables 和 --fields指定")
@@ -50,6 +62,7 @@ def main(m, s, f, excel, tables, fields):
     if tables and fields:
         table_pairs = dict(table.split(':') for table in tables.split(','))
         fields_pairs = dict(field.split(':') for field in fields.split(','))
+        fields_pairs = unpack_alias(fields_pairs)
     elif excel:
         table_pairs, fields_pairs = parse_mapping_from_excel(excel)
     else:
