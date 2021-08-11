@@ -36,16 +36,28 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual([4, 17, 37, 42, 60, 85, 94], r[0])
         self.assertEqual([6, 9, 12, 28, 33, 50, 56, 69, 71, 74, 76, 81], r[1])
 
-    def test_demo4(self):
-        with open("examples/demo4.sql") as f:
-            sql = f.read()
-        r = find_tables_and_fields(sql)
-        print_tables_and_fields(r)
-        self.assertEqual([4, 17, 37, 42, 60, 85, 94], r[0])
-        self.assertEqual([6, 9, 12, 28, 33, 50, 56, 69, 71, 74, 76, 81], r[1])
-
     def test_demo5(self):
         sql = "UPDATE table_1 SET column1= 'Fred' WHERE column2 = 'Wilson'"
+        r = find_tables_and_fields(sql)
+        print_tables_and_fields(r)
+        self.assertEqual([2], r[0])
+        self.assertEqual([6, 13], r[1])
+
+    def test_demo6(self):
+        sql = """MERGE INTO T T1
+USING (SELECT '1001' AS a,2 AS b FROM dual) T2
+ON ( T1.a=T2.a)
+WHEN MATCHED THEN
+    UPDATE SET T1.b = T2.b
+WHEN NOT MATCHED THEN 
+    INSERT (a,b) VALUES(T2.a,T2.b)"""
+        r = find_tables_and_fields(sql)
+        print_tables_and_fields(r)
+        self.assertEqual([4, 27], r[0])
+        self.assertEqual([17, 23, 38, 42, 57, 63, 76, 78, 85, 89], r[1])
+
+    def test_demo7(self):
+        sql = "select column1 from table_1;"
         r = find_tables_and_fields(sql)
         print_tables_and_fields(r)
         self.assertEqual([2], r[0])

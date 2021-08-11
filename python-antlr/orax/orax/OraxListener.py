@@ -13,18 +13,34 @@ class OraxListener(PlSqlParserListener):
         self.fields_like = []
         self.tables = []
         self.ignores = []
-        # table field bind
+        # table field bind, 绑定的情况暂时考虑了简单语句的情况,先看看能不能满足吧,不满足再写成通用的
         self.bind = {}
-        # #insert
+        # insert
         self.insert_into_clause_on = False
         self.insert_bind_table = None
         self.enter_column_list = False
-        # #update
+        # update
         self.update_statement = False
         self.update_bind_table = None
         self.enter_column_based_update_set_clause = False
-        # #where
+        # where
         self.where_clause = False
+        # merge
+        self.merge_statement = False
+        self.merge_table = None
+        self.merge_insert_clause = False
+
+    def enterMerge_element(self, ctx: PlSqlParser.Merge_elementContext):
+        self.merge_statement = True
+
+    def enterMerge_insert_clause(self, ctx: PlSqlParser.Merge_insert_clauseContext):
+        self.merge_insert_clause = True
+
+    def exitMerge_insert_clause(self, ctx: PlSqlParser.Merge_insert_clauseContext):
+        self.merge_insert_clause = False
+
+    def exitMerge_element(self, ctx: PlSqlParser.Merge_elementContext):
+        self.merge_statement = False
 
     def enterUpdate_statement(self, ctx: PlSqlParser.Update_statementContext):
         self.update_statement = True
@@ -66,6 +82,9 @@ class OraxListener(PlSqlParserListener):
         if self.update_statement:
             self.update_bind_table = ctx.getText().upper()
             self.bind[self.update_bind_table] = []
+        if self.merge_statement:
+            self.merge_table = ctx.getText().upper()
+            self.bind[self.merge_table] = []
 
     # Enter a parse tree produced by PlSqlParser#column_list.
     def enterColumn_list(self, ctx: PlSqlParser.Column_listContext):
@@ -81,6 +100,8 @@ class OraxListener(PlSqlParserListener):
             self.bind[self.insert_bind_table].append(ctx.getSourceInterval()[0])
         if self.update_statement and self.update_bind_table and self.enter_column_based_update_set_clause:
             self.bind[self.update_bind_table].append(ctx.getSourceInterval()[0])
+        if self.merge_statement and self.merge_table and self.merge_insert_clause and self.enter_column_list:
+            self.bind[self.merge_table].append(ctx.getSourceInterval()[0])
 
     def enterRegular_id(self, ctx: PlSqlParser.Regular_idContext):
         if self.update_statement and self.update_bind_table and self.where_clause:
