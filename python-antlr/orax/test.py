@@ -5,10 +5,10 @@ from orax.OraxImp import find_tables_and_fields, print_tables_and_fields
 
 class MyTestCase(unittest.TestCase):
     def test_insert(self):
-        r = find_tables_and_fields("insert into my_table select * from my_table")
+        r = find_tables_and_fields("insert into my_table m (m.a, m.b) select * from my_table")
         print_tables_and_fields(r)
-        self.assertEqual([4, 12], r[0])
-        self.assertEqual([], r[1])
+        self.assertEqual([4, 25], r[0])
+        self.assertEqual([11, 16], r[1])
 
     def test_select(self):
         r = find_tables_and_fields(
@@ -27,6 +27,14 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(
             [11, 16, 25, 33, 39, 54, 60, 72, 80, 86, 97, 118, 123, 126, 134, 142, 146, 159, 161, 174, 184, 199, 206,
              214, 222, 233, 249], r[1])
+
+    def test_demo4(self):
+        with open("examples/demo4.sql") as f:
+            sql = f.read()
+        r = find_tables_and_fields(sql)
+        print_tables_and_fields(r)
+        self.assertEqual([4, 17, 37, 42, 60, 85, 94], r[0])
+        self.assertEqual([6, 9, 12, 28, 33, 50, 56, 69, 71, 74, 76, 81], r[1])
 
 
 if __name__ == '__main__':

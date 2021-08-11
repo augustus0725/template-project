@@ -19,7 +19,8 @@ def find_tables_and_fields(sql_clause):
     my_listener = OraxListener(parser, raw_tokens)
     walker = ParseTreeWalker()
     walker.walk(my_listener, parser.unit_statement())
-    return my_listener.get_tables(), my_listener.get_fields(), raw_tokens, my_listener.get_alias_table_kv()
+    return my_listener.get_tables(), my_listener.get_fields(), raw_tokens, my_listener.get_alias_table_kv(), \
+           my_listener.get_bind()
 
 
 def print_tables_and_fields(result):
@@ -43,6 +44,18 @@ def run_console_mode(s, table_pairs, fields_pairs):
     # fields
     fields = r[1]
     alias_table_kv = r[3]
+    # 精确替代
+    nice_match = []
+    for k, v in r[4].items():
+        for vi in v:
+            f = tokens[vi].upper()
+            if (k, f) in fields_pairs:
+                tokens[vi] = fields_pairs[(k, f)]
+                nice_match.append(vi)
+    # 去掉精确匹配的字段
+    for n in nice_match:
+        fields.remove(n)
+
     # #准备简单字段映射
     easy_fields_mapping = {}
     for k, v in fields_pairs.items():

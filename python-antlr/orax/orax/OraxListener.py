@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from orax.PlSqlParser import PlSqlParser
 from orax.PlSqlParserListener import PlSqlParserListener, ParserRuleContext
 
 
@@ -12,6 +13,39 @@ class OraxListener(PlSqlParserListener):
         self.fields_like = []
         self.tables = []
         self.ignores = []
+        # table field bind
+        self.bind = {}
+        self.insert_into_clause_on = False
+        self.insert_bind_table = None
+        self.enter_column_list = False
+
+    # Enter a parse tree produced by PlSqlParser#insert_into_clause.
+    def enterInsert_into_clause(self, ctx: PlSqlParser.Insert_into_clauseContext):
+        self.insert_into_clause_on = True
+
+    # Exit a parse tree produced by PlSqlParser#insert_into_clause.
+    def exitInsert_into_clause(self, ctx: PlSqlParser.Insert_into_clauseContext):
+        self.insert_into_clause_on = False
+        self.insert_bind_table = None
+
+    # Enter a parse tree produced by PlSqlParser#tableview_name.
+    def enterTableview_name(self, ctx: PlSqlParser.Tableview_nameContext):
+        if self.insert_into_clause_on:
+            self.insert_bind_table = ctx.getText().upper()
+            self.bind[self.insert_bind_table] = []
+
+    # Enter a parse tree produced by PlSqlParser#column_list.
+    def enterColumn_list(self, ctx: PlSqlParser.Column_listContext):
+        self.enter_column_list = True
+
+    # Exit a parse tree produced by PlSqlParser#column_list.
+    def exitColumn_list(self, ctx: PlSqlParser.Column_listContext):
+        self.enter_column_list = False
+
+    # Enter a parse tree produced by PlSqlParser#column_name.
+    def enterColumn_name(self, ctx: PlSqlParser.Column_nameContext):
+        if self.insert_into_clause_on and self.insert_bind_table and self.enter_column_list:
+            self.bind[self.insert_bind_table].append(ctx.getSourceInterval()[0])
 
     def __is_table_alias(self, f):
         field_text = self.tokens[f].upper()
@@ -39,6 +73,9 @@ class OraxListener(PlSqlParserListener):
 
     def get_alias_table_kv(self):
         return self.alias_table_kv
+
+    def get_bind(self):
+        return self.bind
 
     def get_tables(self):
         tables = list(set(self.tables))
