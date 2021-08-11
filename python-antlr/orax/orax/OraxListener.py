@@ -15,9 +15,29 @@ class OraxListener(PlSqlParserListener):
         self.ignores = []
         # table field bind
         self.bind = {}
+        # #insert
         self.insert_into_clause_on = False
         self.insert_bind_table = None
         self.enter_column_list = False
+        # #update
+        self.update_statement = False
+        self.update_bind_table = None
+        self.enter_column_based_update_set_clause = False
+
+    def enterUpdate_statement(self, ctx: PlSqlParser.Update_statementContext):
+        self.update_statement = True
+
+    def exitUpdate_statement(self, ctx: PlSqlParser.Update_statementContext):
+        self.update_statement = False
+        self.update_bind_table = None
+
+    def enterColumn_based_update_set_clause(self, ctx: PlSqlParser.Column_based_update_set_clauseContext):
+        if self.update_statement:
+            self.enter_column_based_update_set_clause = True
+
+    def exitColumn_based_update_set_clause(self, ctx: PlSqlParser.Column_based_update_set_clauseContext):
+        if self.update_statement:
+            self.enter_column_based_update_set_clause = False
 
     # Enter a parse tree produced by PlSqlParser#insert_into_clause.
     def enterInsert_into_clause(self, ctx: PlSqlParser.Insert_into_clauseContext):
@@ -33,6 +53,9 @@ class OraxListener(PlSqlParserListener):
         if self.insert_into_clause_on:
             self.insert_bind_table = ctx.getText().upper()
             self.bind[self.insert_bind_table] = []
+        if self.update_statement:
+            self.update_bind_table = ctx.getText().upper()
+            self.bind[self.update_bind_table] = []
 
     # Enter a parse tree produced by PlSqlParser#column_list.
     def enterColumn_list(self, ctx: PlSqlParser.Column_listContext):
@@ -46,6 +69,8 @@ class OraxListener(PlSqlParserListener):
     def enterColumn_name(self, ctx: PlSqlParser.Column_nameContext):
         if self.insert_into_clause_on and self.insert_bind_table and self.enter_column_list:
             self.bind[self.insert_bind_table].append(ctx.getSourceInterval()[0])
+        if self.update_statement and self.update_bind_table and self.enter_column_based_update_set_clause:
+            self.bind[self.update_bind_table].append(ctx.getSourceInterval()[0])
 
     def __is_table_alias(self, f):
         field_text = self.tokens[f].upper()

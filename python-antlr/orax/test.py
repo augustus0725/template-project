@@ -36,6 +36,21 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual([4, 17, 37, 42, 60, 85, 94], r[0])
         self.assertEqual([6, 9, 12, 28, 33, 50, 56, 69, 71, 74, 76, 81], r[1])
 
+    def test_demo4(self):
+        with open("examples/demo4.sql") as f:
+            sql = f.read()
+        r = find_tables_and_fields(sql)
+        print_tables_and_fields(r)
+        self.assertEqual([4, 17, 37, 42, 60, 85, 94], r[0])
+        self.assertEqual([6, 9, 12, 28, 33, 50, 56, 69, 71, 74, 76, 81], r[1])
+
+    def test_demo5(self):
+        sql = "UPDATE table_1 SET column1= 'Fred' WHERE column2 = 'Wilson'"
+        r = find_tables_and_fields(sql)
+        print_tables_and_fields(r)
+        self.assertEqual([2], r[0])
+        self.assertEqual([6, 13], r[1])
+
 
 if __name__ == '__main__':
     unittest.main()
