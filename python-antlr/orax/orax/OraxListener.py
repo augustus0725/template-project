@@ -23,6 +23,8 @@ class OraxListener(PlSqlParserListener):
         self.update_statement = False
         self.update_bind_table = None
         self.enter_column_based_update_set_clause = False
+        # #where
+        self.where_clause = False
 
     def enterUpdate_statement(self, ctx: PlSqlParser.Update_statementContext):
         self.update_statement = True
@@ -38,6 +40,14 @@ class OraxListener(PlSqlParserListener):
     def exitColumn_based_update_set_clause(self, ctx: PlSqlParser.Column_based_update_set_clauseContext):
         if self.update_statement:
             self.enter_column_based_update_set_clause = False
+
+    def enterWhere_clause(self, ctx: PlSqlParser.Where_clauseContext):
+        if self.update_statement:
+            self.where_clause = True
+
+    def exitWhere_clause(self, ctx: PlSqlParser.Where_clauseContext):
+        if self.update_statement:
+            self.where_clause = False
 
     # Enter a parse tree produced by PlSqlParser#insert_into_clause.
     def enterInsert_into_clause(self, ctx: PlSqlParser.Insert_into_clauseContext):
@@ -70,6 +80,10 @@ class OraxListener(PlSqlParserListener):
         if self.insert_into_clause_on and self.insert_bind_table and self.enter_column_list:
             self.bind[self.insert_bind_table].append(ctx.getSourceInterval()[0])
         if self.update_statement and self.update_bind_table and self.enter_column_based_update_set_clause:
+            self.bind[self.update_bind_table].append(ctx.getSourceInterval()[0])
+
+    def enterRegular_id(self, ctx: PlSqlParser.Regular_idContext):
+        if self.update_statement and self.update_bind_table and self.where_clause:
             self.bind[self.update_bind_table].append(ctx.getSourceInterval()[0])
 
     def __is_table_alias(self, f):
