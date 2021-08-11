@@ -28,7 +28,7 @@ copyright = '2021, 江苏红网股份有限公司'
 author = '江苏红网'
 
 # The full version, including alpha/beta/rc tags
-release = '0.2'
+release = '0.3'
 
 
 # -- General configuration ---------------------------------------------------
