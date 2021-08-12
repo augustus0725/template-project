@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+
 from antlr4 import InputStream, CommonTokenStream, ParseTreeWalker
 
 from orax.OraxListener import OraxListener
@@ -80,5 +82,9 @@ def run_file_mode(f, table_pairs, fields_pairs):
     return run_console_mode(f.read(), table_pairs, fields_pairs)
 
 
-def run_batch_mode(f, table_pairs, fields_pairs):
-    return '\n'.join([run_console_mode(sql, table_pairs, fields_pairs) for sql in f.readlines()])
+def run_batch_mode(d, table_pairs, fields_pairs):
+    for f in os.listdir(d):
+        if not f.endswith('.sql'):
+            continue
+        with open(os.path.join(d, f + ".out"), encoding="utf-8", mode="w+") as w:
+            w.write(run_file_mode(open(os.path.join(d, f), encoding="utf-8"), table_pairs, fields_pairs))

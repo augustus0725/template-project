@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+
 import click
 
 from orax.OraxImp import run_console_mode, run_file_mode, run_batch_mode
@@ -51,10 +53,11 @@ def unpack_alias(fields_pairs):
               help="三种运行模式, console表示从命令行传入sql, file表示从文件, batch表示批量也是从文件,要求一行一条sql")
 @click.option('-s', default=None, help='输入需要转换的SQL, console模式')
 @click.option('-f', default=None, type=click.File('r', 'utf-8'), help='sql文件')
+@click.option('-d', default=None, help='批处理的时候指定目录')
 @click.option('--excel', default=None, help='excel文件,里面有映射规则')
 @click.option('--tables', default=None, help='替换的表名, 格式： source_t1:target_t1,source_t2:target_t2')
 @click.option('--fields', default=None, help='替换的字段, 格式：source_t1.source_f1:target_t1.target_f1,source_f2:target_f2')
-def main(m, s, f, excel, tables, fields):
+def main(m, s, f, d, excel, tables, fields):
     if not tables and not excel:
         print("缺少映射规则, 可以用--excel指定excel文件, 或者用--tables 和 --fields指定")
     table_pairs = {}
@@ -77,7 +80,10 @@ def main(m, s, f, excel, tables, fields):
     elif 'file' == m:
         print(run_file_mode(f, table_pairs, fields_pairs))
     elif 'batch' == m:
-        print(run_batch_mode(f, table_pairs, fields_pairs))
+        if not d or not os.path.isdir(d):
+            print("批处理模式需要指定SQL文件的目录, -d <SQL文件的目录>")
+            exit(1)
+        run_batch_mode(d, table_pairs, fields_pairs)
     else:
         print("检查命令行, 出现不支持的模式")
         exit(1)
