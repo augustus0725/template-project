@@ -17,3 +17,7 @@ python -m flask
 -- 测试模式
 export FLASK_ENV=development
 FLASK_DEBUG=1
+
+# 应用 flask 的 【中间件】 和 【扩展】 可以快速帮我们构建应用
+中间件比如有：werkzeug.middleware.proxy_fix
+扩展：       Flask-SQLAlchemy

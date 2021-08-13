@@ -4,9 +4,15 @@ import os
 from flask import Flask, url_for, render_template, request, make_response
 from markupsafe import escape
 from werkzeug.exceptions import abort
+from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+
+# 应用中间件
+# ProxyFix middleware for running behind Nginx
+app.wsgi_app = ProxyFix(app.wsgi_app)
+
 
 
 @app.route('/')
