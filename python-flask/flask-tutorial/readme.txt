@@ -15,6 +15,10 @@ flask init-db 初始化库 --> 这个有问题, 没有django里在python代码�
 pip3 install wheel
 python3 setup.py bdist_wheel
 
+# 部署
+pip3 install waitress-serve
+waitress-serve --call flaskr:create_app
+
 # 笔记
 
 ##
