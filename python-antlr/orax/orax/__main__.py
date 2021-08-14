@@ -63,7 +63,13 @@ def main(m, s, f, d, excel, tables, fields):
     table_pairs = {}
     fields_pairs = {}
     if tables and fields:
-        table_pairs = dict(table.split(':') for table in tables.split(','))
+        table_pairs = {}
+        for table in tables.split(','):
+            kv = table.split(':', 1)
+            if len(kv) != 2:
+                print("表mapping错误: " + table)
+                exit(1)
+            table_pairs[kv[0].upper()] = kv[1]
         fields_pairs = dict(field.split(':') for field in fields.split(','))
         fields_pairs = unpack_alias(fields_pairs)
     elif excel:

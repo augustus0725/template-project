@@ -41,8 +41,8 @@ def run_console_mode(s, table_pairs, fields_pairs):
     tables = r[0]
     # tables
     for t in tables:
-        if tokens[t] in table_pairs:
-            tokens[t] = table_pairs[tokens[t]]
+        if tokens[t].upper() in table_pairs:
+            tokens[t] = table_pairs[tokens[t].upper()]
     # fields
     fields = r[1]
     alias_table_kv = r[3]
