@@ -11,21 +11,10 @@ from app.models import User
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    form = NameForm()
-    if form.validate_on_submit():
-        # name = form.name.data
-        # form.name.data = ''
-        user = User.query.filter_by(username=form.name.data).first()
-        if not user:
-            user = User(username=form.name.data)
-            db.session.add(user)
-            db.session.commit()
-            session['known'] = False
-            flash("欢迎新用户%r!!" % form.name.data)
-        else:
-            session['known'] = True
-        session['name'] = form.name.data
-        return redirect(url_for('main.index'))
-    return render_template('index.html', form=form, name=session.get('name'), current_time=datetime.utcnow(),
-                           known=session.get('known', False))
+    return render_template('index.html')
 
+
+@main.route('/user/<username>')
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('user.html', user=user)

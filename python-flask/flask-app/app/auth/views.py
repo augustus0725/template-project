@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, request, url_for, redirect, flash
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 
 from app import db
 from app.auth import auth
@@ -43,3 +43,14 @@ def register():
         flash('You can now login.')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
+
+
+@auth.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.ping()
+        # if not current_user.confirmed \
+        #         and request.endpoint \
+        #         and request.blueprint != 'auth' \
+        #         and request.endpoint != 'static':
+        #     return redirect(url_for('auth.unconfirmed'))
