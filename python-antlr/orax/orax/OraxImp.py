@@ -39,6 +39,7 @@ def run_console_mode(s, table_pairs, fields_pairs):
     r = find_tables_and_fields(s)
     tokens = r[2]
     tables = r[0]
+    all_tables = set([tokens[t].upper() for t in tables])
     # tables
     for t in tables:
         if tokens[t].upper() in table_pairs:
@@ -61,7 +62,8 @@ def run_console_mode(s, table_pairs, fields_pairs):
     # #准备简单字段映射
     easy_fields_mapping = {}
     for k, v in fields_pairs.items():
-        easy_fields_mapping[k[1].upper()] = v
+        if k[0] and k[0] in all_tables:
+            easy_fields_mapping[k[1].upper()] = v
     for f in fields:
         # 尝试判断前面有没有 alias
         if f - 2 >= 0 and tokens[f - 1] == '.':

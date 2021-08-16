@@ -20,7 +20,7 @@ def parse_mapping_from_excel(excel):
         except Exception as e:
             break
         line = 1 + line
-        tables_mapping[table_from] = table_to
+        tables_mapping[table_from.upper()] = table_to
     # find fields mapping
     line = 1
     fields_mapping = {}
