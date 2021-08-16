@@ -15,3 +15,13 @@ pip3 install flask-bootstrap
 pip3 install flask-moment
 -- 使用表单
 pip3 install flask-wtf
+-- 使用数据库
+pip3 install flask-sqlalchemy
+-- 使用数据库迁移框架, 内部实现是alembic, 增加了 flask db 命令       <Perform database migrations.>
+pip3 install flask-migrate
+--> flask db init --> 产生migrates目录
+!! 一般流程
+- 修改模型
+- flask db migrate -m "init migration" -> 产生迁移脚本
+- 检查脚本, 并把脚本放到版本控制
+- flask db upgrade -> 应用迁移
