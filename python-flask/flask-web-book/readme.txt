@@ -25,3 +25,6 @@ pip3 install flask-migrate
 - flask db migrate -m "init migration" -> 产生迁移脚本
 - 检查脚本, 并把脚本放到版本控制
 - flask db upgrade -> 应用迁移
+
+-- 发送邮件的扩展, 暂时不学
+pip3 install flask-mail
