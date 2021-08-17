@@ -7,13 +7,20 @@ from flask_login import login_required, current_user
 from app import db
 from app.decorators import admin_required
 from app.main import main
-from app.main.forms import NameForm, EditProfileForm, EditProfileAdminForm
-from app.models import User, Role
+from app.main.forms import NameForm, EditProfileForm, EditProfileAdminForm, PostForm
+from app.models import User, Role, Permission, Post
 
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    form = PostForm()
+    if current_user.can(Permission.WRITE) and form.validate_on_submit():
+        post = Post(body=form.body.data, author=current_user._get_current_object())
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('.index'))
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('index.html', form=form, posts=posts, Permission=Permission)
 
 
 @main.route('/user/<username>')
@@ -66,3 +73,4 @@ def edit_profile_admin(id):
     form.location.data = user.location
     form.about_me.data = user.about_me
     return render_template('edit_profile.html', form=form, user=user)
+
