@@ -22,3 +22,13 @@ is_authenticated
 is_active
 is_anonymous
 get_id()
+
+
+# 其他
+pip3 install faker 可以模拟很多数据
+fake.user_name()
+fake.city()
+fake.name()
+fake.text()
+
+itsdangerous 这个库还要学一下
