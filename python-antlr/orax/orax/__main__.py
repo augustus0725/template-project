@@ -50,7 +50,7 @@ def unpack_alias(fields_pairs):
 
 @click.command()
 @click.option('-m', default='console', type=click.Choice(['console', 'file', 'batch']),
-              help="三种运行模式, console表示从命令行传入sql, file表示从文件, batch表示批量也是从文件,要求一行一条sql")
+              help="三种运行模式, console表示从命令行传入sql, file表示从文件, batch表示批量, 需要指定包含sql文件的目录")
 @click.option('-s', default=None, help='输入需要转换的SQL, console模式')
 @click.option('-f', default=None, type=click.File('r', 'utf-8'), help='sql文件')
 @click.option('-d', default=None, help='批处理的时候指定目录')

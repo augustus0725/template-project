@@ -54,7 +54,7 @@ def run_console_mode(s, table_pairs, fields_pairs, repair):
         for f in fields:
             for sf in select_fields:
                 if sf[0] <= f <= sf[1]:
-                    repair_pos[sf[1]] = f
+                    repair_pos[sf[1]] = tokens[f]
 
     # 精确替代
     nice_match = []
@@ -92,7 +92,7 @@ def run_console_mode(s, table_pairs, fields_pairs, repair):
             output_tokens.append(tokens[i])
             if i in repair_pos:
                 output_tokens.append(' ')
-                output_tokens.append(tokens[repair_pos[i]])
+                output_tokens.append(repair_pos[i])
         tokens = output_tokens
     return ''.join(tokens)
 
