@@ -29,6 +29,19 @@ class OraxListener(PlSqlParserListener):
         self.merge_statement = False
         self.merge_table = None
         self.merge_insert_clause = False
+        # select list
+        self.select_fields = None
+        self.field_alias = None
+
+    def enterSelected_list(self, ctx: PlSqlParser.Selected_listContext):
+        self.select_fields = []
+        self.field_alias = []
+
+    def enterSelect_list_elements(self, ctx: PlSqlParser.Select_list_elementsContext):
+        self.select_fields.append(ctx.getSourceInterval())
+
+    def enterColumn_alias(self, ctx: PlSqlParser.Column_aliasContext):
+        self.field_alias.append(ctx.getSourceInterval()[0])
 
     def enterMerge_element(self, ctx: PlSqlParser.Merge_elementContext):
         self.merge_statement = True
@@ -159,3 +172,16 @@ class OraxListener(PlSqlParserListener):
         fields = list(set(fields).difference(set(fields_to_remove)))
         fields.sort()
         return fields
+
+    def get_repair_info(self):
+        # 去掉已经有引用的部分
+        fields_to_repair = []
+        for sf in self.select_fields:
+            is_add = True
+            for fa in self.field_alias:
+                if sf[0] <= fa <= sf[1]:
+                    is_add = False
+                    break
+            if is_add:
+                fields_to_repair.append(sf)
+        return fields_to_repair

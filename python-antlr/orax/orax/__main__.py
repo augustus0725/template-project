@@ -54,10 +54,11 @@ def unpack_alias(fields_pairs):
 @click.option('-s', default=None, help='输入需要转换的SQL, console模式')
 @click.option('-f', default=None, type=click.File('r', 'utf-8'), help='sql文件')
 @click.option('-d', default=None, help='批处理的时候指定目录')
+@click.option('--repair', is_flag=True, help='做一些智能的补全操作')
 @click.option('--excel', default=None, help='excel文件,里面有映射规则')
 @click.option('--tables', default=None, help='替换的表名, 格式： source_t1:target_t1,source_t2:target_t2')
 @click.option('--fields', default=None, help='替换的字段, 格式：source_t1.source_f1:target_t1.target_f1,source_f2:target_f2')
-def main(m, s, f, d, excel, tables, fields):
+def main(m, s, f, d, excel, tables, fields, repair):
     if not tables and not excel:
         print("缺少映射规则, 可以用--excel指定excel文件, 或者用--tables 和 --fields指定")
     table_pairs = {}
@@ -82,14 +83,14 @@ def main(m, s, f, d, excel, tables, fields):
         if not s:
             print("console模式,SQL不能为空, -s 'select * from t'")
             exit(1)
-        print(run_console_mode(s, table_pairs, fields_pairs))
+        print(run_console_mode(s, table_pairs, fields_pairs, repair))
     elif 'file' == m:
-        print(run_file_mode(f, table_pairs, fields_pairs))
+        print(run_file_mode(f, table_pairs, fields_pairs, repair))
     elif 'batch' == m:
         if not d or not os.path.isdir(d):
             print("批处理模式需要指定SQL文件的目录, -d <SQL文件的目录>")
             exit(1)
-        run_batch_mode(d, table_pairs, fields_pairs)
+        run_batch_mode(d, table_pairs, fields_pairs, repair)
     else:
         print("检查命令行, 出现不支持的模式")
         exit(1)

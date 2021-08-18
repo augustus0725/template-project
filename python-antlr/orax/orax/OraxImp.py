@@ -22,7 +22,7 @@ def find_tables_and_fields(sql_clause):
     walker = ParseTreeWalker()
     walker.walk(my_listener, parser.unit_statement())
     return my_listener.get_tables(), my_listener.get_fields(), raw_tokens, my_listener.get_alias_table_kv(), \
-           my_listener.get_bind()
+           my_listener.get_bind(), my_listener.get_repair_info()
 
 
 def print_tables_and_fields(result):
@@ -32,7 +32,7 @@ def print_tables_and_fields(result):
     print(str([result[2][e] for e in result[1]]))
 
 
-def run_console_mode(s, table_pairs, fields_pairs):
+def run_console_mode(s, table_pairs, fields_pairs, repair):
     if not s or len(s) == 0:
         print("SQL 不能为空!!!")
         exit(1)
@@ -47,6 +47,15 @@ def run_console_mode(s, table_pairs, fields_pairs):
     # fields
     fields = r[1]
     alias_table_kv = r[3]
+    # 需要修复的情况下需要先确定修复的位置 <pos, val>
+    repair_pos = {}
+    select_fields = r[5]
+    if repair:
+        for f in fields:
+            for sf in select_fields:
+                if sf[0] <= f <= sf[1]:
+                    repair_pos[sf[1]] = f
+
     # 精确替代
     nice_match = []
     for k, v in r[4].items():
@@ -77,16 +86,24 @@ def run_console_mode(s, table_pairs, fields_pairs):
             # TODO 从key里找可能对应的field,做转换, 可能会不太安全
             if tokens[f].upper() in easy_fields_mapping:
                 tokens[f] = easy_fields_mapping[tokens[f].upper()]
+    output_tokens = []
+    if repair:
+        for i in range(len(tokens)):
+            output_tokens.append(tokens[i])
+            if i in repair_pos:
+                output_tokens.append(' ')
+                output_tokens.append(tokens[repair_pos[i]])
+        tokens = output_tokens
     return ''.join(tokens)
 
 
-def run_file_mode(f, table_pairs, fields_pairs):
-    return run_console_mode(f.read(), table_pairs, fields_pairs)
+def run_file_mode(f, table_pairs, fields_pairs, repair):
+    return run_console_mode(f.read(), table_pairs, fields_pairs, repair)
 
 
-def run_batch_mode(d, table_pairs, fields_pairs):
+def run_batch_mode(d, table_pairs, fields_pairs, repair):
     for f in os.listdir(d):
         if not f.endswith('.sql'):
             continue
         with open(os.path.join(d, f + ".out"), encoding="utf-8", mode="w+") as w:
-            w.write(run_file_mode(open(os.path.join(d, f), encoding="utf-8"), table_pairs, fields_pairs))
+            w.write(run_file_mode(open(os.path.join(d, f), encoding="utf-8"), table_pairs, fields_pairs, repair))
