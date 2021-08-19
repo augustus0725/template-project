@@ -30,12 +30,16 @@ class OraxListener(PlSqlParserListener):
         self.merge_table = None
         self.merge_insert_clause = False
         # select list
-        self.select_fields = None
-        self.field_alias = None
-
-    def enterSelected_list(self, ctx: PlSqlParser.Selected_listContext):
         self.select_fields = []
         self.field_alias = []
+        # order by clause
+        self.order_by_flag = False
+
+    def enterOrder_by_elements(self, ctx: PlSqlParser.Order_by_elementsContext):
+        self.order_by_flag = True
+
+    def exitOrder_by_elements(self, ctx: PlSqlParser.Order_by_elementsContext):
+        self.order_by_flag = False
 
     def enterSelect_list_elements(self, ctx: PlSqlParser.Select_list_elementsContext):
         self.select_fields.append(ctx.getSourceInterval())
@@ -119,6 +123,8 @@ class OraxListener(PlSqlParserListener):
     def enterRegular_id(self, ctx: PlSqlParser.Regular_idContext):
         if self.update_statement and self.update_bind_table and self.where_clause:
             self.bind[self.update_bind_table].append(ctx.getSourceInterval()[0])
+        if self.order_by_flag:
+            self.ignores.append(ctx.getSourceInterval()[0])
 
     def __is_table_alias(self, f):
         field_text = self.tokens[f].upper()
