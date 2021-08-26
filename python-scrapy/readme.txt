@@ -57,3 +57,61 @@ scrapy.FormRequest("http://www.example.com/login",
                                    callback=self.logged_in)
 >> 页面不需要登录
 scrapy.Request(url=url, callback=self.parse)
+
+>> 一些专用的爬虫
+- CrawlSpider
+  能自动follow页面上面的链接, 可以和规则结合起来用
+- XMLFeedSpider/CSVFeedSpider
+  特殊格式的爬虫
+- SitemapSpider
+  支持使用robots.txt文件去爬取数据, 自动发现链接, 使用正则关联<url, parser>, 能使用一些过滤
+
+>> 爬取的数据Item处理流
+   ! 可以定义Pipeline Processor
+   class JsonWriterPipeline:
+
+    def open_spider(self, spider):
+        self.file = open('items.jl', 'w')
+
+    def close_spider(self, spider):
+        self.file.close()
+
+    def process_item(self, item, spider):
+        line = json.dumps(ItemAdapter(item).asdict()) + "\n"
+        self.file.write(line)
+        return item
+
+    ! 然后把具体的流注册到pipeline, 数字800是优先级, 范围0~1000
+    ITEM_PIPELINES = {
+    'myproject.pipelines.JsonWriterPipeline': 800,
+}
+
+>> 配置setting可以让产生的Items归档到文件, 文件可以放到FTP, 本地文件以及各种云存储
+
+>> IP受限的问题可以使用 HttpProxyMiddleware
+
+   尝试使用Google Cache避免直接访问目标网站
+
+   可以对接IP池
+   - 免费
+   https://www.torproject.org/
+   https://scrapoxy.io/
+   - 收费 (可以找找国内的付费版本)
+   https://proxymesh.com/
+
+>> 启动方式
+   - 从命令行启动
+   - 程序里指定爬虫
+     process = CrawlerProcess(settings={
+          "FEEDS": {
+          "items.json": {"format": "json"},
+        },
+     })
+
+     process.crawl(MySpider)
+     # process.crawl(MySpider1)
+     # process.crawl(MySpider2)
+     process.start()
+
+
+

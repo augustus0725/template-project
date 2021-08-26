@@ -1,4 +1,4 @@
-000000000000000000000000000# Scrapy settings for tutorial project
+# Scrapy settings for tutorial project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
