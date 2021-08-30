@@ -54,25 +54,29 @@ def unpack_alias(fields_pairs):
 @click.option('-s', default=None, help='输入需要转换的SQL, console模式')
 @click.option('-f', default=None, type=click.File('r', 'utf-8'), help='sql文件')
 @click.option('-d', default=None, help='批处理的时候指定目录')
-@click.option('--repair', is_flag=True, help='做一些智能的补全操作')
+@click.option('--repair', is_flag=True, help='做一些智能的补全操作, 比如查询字段加字段alias')
 @click.option('--excel', default=None, help='excel文件,里面有映射规则')
 @click.option('--tables', default=None, help='替换的表名, 格式： source_t1:target_t1,source_t2:target_t2')
 @click.option('--fields', default=None, help='替换的字段, 格式：source_t1.source_f1:target_t1.target_f1,source_f2:target_f2')
 def main(m, s, f, d, excel, tables, fields, repair):
-    if not tables and not excel:
+    if (not tables and not fields) and not excel:
         print("缺少映射规则, 可以用--excel指定excel文件, 或者用--tables 和 --fields指定")
+        exit(1)
     table_pairs = {}
     fields_pairs = {}
-    if tables and fields:
+    if tables or fields:
         table_pairs = {}
-        for table in tables.split(','):
-            kv = table.split(':', 1)
-            if len(kv) != 2:
-                print("表mapping错误: " + table)
-                exit(1)
-            table_pairs[kv[0].upper()] = kv[1]
-        fields_pairs = dict(field.split(':') for field in fields.split(','))
-        fields_pairs = unpack_alias(fields_pairs)
+        if tables and ':' in tables:
+            for table in tables.split(','):
+                kv = table.split(':', 1)
+                if len(kv) != 2:
+                    continue
+                table_pairs[kv[0].upper()] = kv[1]
+
+        if fields and ':' in fields:
+            fields_pairs = dict(field.split(':') for field in fields.split(','))
+            fields_pairs = unpack_alias(fields_pairs)
+
     elif excel:
         table_pairs, fields_pairs = parse_mapping_from_excel(excel)
     else:
