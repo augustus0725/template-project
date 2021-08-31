@@ -54,3 +54,10 @@ appbuilder.add_view 绑定到菜单栏
 appbuilder.add_api 注册api
 
 # 主要需要学习的就是如何使用上面的抽象以及定制上面的抽象了
+
+
+# appbuilder/base.html
+{% extends base_template %}
+这个模板里的base_template是变量, 
+构建AppBuilder的对象传入这个参数
+base_template="appbuilder/baselayout.html",
