@@ -61,3 +61,10 @@ appbuilder.add_api 注册api
 这个模板里的base_template是变量, 
 构建AppBuilder的对象传入这个参数
 base_template="appbuilder/baselayout.html",
+
+# 在view里定义action可以在页面对某条记录做操作
+    @action(name='action1', text='action text', multiple=True, single=True)
+    def action1(self, items):
+        print(f"{type(items)} : {items}")
+        self.update_redirect()
+        return redirect(self.get_redirect())
