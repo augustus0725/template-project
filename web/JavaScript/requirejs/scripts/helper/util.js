@@ -1,3 +1,5 @@
+// AMD模块的写法
+
 define(function () {
     let add = function (x,y) {
         return x + y;
