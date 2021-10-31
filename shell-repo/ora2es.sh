@@ -3,7 +3,7 @@
 set -x
 set -e
 
-# TODO 需要修改成现场的配置
+# TODO 需要修改成现场的配置 
 # 192.168.0.71:9200
 ELASTIC_SEARCH_HOST="${1}"
 # 192.168.0.121:1521/orcl
@@ -23,7 +23,7 @@ while [ -h "$PRG" ] ; do
         PRG=$(dirname "$PRG")"/$link"
     fi
 done
-cd "$(dirname \"$PRG\")/" >/dev/null
+cd "$(dirname $PRG)/" >/dev/null
 APP_HOME="$(pwd -P)"
 cd "${APP_HOME}"
 
@@ -44,14 +44,28 @@ INDEX_NAME="${INDEX_ALIAS}-$(date "+%Y%m%d%H%M%S")"
 curl -X PUT "http://${ELASTIC_SEARCH_HOST}/${INDEX_NAME}?pretty" -H 'Content-Type: application/json' -d'
 {
   "settings": {
-    "index.mapping.ignore_malformed": true
+    "index": {
+      "number_of_shards": 1
+    },
+    "analysis": {
+      "index.mapping.ignore_malformed": true,
+      "analyzer": {
+        "default": {
+          "type": "ik_max_word"
+        },
+        "default_search": {
+          "type": "ik_max_word",
+          "filter": [ "lowercase" ]
+        }
+      }
+    }
   }
 }
 '
 
 ora_2_es() {
   sql=$1
-  usql --json -c "${sql}" oracle://"${ORACLE_USER_PASS}"@"${ORACLE_CONNECT_STR}" > data.json
+  /opt/app/data-sync/usql --json -c "${sql}" oracle://"${ORACLE_USER_PASS}"@"${ORACLE_CONNECT_STR}" > data.json
   lines=$(wc -l data.json | cut -f 1 -d ' ')
   if [[ "${lines}" -ne 2 ]]; then
     echo "Fail to fetch data from oracle"
@@ -60,9 +74,13 @@ ora_2_es() {
   tail -n 1 data.json > oracle_json_list.json
   python jsonlist2jsons.py oracle_json_list.json es_ready.json
   # send data to es
-  curl -H "Content-Type: application/json" -XPOST "http://${ELASTIC_SEARCH_HOST}/${INDEX_NAME}/${INDEX_NAME}/_bulk?pretty&refresh" --data-binary "@es_ready.json"
+  for part in `ls es_ready.json-*`;
+  do
+  	curl -H "Content-Type: application/json" -XPOST \
+  	 "http://${ELASTIC_SEARCH_HOST}/${INDEX_NAME}/${INDEX_NAME}/_bulk?pretty&refresh" --data-binary "@${part}"
+  done
   # clean
-  rm -rf data.json oracle_json_list.json es_ready.json
+  rm -rf data.json oracle_json_list.json es_ready.json-*
 }
 
 # real work
@@ -110,4 +128,7 @@ do
 		curl -X DELETE "${ELASTIC_SEARCH_HOST}/${index}?pretty"
 	fi
 done
+
+# 强制合并段, 提升查询效率
+curl -X POST "${ELASTIC_SEARCH_HOST}/${INDEX_ALIAS}/_forcemerge?only_expunge_deletes=false&max_num_segments=1&flush=true"
 

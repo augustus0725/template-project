@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import codecs
 import json
+import re
 import sys
 
 
@@ -15,26 +16,54 @@ def main():
     packed_records = []
     action = {"index": {}}
     part = 0
+    # re part
+    mo = re.compile(u"[\u4e00-\u9fa5]")
     for record in records:
-        all = []
+        # all = []
         for k in record:
-            if u"CATALOG" == k:
-                continue
             v = record[k]
             if v is None or "" == v:
                 record[k] = u"null"
-            if not (type(v) is str or type(v) is unicode):
+            if type(v) is not unicode:
                 record[k] = unicode(v)
-            all.append(record[k])
+            if "SCORE" == k:
+                record[k] = int(v)
+            # all.append(record[k])
         # prepare _text field
-        record["_text"] = ' '.join(all)
-        if u"CATALOG" in record:
-            v = record[u"CATALOG"]
-            if v and len(v) > 0:
-                record[u"CATALOG"] = list(v.split(','))
+        # record["_text"] = ' '.join(all)
+        record["TABLE_HAS_DATA"] = "no"
+        record["TABLE_HAS_TITLE"] = "no"
+        record["COLUMN_HAS_CHINESE"] = "no"
+        if "TABLE_COUNT" in record:
+            v = record["TABLE_COUNT"]
+            try:
+                if v:
+                    record["TABLE_HAS_DATA"] = "yes" if int(v) > 0 else "no"
+            except:
+                pass
+
+        if "TABLE_TITLE" in record:
+            v = record["TABLE_TITLE"]
+            try:
+                if v:
+                    if type(v) is str:
+                        v = unicode(v)
+                record["TABLE_HAS_TITLE"] = "yes" if mo.search(v) is not None else "no"
+            except:
+                pass
+
+        if "COLUMNS" in record:
+            v = record["COLUMNS"]
+            try:
+                if v:
+                    if type(v) is str:
+                        v = unicode(v)
+                record["COLUMN_HAS_CHINESE"] = "yes" if mo.search(v) is not None else "no"
+            except:
+                pass
         packed_records.append(action)
         packed_records.append(record)
-        # 分片
+        # 数据量太大文件会切割
         if 5000 == len(packed_records):
             codecs.open(sys.argv[2] + "-part." + str(part), 'w', 'utf-8').write(
                 '\n'.join(map(lambda x: json.dumps(x, ensure_ascii=False),
@@ -45,8 +74,8 @@ def main():
 
     # rest
     codecs.open(sys.argv[2] + "-part." + str(part), 'w', 'utf-8').write(
-            '\n'.join(map(lambda x: json.dumps(x, ensure_ascii=False),
-                          packed_records)) + '\n')
+        '\n'.join(map(lambda x: json.dumps(x, ensure_ascii=False),
+                      packed_records)) + '\n')
 
 
 if __name__ == '__main__':
