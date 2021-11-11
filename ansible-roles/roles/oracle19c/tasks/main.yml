@@ -1,0 +1,172 @@
+---
+
+- name: Prepare the host to install oracle.
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - zip
+    - unzip
+    - wget
+    - oracle-database-preinstall-19c
+
+- name: Create ORACLE_HOME directory for oracle.
+  file:
+    path: "{{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1"
+    state: directory
+    owner: oracle
+    group: oinstall
+
+- name: Create oraInventory directory for oracle.
+  file:
+    path: "{{ oracle19c.app_dir }}/app/oraInventory"
+    state: directory
+    owner: oracle
+    group: oinstall
+
+- name: Create data directory.
+  file:
+    path: "{{ oracle19c.data_dir }}/app/oracle/oradata"
+    state: directory
+    owner: oracle
+    group: oinstall
+
+- name: To check if oracle is 1st installed.
+  stat: "path={{ oracle19c.app_dir }}/app/oraInventory/logs"
+  register: ora_install_log_path
+
+- name: Create start/stop scripts directory for oracle.
+  file:
+    path: /home/oracle/scripts
+    state: directory
+    owner: oracle
+    group: oinstall
+
+- name: Unarchive oracle install files.
+  unarchive:
+    src: 3rd-repo/oracle19c/LINUX.X64_193000_db_home.zip
+    dest: {{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1
+    remote_src: no
+  become: yes
+  become_user: oracle
+  when: not ora_install_log_path.stat.exists
+
+- name: Config the response file of oracle.
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/tmp/{{ item }}"
+  with_items:
+    - db_install.rsp
+  become: yes
+  become_user: oracle
+
+- name: Run script to install oracle.
+  shell: |
+    ./runInstaller -ignorePrereq -waitforcompletion -silent -responseFile /tmp/db_install.rsp \
+    oracle.install.option=INSTALL_DB_AND_CONFIG                                \
+    ORACLE_HOSTNAME={{ oracle19c.hostname }}                                   \
+    UNIX_GROUP_NAME=oinstall                                                   \
+    INVENTORY_LOCATION={{ oracle19c.app_dir }}/app/oraInventory                \
+    SELECTED_LANGUAGES=AL32UTF8                                                \
+    ORACLE_HOME={{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1     \
+    ORACLE_BASE={{ oracle19c.app_dir }}/app/oracle                             \
+    oracle.install.db.InstallEdition=EE                                        \
+    oracle.install.db.OSDBA_GROUP=dba                                          \
+    oracle.install.db.OSBACKUPDBA_GROUP=dba                                    \
+    oracle.install.db.OSDGDBA_GROUP=dba                                        \
+    oracle.install.db.OSKMDBA_GROUP=dba                                        \
+    oracle.install.db.OSRACDBA_GROUP=dba                                       \
+    SECURITY_UPDATES_VIA_MYORACLESUPPORT=false                                 \
+    DECLINE_SECURITY_UPDATES=true
+    
+    sleep 10
+    # 做多运行半小时, 超时就认为运行出错了
+    for i in `seq 60`;
+    do
+      if tail {{ oracle19c.app_dir }}/app/oraInventory/logs/**/installActions*.log | grep 'Shutdown Oracle Database 19c Installer';then
+        echo "Install success."
+        break
+      else
+        sleep 30
+      fi
+    done
+  args:
+    creates: "{{ oracle19c.app_dir }}/app/oraInventory/logs"
+    chdir: /tmp
+  become: yes
+  become_user: oracle
+  
+- name: Do some config after the oracle is installed.
+  shell: |
+    {{ oracle19c.app_dir }}/app/oraInventory/orainstRoot.sh
+    {{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1/root.sh
+  args:
+    executable: bash
+    chdir: /tmp
+  become: yes
+  become_user: root
+  when: not ora_install_log_path.stat.exists
+
+- name: Config start/stop scripts.
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/home/oracle/scripts/{{ item }}"
+    owner: oracle
+    group: oinstall
+    mode: '0744'
+  with_items:
+    - setEnv.sh
+    - start_all.sh
+    - stop_all.sh
+
+- name: create oracle instance.
+  shell: |
+    . /home/oracle/scripts/setEnv.sh
+    dbca -silent -createDatabase                                                  \
+     -templateName General_Purpose.dbc                                            \
+     -gdbname {{ oracle19c.sid }} -sid {{ oracle19c.sid }} -responseFile NO_VALUE \
+     -characterSet AL32UTF8                                                       \
+     -sysPassword {{ oracle19c.password }}                                                      \
+     -systemPassword {{ oracle19c.password }}                                                   \
+     -createAsContainerDatabase true                                              \
+     -numberOfPDBs 1                                                              \
+     -pdbName pdb1                                                                \
+     -pdbAdminPassword {{ oracle19c.password }}                                                 \
+     -databaseType MULTIPURPOSE                                                   \
+     -storageType FS                                                              \
+     -datafileDestination {{ oracle19c.data_dir }}/app/oracle/oradata             \
+     -redoLogFileSize 50                                                          \
+     -emConfiguration NONE                                                        \
+     -ignorePreReqs
+    
+    sleep 10    
+  args:
+    creates: "{{ oracle19c.app_dir }}/app/oraInventory/logs"
+    chdir: /tmp
+  become: yes
+  become_user: oracle
+
+- name: Config oratab.
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/etc/{{ item }}"
+  with_items:
+    - oratab
+
+- name: config systemd of oracle
+  template:
+    src:  "{{ item }}.j2"
+    dest: /usr/lib/systemd/system/{{ item }}
+  with_items:
+    - dbora.service
+
+- name: Config oracle user profile
+  shell: cat ". /home/oracle/scripts/setEnv.sh" >> /home/oracle/.bash_profile
+  when: not ora_install_log_path.stat.exists
+
+- name: Enable dbora auto-start on restart
+  systemd:
+    name: dbora
+    state: started
+    enabled: True
+  ignore_errors: True

@@ -4,3 +4,5 @@
 3. 把用户的认证方式变成md5
    修改pg_hba.conf 文件
    trust方式不检测密码
+4. 开启了归档之后, 要设置定时任务, 避免归档过多
+   0 4 * * * tmpwatch -v 7d /opt/data/pgsql/pg_archive
