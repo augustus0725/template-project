@@ -35,6 +35,17 @@ oracle11gr2:
   password: Oracle_001
   notification_email: canbin.zhang@qq.com
 
+# oracle19c
+oracle19c:
+  app_dir: /u01
+  data_dir: /u02
+  sid: orcl
+  hostname: "ora01.bd.sabo.com"
+  # MB
+  memory_limit: 6144
+  password: Oracle_002
+  notification_email: canbin.zhang@qq.com
+
 # 配置primary mysql
 mysql_primary:
   db_host: 192.168.0.241
