@@ -10,43 +10,36 @@
     - wget
     - oracle-rdbms-server-11gR2-preinstall
 
-- name: Create base directory for oracle.
+- name: Create ORACLE_HOME directory for oracle.
   file:
-    path: "{{ oracle11gr2.data_dir }}"
+    path: "{{ oracle11gr2.app_dir }}/app/oracle/product/11.2.0/dbhome_1"
     state: directory
     owner: oracle
     group: oinstall
 
 - name: Create inventory directory for oracle.
   file:
-    path: "{{ oracle11gr2.data_dir }}/oraInventory"
-    state: directory
-    owner: oracle
-    group: oinstall
-
-- name: Create base data directory for oracle.
-  file:
-    path: "{{ oracle11gr2.data_dir }}/base/data"
+    path: "{{ oracle11gr2.app_dir }}/app/oraInventory"
     state: directory
     owner: oracle
     group: oinstall
 
 - name: Create data directory for oracle.
   file:
-    path: "{{ oracle11gr2.data_dir }}/data"
+    path: "{{ oracle11gr2.data_dir }}/app/oracle/oradata"
     state: directory
     owner: oracle
     group: oinstall
 
 - name: Create log directory for oracle.
   file:
-    path: "{{ oracle11gr2.data_dir }}/log"
+    path: "{{ oracle11gr2.data_dir }}/app/oracle/oradata/log"
     state: directory
     owner: oracle
     group: oinstall
 
 - name: To check if oracle is 1st installed.
-  stat: "path={{ oracle11gr2.data_dir }}/oraInventory/logs"
+  stat: "path={{ oracle11gr2.app_dir }}/app/oraInventory/logs"
   register: ora_install_log_path
 
 - name: Create start/stop scripts directory for oracle.
@@ -91,7 +84,7 @@
     # 做多运行半小时, 超时就认为运行出错了
     for i in `seq 60`;
     do
-      if tail {{ oracle11gr2.data_dir }}/oraInventory/logs/installActions*.log | grep 'Shutdown Oracle Database 11g Release 2 Installer';then
+      if tail {{ oracle11gr2.app_dir }}/app/oraInventory/logs/installActions*.log | grep 'Shutdown Oracle Database 11g Release 2 Installer';then
         echo "Install success."
         break
       else
@@ -99,15 +92,15 @@
       fi
     done
   args:
-    creates: "{{ oracle11gr2.data_dir }}/oraInventory/logs"
+    creates: "{{ oracle11gr2.app_dir }}/app/oraInventory/logs"
     chdir: /home/oracle/database
   become: yes
   become_user: oracle
   
 - name: Do some config after the oracle is 1st installed.
   shell: |
-    {{ oracle11gr2.data_dir }}/oraInventory/orainstRoot.sh
-    {{ oracle11gr2.data_dir }}/base/data/root.sh
+    {{ oracle11gr2.app_dir }}/app/oraInventory/orainstRoot.sh
+    {{ oracle11gr2.app_dir }}/app/oracle/product/11.2.0/dbhome_1/root.sh
   args:
     executable: bash
     chdir: /home/oracle/database

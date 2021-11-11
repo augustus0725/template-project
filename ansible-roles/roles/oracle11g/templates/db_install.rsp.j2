@@ -44,7 +44,7 @@ UNIX_GROUP_NAME=oinstall
 #-------------------------------------------------------------------------------
 # Specify the location which holds the inventory files.
 #-------------------------------------------------------------------------------
-INVENTORY_LOCATION={{ oracle11gr2.data_dir }}/oraInventory
+INVENTORY_LOCATION={{ oracle11gr2.app_dir }}/app/oraInventory
 
 #-------------------------------------------------------------------------------
 # Specify the languages in which the components will be installed.             
@@ -80,12 +80,12 @@ SELECTED_LANGUAGES=en,zh_CN
 #------------------------------------------------------------------------------
 # Specify the complete path of the Oracle Home.
 #------------------------------------------------------------------------------
-ORACLE_HOME={{ oracle11gr2.data_dir }}/base/data
+ORACLE_HOME={{ oracle11gr2.app_dir }}/app/oracle/product/11.2.0/dbhome_1
 
 #------------------------------------------------------------------------------
 # Specify the complete path of the Oracle Base. 
 #------------------------------------------------------------------------------
-ORACLE_BASE={{ oracle11gr2.data_dir }}/base
+ORACLE_BASE={{ oracle11gr2.app_dir }}/app/oracle
 
 #------------------------------------------------------------------------------
 # Specify the installation edition of the component.                        
@@ -139,7 +139,7 @@ oracle.install.db.customComponents=oracle.server:11.2.0.1.0,oracle.sysman.ccr:10
 #------------------------------------------------------------------------------
 # The DBA_GROUP is the OS group which is to be granted OSDBA privileges.
 #------------------------------------------------------------------------------
-oracle.install.db.DBA_GROUP=oinstall
+oracle.install.db.DBA_GROUP=dba
 
 #------------------------------------------------------------------------------
 # The OPER_GROUP is the OS group which is to be granted OSOPER privileges.
@@ -157,7 +157,7 @@ oracle.install.db.CLUSTER_NODES=
 # - GENERAL_PURPOSE/TRANSACTION_PROCESSING          
 # - DATA_WAREHOUSE                                
 #------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.type=
+oracle.install.db.config.starterdb.type=DATA_WAREHOUSE
 
 #------------------------------------------------------------------------------
 # Specify the Starter Database Global Database Name. 
@@ -189,7 +189,7 @@ oracle.install.db.config.starterdb.characterSet=AL32UTF8
 # If Automatic Memory Management is not desired, and memory allocation
 # is to be done manually, then set it to false.
 #------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.memoryOption=true
+oracle.install.db.config.starterdb.memoryOption=false
 
 #------------------------------------------------------------------------------
 # Specify the total memory allocation for the database. Value(in MB) should be
@@ -329,14 +329,14 @@ oracle.install.db.config.starterdb.storageType=FILE_SYSTEM_STORAGE
 #
 # Applicable only when oracle.install.db.config.starterdb.storage=FILE_SYSTEM 
 #-------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.fileSystemStorage.dataLocation={{ oracle11gr2.data_dir }}/data
+oracle.install.db.config.starterdb.fileSystemStorage.dataLocation={{ oracle11gr2.data_dir }}/app/oracle/oradata
 
 #-------------------------------------------------------------------------------
 # Specify the backup and recovery location.
 #
 # Applicable only when oracle.install.db.config.starterdb.storage=FILE_SYSTEM 
 #-------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.fileSystemStorage.recoveryLocation={{ oracle11gr2.data_dir }}/log
+oracle.install.db.config.starterdb.fileSystemStorage.recoveryLocation={{ oracle11gr2.data_dir }}/app/oracle/oradata/log
 
 #-------------------------------------------------------------------------------
 # Specify the existing ASM disk groups to be used for storage.

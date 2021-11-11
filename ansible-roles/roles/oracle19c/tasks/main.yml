@@ -67,7 +67,7 @@
     ORACLE_HOSTNAME={{ oracle19c.hostname }}                                   \
     UNIX_GROUP_NAME=oinstall                                                   \
     INVENTORY_LOCATION={{ oracle19c.app_dir }}/app/oraInventory                \
-    SELECTED_LANGUAGES=AL32UTF8                                                \
+    SELECTED_LANGUAGES=en,zh_CN                                                \
     ORACLE_HOME={{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1     \
     ORACLE_BASE={{ oracle19c.app_dir }}/app/oracle                             \
     oracle.install.db.InstallEdition=EE                                        \
@@ -92,7 +92,7 @@
     done
   args:
     creates: "{{ oracle19c.app_dir }}/app/oraInventory/logs"
-    chdir: /tmp
+    chdir: {{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1
   become: yes
   become_user: oracle
   
@@ -121,7 +121,9 @@
 
 - name: create oracle instance.
   shell: |
-    . /home/oracle/scripts/setEnv.sh
+    . /home/oracle/scripts/setEnv.sh    
+    lsnrctl start
+    
     dbca -silent -createDatabase                                                  \
      -templateName General_Purpose.dbc                                            \
      -gdbname {{ oracle19c.sid }} -sid {{ oracle19c.sid }} -responseFile NO_VALUE \

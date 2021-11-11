@@ -27,7 +27,8 @@ pg_load:
 
 # 配置Oracle11gR2
 oracle11gr2:
-  data_dir: /opt/oracle
+  app_dir: /u01
+  data_dir: /u02
   sid: orcl
   hostname: "ora01.bd.sabo.com"
   # MB
