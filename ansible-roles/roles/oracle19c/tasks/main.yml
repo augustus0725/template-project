@@ -128,18 +128,30 @@
      -templateName General_Purpose.dbc                                            \
      -gdbname {{ oracle19c.sid }} -sid {{ oracle19c.sid }} -responseFile NO_VALUE \
      -characterSet AL32UTF8                                                       \
-     -sysPassword {{ oracle19c.password }}                                                      \
-     -systemPassword {{ oracle19c.password }}                                                   \
+     -sysPassword {{ oracle19c.password }}                                        \
+     -systemPassword {{ oracle19c.password }}                                     \
      -createAsContainerDatabase true                                              \
      -numberOfPDBs 1                                                              \
      -pdbName pdb1                                                                \
-     -pdbAdminPassword {{ oracle19c.password }}                                                 \
+     -pdbAdminPassword {{ oracle19c.password }}                                   \
      -databaseType MULTIPURPOSE                                                   \
      -storageType FS                                                              \
      -datafileDestination {{ oracle19c.data_dir }}/app/oracle/oradata             \
      -redoLogFileSize 50                                                          \
      -emConfiguration NONE                                                        \
      -ignorePreReqs
+    
+    # check result
+    # 做多运行半小时, 超时就认为运行出错了
+    for i in `seq 60`;
+    do
+      if tail {{ oracle19c.app_dir }}/app/oracle/cfgtoollogs/dbca/{{ oracle19c.sid }}/{{ oracle19c.sid }}.log | grep 'DBCA_PROGRESS : 100';then
+        echo "Install success."
+        break
+      else
+        sleep 30
+      fi
+    done
     
     sleep 10    
   args:
