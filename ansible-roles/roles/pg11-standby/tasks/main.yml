@@ -5,6 +5,8 @@
     name: "{{ item }}"
     state: present
   with_items:
+    - expect
+    - tmpwatch
     - postgresql11-server
     - postgresql11-contrib
 

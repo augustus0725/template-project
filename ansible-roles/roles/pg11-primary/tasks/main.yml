@@ -5,6 +5,8 @@
     name: "{{ item }}"
     state: present
   with_items:
+    - expect
+    - tmpwatch
     - postgresql11-server
     - postgresql11-contrib
 
@@ -111,3 +113,14 @@
   systemd:
     name: postgresql-11
     state: restarted
+
+- name: config daily crontab job config
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/tmp/{{ item }}"
+  with_items:
+    - daily.cron
+
+- name: config daily crontab job
+  command: crontab /tmp/daily.cron
+  when: not pg_archive_stat.stat.exists
