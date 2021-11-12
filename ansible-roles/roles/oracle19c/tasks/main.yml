@@ -125,7 +125,7 @@
     lsnrctl start
     
     dbca -silent -createDatabase                                                  \
-     -templateName General_Purpose.dbc                                            \
+     -templateName {{ oracle19c.mode }}                                           \
      -gdbname {{ oracle19c.sid }} -sid {{ oracle19c.sid }} -responseFile NO_VALUE \
      -characterSet AL32UTF8                                                       \
      -sysPassword {{ oracle19c.password }}                                        \

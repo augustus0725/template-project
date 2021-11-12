@@ -116,7 +116,7 @@ max_connections = 256			# (change requires restart)
 
 # - Memory -
 
-shared_buffers = 4096MB			# min 128kB
+shared_buffers = {{ pg_primary.memory_limit }}MB			# min 128kB
 					# (change requires restart)
 #huge_pages = try			# on, off, or try
 					# (change requires restart)

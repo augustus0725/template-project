@@ -16,6 +16,8 @@ pg_primary:
   pgpass: 123456
   db_host: 192.168.0.241
   pgport: 5432
+  # MB
+  memory_limit: 4096
 
 # 配置初始化数据库(pg-load)的配置
 pg_load:
@@ -42,6 +44,8 @@ oracle19c:
   data_dir: /u02
   sid: orcl
   hostname: "ora01.bd.sabo.com"
+  # mode: Data_Warehouse.dbc 或者 General_Purpose.dbc
+  mode: "General_Purpose.dbc"
   # MB
   memory_limit: 6144
   password: Oracle_002
@@ -53,6 +57,8 @@ mysql_primary:
   db_user: myadmin
   dbpass: Windows_8
   data_dir: /opt/data/mysql
+  # G
+  memory_limit: 4
 
 #################### 监控部分  ###############################################
 # 配置 Prometheus, 单节点或者多节点之后nginx代理的地址
