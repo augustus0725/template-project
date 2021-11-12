@@ -1,0 +1,2 @@
+这个里面需要安放oracle的安装文件
+LINUX.X64_193000_db_home.zip

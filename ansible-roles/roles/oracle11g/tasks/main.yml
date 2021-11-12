@@ -135,7 +135,7 @@
     - dbora.service
 
 - name: Config sqlplus client env when install 1st
-  shell: cat ". /home/oracle/scripts/setEnv.sh" >> /home/oracle/.bash_profile
+  shell: echo ". /home/oracle/scripts/setEnv.sh" >> /home/oracle/.bash_profile
   when: not ora_install_log_path.stat.exists
 
 - name: Enable dbora auto-start on restart
