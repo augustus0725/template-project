@@ -79,7 +79,7 @@
 
 - name: Run script to install oracle.
   shell: |
-    ./runInstaller -silent -ignorePrereq -responseFile /home/oracle/db_install.rsp
+    ./runInstaller -silent -ignorePrereq -ignoreSysPrereqs -responseFile /home/oracle/db_install.rsp
     sleep 10
     # 做多运行半小时, 超时就认为运行出错了
     for i in `seq 60`;
