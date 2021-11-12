@@ -38,16 +38,16 @@ UNIX_GROUP_NAME=oinstall
 # This is an optional parameter if installing on
 # Windows based Operating System.
 #-------------------------------------------------------------------------------
-INVENTORY_LOCATION={{ oracle12c.app_dir }}/app/oraInventory
+INVENTORY_LOCATION={{ oracle19c.app_dir }}/app/oraInventory
 #-------------------------------------------------------------------------------
 # Specify the complete path of the Oracle Home. 
 #-------------------------------------------------------------------------------
-ORACLE_HOME={{ oracle12c.app_dir }}/app/oracle/product/19.0.0/dbhome_1
+ORACLE_HOME={{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1
 
 #-------------------------------------------------------------------------------
 # Specify the complete path of the Oracle Base. 
 #-------------------------------------------------------------------------------
-ORACLE_BASE={{ oracle12c.app_dir }}/app/oracle
+ORACLE_BASE={{ oracle19c.app_dir }}/app/oracle
 
 #-------------------------------------------------------------------------------
 # Specify the installation edition of the component.                     
@@ -175,12 +175,12 @@ oracle.install.db.config.starterdb.type=DATA_WAREHOUSE
 #-------------------------------------------------------------------------------
 # Specify the Starter Database Global Database Name. 
 #-------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.globalDBName={{ oracle12c.sid }}
+oracle.install.db.config.starterdb.globalDBName={{ oracle19c.sid }}
 
 #-------------------------------------------------------------------------------
 # Specify the Starter Database SID.
 #-------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.SID={{ oracle12c.sid }}
+oracle.install.db.config.starterdb.SID={{ oracle19c.sid }}
 
 #-------------------------------------------------------------------------------
 # Specify whether the database should be configured as a Container database.

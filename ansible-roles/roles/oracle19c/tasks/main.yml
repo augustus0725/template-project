@@ -45,7 +45,7 @@
 - name: Unarchive oracle install files.
   unarchive:
     src: 3rd-repo/oracle19c/LINUX.X64_193000_db_home.zip
-    dest: {{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1
+    dest: "{{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1"
     remote_src: no
   become: yes
   become_user: oracle
@@ -92,7 +92,7 @@
     done
   args:
     creates: "{{ oracle19c.app_dir }}/app/oraInventory/logs"
-    chdir: {{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1
+    chdir: "{{ oracle19c.app_dir }}/app/oracle/product/19.0.0/dbhome_1"
   become: yes
   become_user: oracle
   
@@ -155,10 +155,10 @@
     
     sleep 10    
   args:
-    creates: "{{ oracle19c.app_dir }}/app/oraInventory/logs"
     chdir: /tmp
   become: yes
   become_user: oracle
+  when: not ora_install_log_path.stat.exists
 
 - name: Config oratab.
   template:
