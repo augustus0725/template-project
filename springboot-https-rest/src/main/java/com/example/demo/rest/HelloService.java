@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 public class HelloService {
     /**
      *  http://localhost:8080/hello?name=sabo
-     *
+     *  @RequestParam(required = false) 当参数可有可没有的时候
      * @param name
      * @return
      */
