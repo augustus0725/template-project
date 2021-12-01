@@ -1,0 +1,5 @@
+[program:zookeeper]
+command           = /opt/app/zookeeper/current/bin/zkServer.sh start-foreground
+directory         = /opt/app/zookeeper/current
+redirect_stderr   = true
+stdout_logfile    = /opt/app/zookeeper/current/logs/zookeeper.out

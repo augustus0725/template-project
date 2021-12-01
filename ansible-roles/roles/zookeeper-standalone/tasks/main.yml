@@ -1,0 +1,44 @@
+---
+
+- name: Install JDK
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - java-1.8.0-openjdk-devel
+
+- name: Create /opt/app/zookeeper if it does not exist
+  file:
+    path: /opt/app/zookeeper
+    state: directory
+
+- name: Extract apache-zookeeper-3.6.3-bin.tar.gz into /opt/app/zookeeper
+  unarchive:
+    src: "3rd-repo/apache/zk/apache-zookeeper-3.6.3-bin.tar.gz"
+    dest: /opt/app/zookeeper
+    remote_src: no
+
+- name: Create a zookeeper symbolic link
+  file:
+    src: /opt/app/zookeeper/apache-zookeeper-3.6.3-bin
+    dest: /opt/app/zookeeper/current
+    state: link
+
+- name: Create /opt/app/zookeeper/current/logs if it does not exist
+  file:
+    path: /opt/app/zookeeper/current/logs
+    state: directory
+
+- name: Config zookeeper
+  template:
+    src: zoo.cfg.j2
+    dest: /opt/app/zookeeper/current/conf/zoo.cfg
+
+- name: Config suervisor to start zookeeper
+  template:
+    src: zookeeper.ini.j2
+    dest: /etc/supervisord.d/zookeeper.ini
+
+- name: Start zookeeper
+  command: supervisorctl update zookeeper
+
