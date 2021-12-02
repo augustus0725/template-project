@@ -1,0 +1,41 @@
+---
+
+- name: Install required software
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - postgresql11
+
+- name: create user
+  command: psql -c "create user {{ ds.db_user }} with password '{{ ds.db_pass }}'"
+  environment:
+    PGUSER: "{{ pg_primary.db_user }}"
+    PGHOST: "{{ pg_primary.db_host }}"
+    PGPASSWORD: "{{ pg_primary.pgpass }}"
+    PGPORT: "{{ pg_primary.pgport }}"
+    PGDATABASE: "postgres"
+
+- name: create user
+  command: psql -c "create database {{ ds.dbname }} owner {{ ds.db_user }}"
+  environment:
+    PGUSER: "{{ pg_primary.db_user }}"
+    PGHOST: "{{ pg_primary.db_host }}"
+    PGPASSWORD: "{{ pg_primary.pgpass }}"
+    PGPORT: "{{ pg_primary.pgport }}"
+    PGDATABASE: "postgres"
+
+
+- name: Prepare sql schema
+  template:
+    src: dolphinscheduler_postgre.sql.j2
+    dest: /tmp/dolphinscheduler_postgre.sql
+
+- name: Create schema of this app.
+  command: psql -f /tmp/dolphinscheduler_postgre.sql
+  environment:
+    PGUSER: "{{ pg_primary.db_user }}"
+    PGHOST: "{{ pg_primary.db_host }}"
+    PGPASSWORD: "{{ pg_primary.pgpass }}"
+    PGPORT: "{{ pg_primary.pgport }}"
+    PGDATABASE: "{{ ds.dbname }}"

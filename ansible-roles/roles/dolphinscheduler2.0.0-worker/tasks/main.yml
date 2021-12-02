@@ -1,0 +1,92 @@
+---
+
+- name: Install required software
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - psmisc
+    - java-1.8.0-openjdk-devel
+
+- name: Create /opt/app/dolphinscheduler if it does not exist
+  file:
+    path: /opt/app/dolphinscheduler
+    state: directory
+
+- name: Extract apache-dolphinscheduler-2.0.0-bin.tar.gz into /opt/app/dolphinscheduler
+  unarchive:
+    src: "3rd-repo/apache/dolphinscheduler/apache-dolphinscheduler-2.0.0-bin.tar.gz"
+    dest: /opt/app/dolphinscheduler
+    remote_src: no
+
+- name: Create a dolphinscheduler symbolic link
+  file:
+    src: /opt/app/dolphinscheduler/apache-dolphinscheduler-2.0.0-bin
+    dest: /opt/app/dolphinscheduler/current
+    state: link
+
+- name: Create /opt/app/dolphinscheduler/current/logs if it does not exist
+  file:
+    path: /opt/app/dolphinscheduler/current/logs
+    state: directory
+
+- name: Run script to prepare env for dolphinscheduler.
+  shell: |
+    id dolphinscheduler
+    if id dolphinscheduler &>/dev/null; then
+      echo 'dolphinscheduler user already exist.'
+      exit 0
+    else
+      useradd dolphinscheduler
+      echo "dolphinscheduler" | passwd --stdin dolphinscheduler
+      sed -i '$adolphinscheduler  ALL=(ALL)  NOPASSWD: NOPASSWD: ALL' /etc/sudoers
+      sed -i 's/Defaults    requirett/#Defaults    requirett/g' /etc/sudoers
+      chown -R dolphinscheduler:dolphinscheduler /opt/app/dolphinscheduler      
+    fi
+
+- name: Config install.sh
+  template:
+    src:  "install.sh.j2"
+    dest: "/opt/app/dolphinscheduler/current/install.sh"
+    owner: "dolphinscheduler"
+    group: "dolphinscheduler"
+    
+- name: Config worker.properties
+  template:
+    src:  "worker.properties.j2"
+    dest: "/opt/app/dolphinscheduler/current/conf/worker.properties"
+    owner: "dolphinscheduler"
+    group: "dolphinscheduler"
+
+- name: Config install_config.conf
+  template:
+    src:  "install_config.conf.j2"
+    dest: "/opt/app/dolphinscheduler/current/conf/config/install_config.conf"
+    owner: "dolphinscheduler"
+    group: "dolphinscheduler"
+
+- name: Config dolphinscheduler-daemon.sh
+  template:
+    src:  "dolphinscheduler-daemon.sh.j2"
+    dest: "/opt/app/dolphinscheduler/current/bin/dolphinscheduler-daemon.sh"
+    owner: "dolphinscheduler"
+    group: "dolphinscheduler"
+
+- name: Replace config files and install
+  shell: /opt/app/dolphinscheduler/current/install.sh
+  args:
+    chdir: /opt/app/dolphinscheduler/current
+  become: yes
+  become_user: dolphinscheduler
+
+- name: Config suervisor to start ds-worker
+  template:
+    src: ds-worker.ini.j2
+    dest: /etc/supervisord.d/ds-worker.ini
+
+- name: Start ds-worker
+  command: supervisorctl update ds-worker
+
+# 保证运行的程序是最新的
+- name: Restart ds-worker
+  command: supervisorctl restart ds-worker

@@ -1,0 +1,6 @@
+[program:ds-worker]
+command           = /opt/app/dolphinscheduler/current/bin/dolphinscheduler-daemon.sh start worker-server
+directory         = /opt/app/dolphinscheduler/current
+redirect_stderr   = true
+stdout_logfile    = /opt/app/dolphinscheduler/current/logs/ds-worker.out
+user              = dolphinscheduler
