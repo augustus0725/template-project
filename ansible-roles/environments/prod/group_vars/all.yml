@@ -86,3 +86,26 @@ node_exporter:
 grafana:
   port: 3000
   host: 127.0.0.1
+
+#################### 调度部分  ###############################################
+# 注意要确保role执行的次序
+# zookeeper-standalone dolphinscheduler2.0.0-pg
+# dolphinscheduler2.0.0-api dolphinscheduler2.0.0-alert dolphinscheduler2.0.0-master dolphinscheduler2.0.0-worker
+
+ds:
+  # hostnames: ips="ds1,ds2,ds3,ds4,ds5", Example for IPs: ips="192.168.8.1,192.168.8.2,192.168.8.3,192.168.8.4,192.168.8.5"
+  ips: "127.0.0.1"
+  # hostnames: masters="ds1,ds2", Example for IPs: masters="192.168.8.1,192.168.8.2"
+  masters: "127.0.0.1"
+  # hostnames: workers="ds1:default,ds2:default,ds3:default", Example for IPs: workers="192.168.8.1:default,192.168.8.2:default,192.168.8.3:default"
+  workers: "127.0.0.1:default"
+  # hostname: alertServer="ds3", Example for IP: alertServer="192.168.8.3"
+  alert: "127.0.0.1"
+  # hostname: apiServers="ds1", Example for IP: apiServers="192.168.8.1"
+  api: "127.0.0.1"
+  api_port: "12345"
+  # 192.168.8.1:2181,192.168.8.2:2181,192.168.8.3:2181
+  zk: "127.0.0.1:2181"
+  db_user: "dolphinscheduler"
+  db_pass: "dolphinscheduler"
+  dbname: "dolphinscheduler"
