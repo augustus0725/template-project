@@ -27,7 +27,7 @@ FAB_API_SWAGGER_UI = True # 让页面可看swagger api说明
 ---------------------------------------------------------------------------
 # 请求token
    $ curl -XPOST http://localhost:8080/api/v1/security/login -d \
-  '{"username": "admin", "password": "password", "provider": "db"}' \
+  '{"username": "ray", "password": "123456", "provider": "db", "refresh": true}' \
   -H "Content-Type: application/json"
 
 # 请求的时候可以带自动刷新
