@@ -73,13 +73,22 @@
 - name: Create postgresql user({{ pg_primary.db_user }}) && set password({{ pg_primary.pgpass }}).
   shell: |
     set timeout 300
-    spawn createuser --interactive --password {{ pg_primary.db_user }}
+    spawn createuser --interactive --pwprompt {{ pg_primary.db_user }}
+
+    expect "Enter password for new role:"
+    send "{{ pg_primary.pgpass }}\n"
+
+    expect "Enter it again:"
+    send "{{ pg_primary.pgpass }}\n"
 
     expect "Shall the new role be a superuser? (y/n)"
     send "y\n"
 
-    expect "Password:"
-    send "{{ pg_primary.pgpass }}\n"
+    expect "Shall the new role be allowed to create databases? (y/n)"
+    send "y\n"
+
+    expect "Shall the new role be allowed to create more new roles? (y/n)"
+    send "y\n"
 
     expect "\r\n"
     expect ""

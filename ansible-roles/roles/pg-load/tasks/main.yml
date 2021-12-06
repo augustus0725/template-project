@@ -4,6 +4,8 @@
   file:
     path: /opt/data/pgsql/sql
     state: directory
+    owner: postgres
+    group: postgres
 
 - name: create database "{{ pg_load.db_name }}" && ignore error.
   command: createdb {{ pg_load.db_name }} -O {{ pg_load.db_user }}
