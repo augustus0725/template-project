@@ -32,27 +32,26 @@ public class StudentRepositoryTest {
         student.setLastname("zhang");
         student.setHisFather("bigsabo");
         student.setAge(99);
-        student.setId(2);
         Student addedStu = studentRepository.save(student);
-        assertEquals("Student{id=2, firstname=sabo, lastname=zhang, hisFather=bigsabo, age=99}", addedStu.toString());
+        assertEquals("Student(id=1, firstname=sabo, lastname=zhang, hisFather=bigsabo, age=99)", addedStu.toString());
     }
 
     @Test
     public void testFindById() {
-        Optional<Student> student = studentRepository.findById(2L);
-        assertEquals("Student{id=2, firstname=sabo, lastname=zhang, hisFather=bigsabo, age=99}", student.get().toString());
+        Optional<Student> student = studentRepository.findById(1L);
+        assertEquals("Student(id=1, firstname=sabo, lastname=zhang, hisFather=bigsabo, age=99)", student.get().toString());
     }
 
     @Test
     public void testFindByIdNot() {
-        Iterable<Student> students = studentRepository.findByIdNot(2L);
+        Iterable<Student> students = studentRepository.findByIdNot(1L);
         assertEquals("[Student{id=1, firstname=sabo, lastname=zhang, hisFather=bigsabo, age=99}]", students.toString());
     }
 
     @Test
     public void testFindByIdIn() {
         Iterable<Student> students = studentRepository.findByIdIn(Arrays.asList(1L, 3L));
-        assertEquals("[Student{id=1, firstname=sabo, lastname=zhang, hisFather=bigsabo, age=99}]", students.toString());
+        assertEquals("[Student(id=1, firstname=sabo, lastname=zhang, hisFather=bigsabo, age=99)]", students.toString());
     }
 
     @Test
