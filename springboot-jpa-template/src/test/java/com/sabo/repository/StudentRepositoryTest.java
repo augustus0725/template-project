@@ -1,6 +1,7 @@
 package com.sabo.repository;
 
 import com.sabo.Application;
+import com.sabo.custom.repository.CustomStudentRepository;
 import com.sabo.entity.Student;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -151,6 +152,14 @@ public class StudentRepositoryTest {
         assertEquals(1, changed);
         Optional<Student> student = studentRepository.findById(2L);
         System.out.println();
+    }
+
+    @Autowired private CustomStudentRepository customStudentRepository;
+
+    @Test
+    public void testCustomGetStudents() {
+        assertEquals("[Student(id=1, firstname=sabo, lastname=zhang, hisFather=bigsabo, age=99)]",
+                customStudentRepository.findStudents().toString());
     }
 
 }
