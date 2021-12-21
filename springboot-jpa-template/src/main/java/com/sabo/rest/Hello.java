@@ -1,6 +1,5 @@
 package com.sabo.rest;
 
-import com.sabo.service.HelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class Hello {
-    @Autowired private HelloService helloService;
+    @Autowired private com.sabo.apis.Hello hello;
 
     @RequestMapping("/ping")
     public String ping() {
         try {
-            helloService.m10(100);
+            hello.m10(100);
         } catch (Exception e) {
             System.out.println("===========");
         }

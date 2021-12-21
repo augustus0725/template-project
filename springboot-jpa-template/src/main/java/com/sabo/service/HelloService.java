@@ -1,5 +1,6 @@
 package com.sabo.service;
 
+import com.sabo.apis.Hello;
 import com.sabo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
  * date: 2020/8/15
  */
 @Service
-public class HelloService {
+public class HelloService implements Hello {
     @Autowired
     private StudentRepository studentRepository;
 

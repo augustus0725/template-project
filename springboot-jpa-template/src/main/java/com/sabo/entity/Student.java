@@ -1,6 +1,6 @@
 package com.sabo.entity;
 
-import com.google.common.base.MoreObjects;
+import lombok.Data;
 
 import javax.persistence.*;
 
@@ -10,9 +10,14 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "student")
+@Data
 public class Student {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    // GenerationType.SEQUENCE 使用sequence
+    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "db_source_id_seq")
+    @SequenceGenerator(name="db_source_id_seq", allocationSize = 1)
+    // 支持 auto increment的库
+    // @GenerationType.IDENTITY
     private long id;
     private String firstname;
     private String lastname;
@@ -22,58 +27,16 @@ public class Student {
      * Hibernate: insert into student (age, firstname, "hisFather", lastname) values (?, ?, ?, ?)
      * pg里不带引号的字段全变成小写，加引号之后会保留大小写
      */
-    @Column(name = "\"hisFather\"")
+//    @Column(name = "\"hisFather\"")
+    @Column(name = "his_father")
     private String hisFather;
     private int age;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getHisFather() {
-        return hisFather;
-    }
-
-    public void setHisFather(String hisFather) {
-        this.hisFather = hisFather;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("id", id)
-                .add("firstname", firstname)
-                .add("lastname", lastname)
-                .add("hisFather", hisFather)
-                .add("age", age)
-                .toString();
-    }
 }
+/**
+ * JPA的主键生成策略
+ *
+ * GenerationType.TABLE
+ * GenerationType.SEQUENCE
+ * GenerationType.IDENTITY
+ * GenerationType.AUTO
+ */

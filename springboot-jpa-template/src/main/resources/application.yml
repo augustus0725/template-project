@@ -1,0 +1,72 @@
+spring:
+  datasource:
+    db0:
+      jdbcUrl: jdbc:postgresql://192.168.0.185:5432/demo
+      username: pgadmin
+      password: 123456
+      driverClassName: org.postgresql.Driver
+      # pool setting
+      connectionTimeout: 20000
+      idleTimeout: 15000
+      minimumIdle: 2
+      maximumPoolSize: 4
+      autoCommit: true
+  jpa:
+    show-sql: false
+    open-in-view: false
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      # 自动从entity生成表结构
+      javax:
+        persistence:
+          schema-generation:
+            scripts:
+              create-source: metadata
+              drop-source: metadata
+              create-target: auto-schema/create.sql
+              drop-target: auto-schema/drop.sql
+              # none create drop drop-and-create
+              action: create
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+        jdbc:
+          # 使用Transactional的标注也没有用，默认会一条数据一个事务，所以需要设置下面的值
+          # 太大也有问题, 会导致OOM, JPA会将对象保存在内存里
+          # 所以要显式
+          # begin transaction --> 可以采用Transactional的标注的方法
+          # entityManager.flush(); -> 刷到数据库
+          # entityManager.clear(); -> 及时清理对象
+          # end transaction
+          batch_size: 500
+          # Similar to batch inserts, we can group several update statements and send them to the database in one go.
+          batch_versioned_data: true
+          order_updates: true
+          # !!! GenerationType.IDENTITY 会disable batch insert/update
+        #@Transactional
+        #@Test
+        #public void whenThereAreMultipleEntities_ThenCreatesNewBatch() {
+        #    for (int i = 0; i < 10; i++) {
+        #        if (i > 0 && i % BATCH_SIZE == 0) {
+        #            entityManager.flush();
+        #            entityManager.clear();
+        #        }
+        #        School school = createSchool(i);
+        #        entityManager.persist(school);
+        #        Student firstStudent = createStudent(school);
+        #        Student secondStudent = createStudent(school);
+        #        entityManager.persist(firstStudent);
+        #        entityManager.persist(secondStudent);
+        #    }
+        #}
+        # 假设batch_size = 5， order_inserts: false
+        # "batch":true, "querySize":1, "batchSize":1, "query":["insert into school (name, id) values (?, ?)"],
+        #  "params":[["School1","1"]]
+        #"batch":true, "querySize":1, "batchSize":2, "query":["insert into student (name, school_id, id)
+        #  values (?, ?, ?)"], "params":[["Student-School1","1","2"],["Student-School1","1","3"]]
+        # 假设batch_size = 5， order_inserts: true
+        # "batch":true, "querySize":1, "batchSize":5, "query":["insert into school (name, id) values (?, ?)"],
+        #  "params":[["School6","16"],["School7","19"],["School8","22"],["School9","25"],["School10","28"]]
+        order_inserts: true
