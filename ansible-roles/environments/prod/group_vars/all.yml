@@ -64,6 +64,7 @@ mysql_primary:
 ldap:
   passwd: "123456"
   domain: "dc=sabo,dc=com"
+  short_domain: "sabo"
   organization: "sabo.com"
 
 #################### 监控部分  ###############################################

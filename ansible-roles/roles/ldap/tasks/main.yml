@@ -17,7 +17,7 @@
     enabled: True
 
 - name: Check if the ldap is installed.
-  stat: path=/etc/openldap/config
+  stat: path=/etc/openldap/finish
   register: ldap_already_installed
 
 - name: Create /etc/openldap/config if it does not exist
@@ -25,15 +25,15 @@
     path: /etc/openldap/config
     state: directory
 
-- name: Config ldap admin passwd
+- name: Prepare configurations.
   template:
     src:  "{{ item }}.j2"
     dest: "/etc/openldap/config/{{ item }}"
   with_items:
     - ldap-admin-passwd
+    - ldaprootpasswd.ldif
     - ldapdomain.ldif
     - baseldapdomain.ldif
-    - ldap-admin-passwd
 
 - name: Config ldap
   shell: |
@@ -55,5 +55,9 @@
     ldapadd -x -D cn=Manager,{{ ldap.domain }} -y /etc/openldap/config/ldap-admin-passwd -f /etc/openldap/config/baseldapdomain.ldif
   args:
     chdir: /tmp
-    creates: /etc/openldap/config
   when: not ldap_already_installed.stat.exists
+
+- name: Create /etc/openldap/finish if it does not exist
+  file:
+    path: /etc/openldap/finish
+    state: directory

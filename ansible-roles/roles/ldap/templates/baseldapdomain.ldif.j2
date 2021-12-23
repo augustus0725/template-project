@@ -3,7 +3,7 @@ objectClass: top
 objectClass: dcObject
 objectclass: organization
 o: {{ ldap.organization }}
-dc: {{ ldap.organization }}
+dc: {{ ldap.short_domain }}
 
 dn: cn=Manager,{{ ldap.domain }}
 objectClass: organizationalRole
