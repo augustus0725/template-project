@@ -60,6 +60,12 @@ mysql_primary:
   # G
   memory_limit: 4
 
+# ldap
+ldap:
+  passwd: "123456"
+  domain: "dc=sabo,dc=com"
+  organization: "sabo.com"
+
 #################### 监控部分  ###############################################
 # 配置 Prometheus, 单节点或者多节点之后nginx代理的地址
 prometheus:
