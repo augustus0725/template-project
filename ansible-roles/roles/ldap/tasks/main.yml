@@ -34,6 +34,9 @@
     - ldaprootpasswd.ldif
     - ldapdomain.ldif
     - baseldapdomain.ldif
+    - mod_syncprov.ldif
+    - syncprov.ldif
+    - mirror-mode.ldif
 
 - name: Config ldap
   shell: |
@@ -53,6 +56,10 @@
     ldapmodify -Y EXTERNAL -H ldapi:/// -f /etc/openldap/config/ldapdomain.ldif
     # 构建基础的权限schema, 组，成员
     ldapadd -x -D cn=Manager,{{ ldap.domain }} -y /etc/openldap/config/ldap-admin-passwd -f /etc/openldap/config/baseldapdomain.ldif
+    # 配置高可用
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/config/mod_syncprov.ldif
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/config/syncprov.ldif
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/config/mirror-mode.ldif
   args:
     chdir: /tmp
   when: not ldap_already_installed.stat.exists
