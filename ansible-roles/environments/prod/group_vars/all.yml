@@ -66,6 +66,9 @@ ldap:
   domain: "dc=sabo,dc=com"
   short_domain: "sabo"
   organization: "sabo.com"
+  # mirror mode, 至少需要两台机器
+  server_01: 192.168.0.34
+  server_02: 192.168.0.35
 
 #################### 监控部分  ###############################################
 # 配置 Prometheus, 单节点或者多节点之后nginx代理的地址

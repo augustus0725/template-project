@@ -68,3 +68,6 @@
   file:
     path: /etc/openldap/finish
     state: directory
+
+- name: Delete ldap tmp install configuration files.
+  shell: rm -rf /etc/openldap/config
