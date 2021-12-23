@@ -1,0 +1,19 @@
+dn: {{ ldap.domain }}
+objectClass: top
+objectClass: dcObject
+objectclass: organization
+o: {{ ldap.organization }}
+dc: {{ ldap.short_domain }}
+
+dn: cn=Manager,{{ ldap.domain }}
+objectClass: organizationalRole
+cn: Manager
+description: Directory Manager
+
+dn: ou=People,{{ ldap.domain }}
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Group,{{ ldap.domain }}
+objectClass: organizationalUnit
+ou: Group

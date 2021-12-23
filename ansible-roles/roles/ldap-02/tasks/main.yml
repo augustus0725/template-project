@@ -1,0 +1,70 @@
+---
+
+- name: Install ldap
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - expect
+    - openldap
+    - openldap-servers
+    - openldap-clients
+
+- name: Enable openldap auto-start on restart
+  systemd:
+    name: slapd
+    state: started
+    enabled: True
+
+- name: Check if the ldap is installed.
+  stat: path=/etc/openldap/finish
+  register: ldap_already_installed
+
+- name: Create /etc/openldap/config if it does not exist
+  file:
+    path: /etc/openldap/config
+    state: directory
+
+- name: Prepare configurations.
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/etc/openldap/config/{{ item }}"
+  with_items:
+    - ldap-admin-passwd
+    - ldaprootpasswd.ldif
+    - ldapdomain.ldif
+    - baseldapdomain.ldif
+    - mod_syncprov.ldif
+    - syncprov.ldif
+    - mirror-mode.ldif
+
+- name: Config ldap
+  shell: |
+    export boong=FLEAK
+    ldap_passwd=$(slappasswd -T /etc/openldap/config/ldap-admin-passwd | grep 'SSHA')
+
+    sed -i 's|{SSHA}|'${ldap_passwd}'|g' /etc/openldap/config/ldaprootpasswd.ldif
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/config/ldaprootpasswd.ldif
+    cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+    chown -R ldap:ldap /var/lib/ldap/DB_CONFIG
+    systemctl restart slapd
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+    # 添加我们自己的域
+    sed -i 's|{SSHA}|'${ldap_passwd}'|g' /etc/openldap/config/ldapdomain.ldif
+    ldapmodify -Y EXTERNAL -H ldapi:/// -f /etc/openldap/config/ldapdomain.ldif
+    # 构建基础的权限schema, 组，成员
+    ldapadd -x -D cn=Manager,{{ ldap.domain }} -y /etc/openldap/config/ldap-admin-passwd -f /etc/openldap/config/baseldapdomain.ldif
+    # 配置高可用
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/config/mod_syncprov.ldif
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/config/syncprov.ldif
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/config/mirror-mode.ldif
+  args:
+    chdir: /tmp
+  when: not ldap_already_installed.stat.exists
+
+- name: Create /etc/openldap/finish if it does not exist
+  file:
+    path: /etc/openldap/finish
+    state: directory
