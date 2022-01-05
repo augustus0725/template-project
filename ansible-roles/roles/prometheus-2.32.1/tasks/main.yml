@@ -1,0 +1,40 @@
+---
+
+- name: Create /opt/app/prometheus if it does not exist
+  file:
+    path: /opt/app/prometheus
+    state: directory
+
+- name: Create /opt/log/prometheus if it does not exist
+  file:
+    path: /opt/log/prometheus
+    state: directory
+
+- name: Extract prometheus-2.32.1.linux-amd64.tar.gz into /opt/app/prometheus
+  unarchive:
+    src: "3rd-repo/monitor-system/prometheus/prometheus-2.32.1.linux-amd64.tar.gz"
+    dest: /opt/app/prometheus
+    remote_src: no
+
+- name: Create a prometheus symbolic link
+  file:
+    src: /opt/app/prometheus/prometheus-2.32.1.linux-amd64
+    dest: /opt/app/prometheus/current
+    state: link
+
+- name: Config prometheus
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/app/prometheus/current/prometheus.yml
+
+- name: Config suervisor to start prometheus
+  template:
+    src: prometheus.ini.j2
+    dest: /etc/supervisord.d/prometheus.ini
+
+- name: Start prometheus
+  command: supervisorctl update prometheus
+
+# 保证运行的程序是最新的
+- name: Restart prometheus
+  command: supervisorctl restart prometheus

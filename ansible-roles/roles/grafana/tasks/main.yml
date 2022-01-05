@@ -46,7 +46,7 @@
 
 - name: Copy dashboard.json to remote /opt/app/grafana/current/init/
   copy:
-    src: 3rd-repo/grafana/dashboard.json
+    src: 3rd-repo/monitor-system/grafana/dashboard.json
     dest: /opt/app/grafana/current/init/dashboard.json
     mode: '0744'
 
