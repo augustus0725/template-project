@@ -12,7 +12,7 @@
 
 - name: Extract prometheus-2.18.1.linux-amd64.tar.gz into /opt/app/prometheus
   unarchive:
-    src: "3rd-repo/prometheus/prometheus-2.18.1.linux-amd64.tar.gz"
+    src: "3rd-repo/monitor-system/prometheus/prometheus-2.18.1.linux-amd64.tar.gz"
     dest: /opt/app/prometheus
     remote_src: no
 

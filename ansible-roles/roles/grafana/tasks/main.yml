@@ -12,7 +12,7 @@
 
 - name: Extract grafana-7.0.3.linux-amd64.tar.gz into /opt/app/grafana
   unarchive:
-    src: "3rd-repo/grafana/grafana-7.0.3.linux-amd64.tar.gz"
+    src: "3rd-repo/monitor-system/grafana/grafana-7.0.3.linux-amd64.tar.gz"
     dest: /opt/app/grafana
     remote_src: no
 
