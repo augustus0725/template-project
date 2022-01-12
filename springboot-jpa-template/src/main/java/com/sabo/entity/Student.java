@@ -15,6 +15,7 @@ public class Student {
     @Id
     // GenerationType.SEQUENCE 使用sequence
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "db_source_id_seq")
+    // allocationSize 设置成多大, create sequence increment by <多大>, 不然会有重复数据, 并且批量更新的数量也要少于 <多大>
     @SequenceGenerator(name="db_source_id_seq", allocationSize = 1)
     // 支持 auto increment的库
     // @GenerationType.IDENTITY

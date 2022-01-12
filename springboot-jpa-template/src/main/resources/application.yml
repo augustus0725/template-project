@@ -70,3 +70,12 @@ spring:
         # "batch":true, "querySize":1, "batchSize":5, "query":["insert into school (name, id) values (?, ?)"],
         #  "params":[["School6","16"],["School7","19"],["School8","22"],["School9","25"],["School10","28"]]
         order_inserts: true
+
+# 配置将事务打印出来, debug的时候需要
+logging:
+  level:
+    org:
+      springframework:
+        transaction:
+          interceptor:
+            log4j: DEBUG
