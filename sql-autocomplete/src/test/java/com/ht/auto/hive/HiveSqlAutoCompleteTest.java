@@ -287,4 +287,70 @@ public class HiveSqlAutoCompleteTest {
         assertEquals("[T_FIELDS_teacher]",
                 ac.suggest(sql, "select t1.a, t2.".length() - 1).toString());
     }
+
+    // @Test
+    public void test032() {
+        SqlAutoComplete ac = new HiveSqlAutoComplete();
+        String sql = "select\n" +
+                "*\n" +
+                "from\n" +
+                "  (\n" +
+                "    select\n" +
+                "      hdfs_par,\n" +
+                "      customer_id,\n" +
+                "      fund_code,\n" +
+                "      sum(purchase_amount) balance\n" +
+                "    from\n" +
+                "      htsc_dwd_ods.cust_dim_detail_d\n" +
+                "    where\n" +
+                "      hdfs_par >= '20220215'\n" +
+                "      and hdfs_par <= '20220218'\n" +
+                "      and cast(cast(business_type as int) as string) in ('4', '5', '12', '14', '16', '17', '18', '19')\n" +
+                "      and (\n" +
+                "        fund_code = '005267'\n" +
+                "        or fund_code = '013575'\n" +
+                "        or fund_code = '012844'\n" +
+                "        or fund_code = '012845'\n" +
+                "        or fund_code = '012679'\n" +
+                "        or fund_code = '012680'\n" +
+                "        or fund_code = '515790'\n" +
+                "        or fund_code  = '159796'\n" +
+                "        or fund_code  = '517503'\n" +
+                "or fund_code  = '159745'\n" +
+                "or fund_code  = '513963'\n" +
+                "or fund_code  = '161725'\n" +
+                "or fund_code  = '012414'\n" +
+                "or fund_code  = '160632'\n" +
+                "or fund_code  = '233008'\n" +
+                "or fund_code  = '001320'\n" +
+                "or fund_code  = '003634'\n" +
+                "or fund_code  = '010769'\n" +
+                "or fund_code  = '010770'\n" +
+                "or fund_code  = '002662'\n" +
+                "or fund_code  = '002663'\n" +
+                "or fund_code  = '013576'\n" +
+                "or fund_code  = '161834'\n" +
+                "or fund_code  = '007549'\n" +
+                "or fund_code  = '166019'\n" +
+                "or fund_code  = '001140'\n" +
+                "or fund_code  = '001990'\n" +
+                "or fund_code  = '001980'\n" +
+                "or fund_code = '014135'\n" +
+                "or fund_code  = '011103'\n" +
+                "or fund_code  = '011102'\n" +
+                "or fund_code  = '513590'\n" +
+                "or fund_code  = '159735'\n" +
+                ")\n" +
+                "group by\n" +
+                "hdfs_par,\n" +
+                "customer_id,\n" +
+                "fund_code\n" +
+                ") x2\n" +
+                "where\n" +
+                "x2.";
+
+        assertEquals("[T_FIELDS_teacher]",
+                ac.suggest(sql, 1049));
+    }
+
 }
