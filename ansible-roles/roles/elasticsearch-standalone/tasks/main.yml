@@ -1,5 +1,18 @@
 ---
 
+- name: Install JDK
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - java-1.8.0-openjdk-devel
+
+- name: Create a java symbolic link
+  file:
+    src: /bin/java
+    dest: /usr/local/bin/java
+    state: link
+
 - name: Create user if it not exist
   shell: id -u elasticsearch &>/dev/null || useradd elasticsearch -M -s /sbin/nologin
 
@@ -34,14 +47,7 @@
     group: elasticsearch
 
 # 安装ik插件
-- name: Create /opt/app/elasticsearch-analysis-ik if it does not exist
-  file:
-    path: /opt/app/elasticsearch-analysis-ik
-    state: directory
-    owner: elasticsearch
-    group: elasticsearch
-
-- name: Extract elasticsearch-analysis-ik-6.8.12.tar.gz into /opt/app/elasticsearch-analysis-ik
+- name: Extract elasticsearch-analysis-ik-6.8.12.tar.gz into /opt/app/elasticsearch/current/plugins
   unarchive:
     src: "3rd-repo/fts/elasticsearch-analysis-ik-6.8.12.tar.gz"
     dest: /opt/app/elasticsearch/current/plugins
@@ -50,7 +56,7 @@
     group: elasticsearch
 
 - name: rename to ik
-  shell: mv /opt/app/elasticsearch-analysis-ik/elasticsearch-analysis-ik-6.8.12 /opt/app/elasticsearch/current/plugins/ik
+  shell: mv /opt/app/elasticsearch/current/plugins/elasticsearch-analysis-ik-6.8.12 /opt/app/elasticsearch/current/plugins/ik
 
 # 配置OS环境
 
