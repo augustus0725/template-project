@@ -18,12 +18,9 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
-      # è‡ªåŠ¨ä»entityç”Ÿæˆè¡¨ç»“æ„
+      # ×Ô¶¯´ÓentityÉú³É±í½á¹¹
       javax:
         persistence:
-          // TODO
-          // å¯ä»¥è¯•è¯• spring.jpa.generate-ddl æˆ–è€… spring.jpa.hibernate.ddl-auto
-          // spring.jpa.generate-ddl å¯ä»¥å…¼å®¹ä»»æ„çš„ JPA å®ç°(eclipse-link, OpenJPA, DataNucleus, Hibernate)
           schema-generation:
             scripts:
               create-source: metadata
@@ -36,18 +33,18 @@ spring:
         temp:
           use_jdbc_metadata_defaults: false
         jdbc:
-          # ä½¿ç”¨Transactionalçš„æ ‡æ³¨ä¹Ÿæ²¡æœ‰ç”¨ï¼Œé»˜è®¤ä¼šä¸€æ¡æ•°æ®ä¸€ä¸ªäº‹åŠ¡ï¼Œæ‰€ä»¥éœ€è¦è®¾ç½®ä¸‹é¢çš„å€¼
-          # å¤ªå¤§ä¹Ÿæœ‰é—®é¢˜, ä¼šå¯¼è‡´OOM, JPAä¼šå°†å¯¹è±¡ä¿å­˜åœ¨å†…å­˜é‡Œ
-          # æ‰€ä»¥è¦æ˜¾å¼
-          # begin transaction --> å¯ä»¥é‡‡ç”¨Transactionalçš„æ ‡æ³¨çš„æ–¹æ³•
-          # entityManager.flush(); -> åˆ·åˆ°æ•°æ®åº“
-          # entityManager.clear(); -> åŠæ—¶æ¸…ç†å¯¹è±¡
+          # Ê¹ÓÃTransactionalµÄ±ê×¢Ò²Ã»ÓĞÓÃ£¬Ä¬ÈÏ»áÒ»ÌõÊı¾İÒ»¸öÊÂÎñ£¬ËùÒÔĞèÒªÉèÖÃÏÂÃæµÄÖµ
+          # Ì«´óÒ²ÓĞÎÊÌâ, »áµ¼ÖÂOOM, JPA»á½«¶ÔÏó±£´æÔÚÄÚ´æÀï
+          # ËùÒÔÒªÏÔÊ½
+          # begin transaction --> ¿ÉÒÔ²ÉÓÃTransactionalµÄ±ê×¢µÄ·½·¨
+          # entityManager.flush(); -> Ë¢µ½Êı¾İ¿â
+          # entityManager.clear(); -> ¼°Ê±ÇåÀí¶ÔÏó
           # end transaction
           batch_size: 500
           # Similar to batch inserts, we can group several update statements and send them to the database in one go.
           batch_versioned_data: true
           order_updates: true
-          # !!! GenerationType.IDENTITY ä¼šdisable batch insert/update
+          # !!! GenerationType.IDENTITY »ádisable batch insert/update
         #@Transactional
         #@Test
         #public void whenThereAreMultipleEntities_ThenCreatesNewBatch() {
@@ -64,17 +61,17 @@ spring:
         #        entityManager.persist(secondStudent);
         #    }
         #}
-        # å‡è®¾batch_size = 5ï¼Œ order_inserts: false
+        # ¼ÙÉèbatch_size = 5£¬ order_inserts: false
         # "batch":true, "querySize":1, "batchSize":1, "query":["insert into school (name, id) values (?, ?)"],
         #  "params":[["School1","1"]]
         #"batch":true, "querySize":1, "batchSize":2, "query":["insert into student (name, school_id, id)
         #  values (?, ?, ?)"], "params":[["Student-School1","1","2"],["Student-School1","1","3"]]
-        # å‡è®¾batch_size = 5ï¼Œ order_inserts: true
+        # ¼ÙÉèbatch_size = 5£¬ order_inserts: true
         # "batch":true, "querySize":1, "batchSize":5, "query":["insert into school (name, id) values (?, ?)"],
         #  "params":[["School6","16"],["School7","19"],["School8","22"],["School9","25"],["School10","28"]]
         order_inserts: true
 
-# é…ç½®å°†äº‹åŠ¡æ‰“å°å‡ºæ¥, debugçš„æ—¶å€™éœ€è¦
+# ÅäÖÃ½«ÊÂÎñ´òÓ¡³öÀ´, debugµÄÊ±ºòĞèÒª
 logging:
   level:
     org:

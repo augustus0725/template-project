@@ -1,0 +1,6 @@
+[program:elasticsearch]
+command           = /opt/app/elasticsearch/current/bin/elasticsearch
+directory         = /opt/app/elasticsearch/current
+redirect_stderr   = true
+stdout_logfile    = /opt/app/elasticsearch/current/elasticsearch.out
+user              = elasticsearch

@@ -1,0 +1,78 @@
+---
+
+- name: Create user if it not exist
+  shell: id -u elasticsearch &>/dev/null || useradd elasticsearch -M -s /sbin/nologin
+
+- name: Create /opt/app/elasticsearch if it does not exist
+  file:
+    path: /opt/app/elasticsearch
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+
+- name: Extract elasticsearch-6.8.12.tar.gz into /opt/app/elasticsearch
+  unarchive:
+    src: "3rd-repo/fts/elasticsearch-6.8.12.tar.gz"
+    dest: /opt/app/elasticsearch
+    remote_src: no
+    owner: elasticsearch
+    group: elasticsearch
+
+- name: Create a elasticsearch symbolic link
+  file:
+    src: /opt/app/elasticsearch/elasticsearch-6.8.12
+    dest: /opt/app/elasticsearch/current
+    state: link
+    owner: elasticsearch
+    group: elasticsearch
+
+- name: Create /opt/app/elasticsearch/current/logs if it does not exist
+  file:
+    path: "/opt/app/elasticsearch/current/logs"
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+
+# 安装ik插件
+- name: Create /opt/app/elasticsearch-analysis-ik if it does not exist
+  file:
+    path: /opt/app/elasticsearch-analysis-ik
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+
+- name: Extract elasticsearch-analysis-ik-6.8.12.tar.gz into /opt/app/elasticsearch-analysis-ik
+  unarchive:
+    src: "3rd-repo/fts/elasticsearch-analysis-ik-6.8.12.tar.gz"
+    dest: /opt/app/elasticsearch/current/plugins
+    remote_src: no
+    owner: elasticsearch
+    group: elasticsearch
+
+- name: rename to ik
+  shell: mv /opt/app/elasticsearch-analysis-ik/elasticsearch-analysis-ik-6.8.12 /opt/app/elasticsearch/current/plugins/ik
+
+# 配置OS环境
+
+- name: Config limits.conf
+  template:
+    src: limits.conf.j2
+    dest: /etc/security/limits.conf
+
+- name: Config sysctl.conf
+  template:
+    src: sysctl.conf.j2
+    dest: /etc/sysctl.conf
+
+# config 
+- name: Config suervisor to start elasticsearch
+  template:
+    src: elasticsearch.ini.j2
+    dest: /etc/supervisord.d/elasticsearch.ini
+
+- name: Start elasticsearch
+  command: supervisorctl update elasticsearch
+
+# 保证运行的程序是最新的
+- name: Restart elasticsearch
+  command: supervisorctl restart elasticsearch
