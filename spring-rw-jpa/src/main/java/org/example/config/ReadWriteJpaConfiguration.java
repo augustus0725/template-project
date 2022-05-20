@@ -8,9 +8,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -25,9 +23,10 @@ import javax.sql.DataSource;
 @EnableAutoConfiguration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = {"org.example.jpa.repository.rw"},
+        basePackages = {RepositoryConfig.RW.REPOSITORY_PACKAGE},
         entityManagerFactoryRef = "rwEntityManagerFactory",
-        transactionManagerRef = "rwTransactionManager"
+        transactionManagerRef = "rwTransactionManager",
+        includeFilters = {@ComponentScan.Filter(type = FilterType.CUSTOM, classes = {RepositoryConfig.RW.class})}
 )
 @EnableJpaAuditing
 public class ReadWriteJpaConfiguration {
@@ -51,9 +50,9 @@ public class ReadWriteJpaConfiguration {
 
         return builder
                 .dataSource(dataSource)
-                .packages("org.example.jpa.repository.rw",
-                        "org.example.jpa.entity"
-                        ) // TODO, 后面测试一下这个是不是必须的
+                .packages(
+                        RepositoryConfig.JPA_ENTITY_HOME
+                        )
                 .persistenceUnit("rw-emf")
                 .properties(hibernateProperties.determineHibernateProperties(jpaProperties.getProperties(), new HibernateSettings()))
                 .build();

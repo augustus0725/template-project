@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -19,9 +21,10 @@ import javax.sql.DataSource;
 @EnableAutoConfiguration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = {"org.example.jpa.repository.r"},
+        basePackages = {RepositoryConfig.R.REPOSITORY_PACKAGE},
         entityManagerFactoryRef = "rEntityManagerFactory",
-        transactionManagerRef = "rTransactionManager"
+        transactionManagerRef = "rTransactionManager",
+        includeFilters = {@ComponentScan.Filter(type = FilterType.CUSTOM, classes = {RepositoryConfig.R.class})}
 )
 public class ReadJpaConfiguration {
     @Bean(name = "rDataSource")
@@ -36,9 +39,9 @@ public class ReadJpaConfiguration {
 
         return builder
                 .dataSource(dataSource)
-                .packages("org.example.jpa.repository.r",
-                        "org.example.jpa.entity"
-                ) // TODO, 后面测试一下这个是不是必须的
+                .packages(
+                        RepositoryConfig.JPA_ENTITY_HOME
+                )
                 .persistenceUnit("r-emf")
                 .build();
     }
