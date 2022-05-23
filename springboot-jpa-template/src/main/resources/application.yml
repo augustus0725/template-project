@@ -12,26 +12,29 @@ spring:
       maximumPoolSize: 4
       autoCommit: true
   jpa:
-    show-sql: false
+    show-sql: true
     open-in-view: false
     hibernate:
+      # 自动根据entity构建表
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
-      # 自动从entity生成表结构
-      javax:
-        persistence:
-          // TODO
-          // 可以试试 spring.jpa.generate-ddl 或者 spring.jpa.hibernate.ddl-auto
-          // spring.jpa.generate-ddl 可以兼容任意的 JPA 实现(eclipse-link, OpenJPA, DataNucleus, Hibernate)
-          schema-generation:
-            scripts:
-              create-source: metadata
-              drop-source: metadata
-              create-target: auto-schema/create.sql
-              drop-target: auto-schema/drop.sql
-              # none create drop drop-and-create
-              action: create
+
+      # 自动从entity生成表结构 -> 使用 spring.jpa.hibernate.ddl-auto
+#      javax:
+#        persistence:
+#          # TODO
+#          # 可以试试 spring.jpa.generate-ddl 或者 spring.jpa.hibernate.ddl-auto
+#          # spring.jpa.generate-ddl 可以兼容任意的 JPA 实现(eclipse-link, OpenJPA, DataNucleus, Hibernate)
+#          schema-generation:
+#            scripts:
+#              create-source: metadata
+#              drop-source: metadata
+#              create-target: auto-schema/create.sql
+#              drop-target: auto-schema/drop.sql
+#              # none create drop drop-and-create
+#              action: create
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false

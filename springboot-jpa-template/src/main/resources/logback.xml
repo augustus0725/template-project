@@ -21,8 +21,10 @@
         </encoder>
     </appender>
 
+    <logger name="org.hibernate.persister.entity" level="DEBUG" />
+
     <!--  限制所有的日志  -->
-    <root level="INFO">
+    <root level="WARN">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="RollingFILE"/>
     </root>
