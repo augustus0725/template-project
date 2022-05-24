@@ -1,0 +1,65 @@
+spring:
+  datasource:
+    # 读写
+    db0:
+      jdbcUrl: jdbc:postgresql://192.168.0.185:5432/demo
+      username: pgadmin
+      password: 123456
+      driverClassName: org.postgresql.Driver
+      # pool setting
+      connectionTimeout: 20000
+      idleTimeout: 15000
+      minimumIdle: 2
+      maximumPoolSize: 4
+      autoCommit: true
+    # 只读
+    db1:
+      jdbcUrl: jdbc:postgresql://192.168.0.186:5432/demo
+      username: pgadmin
+      password: 123456
+      driverClassName: org.postgresql.Driver
+      # pool setting
+      connectionTimeout: 20000
+      idleTimeout: 15000
+      minimumIdle: 2
+      maximumPoolSize: 4
+      autoCommit: true
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      # 自动根据entity构建表
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          # 不然会报错, 提示jdbc驱动有些api没有实现
+          use_jdbc_metadata_defaults: false
+        jdbc:
+          # 使用Transactional的标注也没有用，默认会一条数据一个事务，所以需要设置下面的值
+          # 太大也有问题, 会导致OOM, JPA会将对象保存在内存里
+          # 所以要显式
+          # begin transaction --> 可以采用Transactional的标注的方法
+          # entityManager.flush(); -> 刷到数据库
+          # entityManager.clear(); -> 及时清理对象
+          # end transaction
+          batch_size: 500
+          # Similar to batch inserts, we can group several update statements and send them to the database in one go.
+          batch_versioned_data: true
+          order_updates: true
+        order_inserts: true
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              # 显示SQL绑定参数的值| TRACE | [main] o.h.t.d.s.BasicBinder:65 - binding parameter [1] as [BIGINT] - [1653036356102]
+              BasicBinder: TRACE
