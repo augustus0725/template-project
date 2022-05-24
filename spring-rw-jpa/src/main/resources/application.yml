@@ -26,6 +26,7 @@ spring:
       autoCommit: true
   jpa:
     open-in-view: false
+    show-sql: true
     hibernate:
       # 自动根据entity构建表
       ddl-auto: update
@@ -34,6 +35,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         temp:
           # 不然会报错, 提示jdbc驱动有些api没有实现
           use_jdbc_metadata_defaults: false
