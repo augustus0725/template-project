@@ -7,10 +7,10 @@ import org.example.app.api.Users;
 import org.example.commons.annotation.Loggable;
 import org.example.commons.standard.RestResponse;
 import org.example.jpa.entity.User;
+import org.example.jpa.entity.base.Page;
+import org.example.jpa.entity.projections.UserFieldsAge;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor(onConstructor__ = {@Autowired})
@@ -24,6 +24,13 @@ public class UsersController {
     @Loggable
     public RestResponse<User> hello(@RequestBody User user) {
         return users.save(user);
+    }
+
+    @GetMapping({"/users"})
+    @ApiOperation("添加用户")
+    @Loggable
+    public RestResponse<Page<UserFieldsAge>> hello(@RequestParam String name, @RequestParam int currentPage, @RequestParam int pageSize) {
+        return users.findByName(name, currentPage, pageSize);
     }
 
 }

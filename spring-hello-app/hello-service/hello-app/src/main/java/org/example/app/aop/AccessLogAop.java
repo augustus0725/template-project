@@ -48,7 +48,7 @@ public class AccessLogAop {
         w.append("params: ").append(Arrays.toString(pjp.getArgs())).append('\t');
         Object ret = pjp.proceed();
         duration = System.currentTimeMillis() - startTime;
-        w.append("cost： ").append(duration).append('\t');
+        w.append("cost： ").append(duration).append("ms").append('\t');
         w.append("return： ").append(ret);
 
         if (longQueryLog && duration > longQueryLimit
