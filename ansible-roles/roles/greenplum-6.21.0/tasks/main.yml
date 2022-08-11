@@ -1,0 +1,12 @@
+---
+
+# 优化OS
+- name: Enabling Passwordless SSH
+  shell: |
+    
+    exit 0
+  args:
+    executable: /bin/bash
+    chdir: /tmp
+
+
