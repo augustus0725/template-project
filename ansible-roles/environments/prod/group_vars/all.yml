@@ -70,6 +70,24 @@ ldap:
   server_01: 192.168.0.34
   server_02: 192.168.0.35
 
+# Greenplum
+gp:
+  password: 123456
+  dbname: gpdb
+  master_data_directory: /opt/data/master
+  primary_data_directory:
+    # 一台机器上布置几个segment就设置几个路径, 比如下面的就会安装两个segment
+    - /opt/data/primary
+    - /opt/data/primary
+  mdw:
+    hostname: mdw
+    ip: 192.168.0.34
+  sdws:
+    - hostname: sdw1
+      ip: 192.168.0.35
+    - hostname: sdw2
+      ip: 192.168.0.37 
+
 #################### 监控部分  ###############################################
 # 配置 Prometheus, 单节点或者多节点之后nginx代理的地址
 prometheus:

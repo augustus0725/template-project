@@ -1,0 +1,17 @@
+#!/bin/bash
+
+source /usr/local/greenplum-db/greenplum_path.sh
+cat > /tmp/gp_init.expect <<EOF
+set timeout 300
+spawn gpinitsystem -c /home/gpadmin/gpinitsystem_config -h /home/gpadmin/hostfile_gpinitsys
+
+expect "Continue with Greenplum creation Yy|Nn (default=N):"
+expect ">"
+send "Y\n"
+expect "\r\n"
+expect ""
+expect ""
+expect eof
+EOF
+
+/bin/expect -f /tmp/gp_init.expect

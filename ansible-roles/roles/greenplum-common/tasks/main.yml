@@ -65,13 +65,15 @@
       echo 'MaxStartups 10:30:200' >> /etc/ssh/sshd_config
       echo 'MaxSessions 200' >> /etc/ssh/sshd_config
     fi
+    # 让系统参数立即生效
+    sysctl -p
     exit 0
   args:
     executable: /bin/bash
     chdir: /tmp
 
 - name: Create user gpadmin if it not exist.
-  shell: id -u gpadmin &>/dev/null || useradd -p $(echo 123456 | openssl passwd -1 -stdin) gpadmin
+  shell: "id -u gpadmin &>/dev/null || useradd -p $(echo {{ gp.password }} | openssl passwd -1 -stdin) gpadmin"
 
 - name: Create ssh key if not exist.
   shell: ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y 2>&1 >/dev/null
@@ -116,21 +118,26 @@
 
 - name: Prepare master directory
   file:
-    path: /opt/data/master
+    path: "{{ gp.master_data_directory }}"
     state: directory
     owner: gpadmin
     group: gpadmin
 
-- name: Prepare primary data directory
-  file:
-    path: /opt/data/primary
-    state: directory
-    owner: gpadmin
-    group: gpadmin
+- name: Prepare primary data directory script
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/home/gpadmin/{{ item }}"
+  with_items:
+    - new_primary_data_path.sh
+  become: yes
+  become_user: gpadmin
 
-- name: Prepare mirror data directory
-  file:
-    path: /opt/data/mirror
-    state: directory
-    owner: gpadmin
-    group: gpadmin
+- name: Create primary data path.
+  shell: bash /home/gpadmin/new_primary_data_path.sh
+
+# - name: Prepare mirror data directory
+#   file:
+#     path: /opt/data/mirror
+#     state: directory
+#     owner: gpadmin
+#     group: gpadmin
