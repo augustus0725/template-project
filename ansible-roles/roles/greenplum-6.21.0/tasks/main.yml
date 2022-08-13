@@ -1,12 +1,51 @@
 ---
 
-# 优化OS
+# Passwordless SSH
 - name: Enabling Passwordless SSH
   shell: |
+    # ssh Passwordless 1-n
+    while read -r line
+    do
+      SSHPASS=123456 sshpass -e ssh-copy-id -o "StrictHostKeyChecking=no" "${line}"
+    done < /home/gpadmin/hostfile_exkeys
+    # build n-n Passwordless
+    source /usr/local/greenplum-db/greenplum_path.sh
+    gpssh-exkeys -f /home/gpadmin/hostfile_exkeys
+    # end
+    exit 0
+  args:
+    executable: /bin/bash
+    chdir: /tmp
+  become: yes
+  become_user: gpadmin
+
+- name: Config hostfile_gpinitsys & gpinitsystem_config
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/home/gpadmin/{{ item }}"
+  with_items:
+    - hostfile_gpinitsys
+    - gpinitsystem_config
+  become: yes
+  become_user: gpadmin
+
+- name: Init Greenplum
+  shell: |
+    set timeout 300
+    source /usr/local/greenplum-db/greenplum_path.sh
+    spawn gpinitsystem -c /home/gpadmin/gpinitsystem_config -h /home/gpadmin/hostfile_gpinitsys
+
+    expect "Continue with Greenplum creation Yy|Nn (default=N):"
+    expect ">"
+    send "Y\n"
+    expect "\r\n"
+    expect ""
+    expect ""
+    expect eof
     
     exit 0
   args:
     executable: /bin/bash
     chdir: /tmp
-
-
+  become: yes
+  become_user: gpadmin

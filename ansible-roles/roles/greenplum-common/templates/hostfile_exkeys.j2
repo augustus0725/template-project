@@ -1,3 +1,4 @@
-{% for node in gp.nodes -%}
-{{ node.hostname }}  
+{% for sdw in gp.sdws -%}
+{{ sdw['hostname'] }}  
 {% endfor %}
+{{ gp.mdw.hostname }}

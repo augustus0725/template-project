@@ -1,0 +1,1 @@
+需要把open-source-greenplum-db-6.21.0-rhel7-x86_64.rpm这个文件拷贝进来

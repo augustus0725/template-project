@@ -71,20 +71,27 @@
     chdir: /tmp
 
 - name: Create user gpadmin if it not exist.
-  command: id -u gpadmin &>/dev/null || useradd -p $(echo 123456 | openssl passwd -1 -stdin) gpadmin
+  shell: id -u gpadmin &>/dev/null || useradd -p $(echo 123456 | openssl passwd -1 -stdin) gpadmin
 
 - name: Create ssh key if not exist.
   shell: ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y 2>&1 >/dev/null
   become: yes
   become_user: gpadmin
 
+- name: Copy open-source-greenplum-db-6.21.0-rhel7-x86_64.rpm to remote /tmp
+  copy:
+    src: 3rd-repo/greenplum/open-source-greenplum-db-6.21.0-rhel7-x86_64.rpm
+    dest: /tmp/open-source-greenplum-db-6.21.0-rhel7-x86_64.rpm
+    mode: '0744'
+
 - name: Install necessary software with yum.
   yum:
     name: "{{ item }}"
     state: present
   with_items:
+    - expect
     - sshpass
-    - 3rd-repo/greenplum/open-source-greenplum-db-6.21.0-rhel7-x86_64.rpm
+    - /tmp/open-source-greenplum-db-6.21.0-rhel7-x86_64.rpm
 
 - name: Grant gpadmin to binary.
   shell: chown -R gpadmin:gpadmin /usr/local/greenplum*
@@ -106,3 +113,24 @@
 
 - name: Append to /etc/hosts
   shell: cat /home/gpadmin/hosts >> /etc/hosts
+
+- name: Prepare master directory
+  file:
+    path: /opt/data/master
+    state: directory
+    owner: gpadmin
+    group: gpadmin
+
+- name: Prepare primary data directory
+  file:
+    path: /opt/data/primary
+    state: directory
+    owner: gpadmin
+    group: gpadmin
+
+- name: Prepare mirror data directory
+  file:
+    path: /opt/data/mirror
+    state: directory
+    owner: gpadmin
+    group: gpadmin
