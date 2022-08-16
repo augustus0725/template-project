@@ -33,5 +33,8 @@ gpkafka gpss gpsscli kafkacat
 ```
 # 流的方式导入数据
 https://greenplum.docs.pivotal.io/streaming-server/1-3-6/instcfgmgt.html
+
+# spark的方式导入数据
+https://docs.vmware.com/en/VMware-Tanzu-Greenplum-Connector-for-Apache-Spark/2.1/tanzu-greenplum-connector-spark/GUID-index.html
 ```
 
