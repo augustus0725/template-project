@@ -17,3 +17,21 @@ Resolving Dependencies
 
 ```
 
+## 节点上安装Greenplum ETL组件
+
+```
+# 安装下面的rpm包
+yum install -y gpss-gpdb6-1.7.2-rhel7-x86_64.rpm
+# 配置环境变量
+source /usr/local/gpss/gpss_path.sh
+# 这样一些ETL设施就齐全了
+gpkafka gpss gpsscli kafkacat
+```
+
+## ETL
+
+```
+# 流的方式导入数据
+https://greenplum.docs.pivotal.io/streaming-server/1-3-6/instcfgmgt.html
+```
+
