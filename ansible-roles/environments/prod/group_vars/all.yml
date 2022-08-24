@@ -86,7 +86,18 @@ gp:
     - hostname: sdw1
       ip: 192.168.0.35
     - hostname: sdw2
-      ip: 192.168.0.37 
+      ip: 192.168.0.37
+
+#################### ETL部分  ###############################################
+# Nifi
+nifi:
+  port: 8022
+  zk: "192.168.0.181:2181"
+  dir_flowfile: "./flowfile_repository"
+  # content的IO最高
+  dir_content: "./content_repository"
+  dir_provenance: "./provenance_repository"
+
 
 #################### 监控部分  ###############################################
 # 配置 Prometheus, 单节点或者多节点之后nginx代理的地址
