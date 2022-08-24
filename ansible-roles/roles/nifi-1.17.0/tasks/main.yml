@@ -1,0 +1,64 @@
+---
+
+- name: Install JDK
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - java-1.8.0-openjdk-devel
+
+- name: Create user nifi if it not exist.
+  shell: "id -u nifi &>/dev/null || useradd nifi"
+
+- name: Create /opt/app/nifi if it does not exist
+  file:
+    path: /opt/app/nifi
+    state: directory
+    owner: nifi
+    group: nifi
+
+- name: Extract nifi-1.17.0.tar.gz into /opt/app/nifi
+  unarchive:
+    src: "3rd-repo/apache/nifi/nifi-1.17.0.tar.gz"
+    dest: /opt/app/nifi
+    owner: nifi
+    group: nifi
+    remote_src: no
+
+- name: Create a nifi symbolic link
+  file:
+    src: /opt/app/nifi/nifi-1.17.0
+    dest: /opt/app/nifi/current
+    owner: nifi
+    group: nifi
+    state: link
+
+- name: Config nifi
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/opt/app/nifi/current/conf/{{ item }}"
+    owner: nifi
+    group: nifi
+  with_items:
+    - login-identity-providers.xml
+    - nifi.properties
+    - state-management.xml
+
+- name: create replica user repuser
+  shell: |
+    sed -i 's/hostname_place_holder/'$(hostname)'/g' /opt/app/nifi/current/conf/nifi.properties    
+    exit 0
+
+- name: Config suervisor to start nifi
+  template:
+    src: nifi.ini.j2
+    dest: /etc/supervisord.d/nifi.ini
+    owner: nifi
+    group: nifi
+
+- name: Start nifi_1170
+  command: supervisorctl update nifi_1170
+
+# 保证运行的程序是最新的
+- name: Restart nifi_1170
+  command: supervisorctl restart nifi_1170

@@ -1,0 +1,7 @@
+[program:nifi_1170]
+command           = /opt/app/nifi/current/bin/nifi.sh run
+directory         = /opt/app/nifi/current
+redirect_stderr   = true
+stdout_logfile    = /opt/app/nifi/current/logs/nifi_1170.out
+stopsignal        = INT
+user              = nifi
