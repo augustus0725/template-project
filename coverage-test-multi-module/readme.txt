@@ -1,1 +1,0 @@
-mvn package sonar:sonar -Dsonar.login=<login password> -s ci_settings.xml
