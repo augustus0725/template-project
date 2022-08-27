@@ -18,5 +18,8 @@ const mockTasks = [
 
 //  reducer负责初始化状态
 export default function tasks(state = {tasks: mockTasks}, action) {
+    if (action.type === 'CREATE_TASK') {
+      return {tasks: state.tasks.concat(action.payload)};
+    }
     return state;
 }
