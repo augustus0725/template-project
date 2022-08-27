@@ -39,3 +39,7 @@ function mapStateToProps(state) {
 }
 -> 3.0 用connect方法绑定组件
 export default connect(mapStateToProps)(App);
+
+# 组件分成两类
+-> 比如TaskList 只负责接收props来渲染  => 展示型组件
+-> 比如App, 负责从redux里获取数据, 构建关联的  => 容器型组件
