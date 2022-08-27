@@ -43,3 +43,12 @@ export default connect(mapStateToProps)(App);
 # 组件分成两类
 -> 比如TaskList 只负责接收props来渲染  => 展示型组件
 -> 比如App, 负责从redux里获取数据, 构建关联的  => 容器型组件
+
+# Redux DevTools
+要能使用需要一些配置
+
+-> 1. 安装chrome 插件Redux DevTools
+-> 2. 安装依赖
+npm install --save-dev redux-devtools-extension
+-> 3. 修改创建store的方法
+const store = createStore(counterReducer, devToolsEnhancer());
