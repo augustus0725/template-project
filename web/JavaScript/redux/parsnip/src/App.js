@@ -6,10 +6,22 @@ import { Component } from 'react';
 
 
 class App extends Component {
+  onCreateTask = ({title, description}) => {
+    this.props.dispatch(
+      {
+        type: 'CREATE_TASK',
+        payload: {
+          title, description
+        }
+      }
+    )
+  }
+
+
   render() {
     return (
       <div className="main-content">
-        <TasksPage tasks={this.props.tasks} />
+        <TasksPage tasks={this.props.tasks} onCreateTask={this.onCreateTask}/>
       </div>
     );
   }

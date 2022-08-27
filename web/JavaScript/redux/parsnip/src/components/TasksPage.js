@@ -37,7 +37,7 @@ class TasksPage extends Component {
 
     onCreateTask = (e) => {
         e.preventDefault();
-        this.props.onCreateTask({
+        this.props.onCreateTask({ // 这个方法从外部传进来
             title: this.state.title,
             description: this.state.description,
         });
