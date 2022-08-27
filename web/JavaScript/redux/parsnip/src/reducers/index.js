@@ -1,12 +1,14 @@
+import { uniqueId } from "../actions";
+
 const mockTasks = [
     {
-      id: 1,
+      id: uniqueId(),
       title: 'Learn Redux',
       description: 'One.......................',
       status: 'In Progress',
     },
     {
-      id: 2,
+      id: uniqueId(),
       title: 'Learn Redux two',
       description: 'Two.......................',
       status: 'In Progress',
