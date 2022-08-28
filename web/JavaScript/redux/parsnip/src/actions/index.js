@@ -33,6 +33,10 @@ export function fetchTasksSucceeded(tasks) {
       api.fetchTasks()
       .then(resp => {
         dispatch(fetchTasksSucceeded(resp.data));
-      });    
+      }).catch(
+        err => {
+          console.log('Fail to call api:/tasks', err);
+        }
+      );    
     }
   }
