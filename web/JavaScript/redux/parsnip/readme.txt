@@ -52,3 +52,7 @@ export default connect(mapStateToProps)(App);
 npm install --save-dev redux-devtools-extension
 -> 3. 修改创建store的方法
 const store = createStore(counterReducer, devToolsEnhancer());
+
+# 异步action的解决方案 -> redux-thunk
+npm install --save-prod redux-thunk
+npm install --save-prod axios         -> js http client

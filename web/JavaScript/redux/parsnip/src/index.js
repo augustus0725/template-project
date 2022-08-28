@@ -4,13 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import tasks from './reducers';
-import {legacy_createStore as createStore } from 'redux'
+import {applyMiddleware, legacy_createStore as createStore } from 'redux'
 import { Provider } from 'react-redux';
 import { devToolsEnhancer } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 
 
 // const store = createStore(tasks);
-const store = createStore(tasks, devToolsEnhancer());
+// const store = createStore(tasks, devToolsEnhancer());
+const store = createStore(tasks, applyMiddleware(thunk));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

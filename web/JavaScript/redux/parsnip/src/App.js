@@ -3,7 +3,7 @@ import './App.css';
 import TasksPage from './components/TasksPage';
 import { connect } from 'react-redux';
 import { Component } from 'react';
-import { createTask } from './actions';
+import { createTask, fetchTasks } from './actions';
 
 
 class App extends Component {
@@ -11,6 +11,11 @@ class App extends Component {
     this.props.dispatch(
       createTask({title, description})
     );
+  }
+
+  componentDidMount() {
+    // 产生异步action
+    this.props.dispatch(fetchTasks());
   }
 
 
