@@ -6,13 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import tasks from './reducers';
 import {applyMiddleware, legacy_createStore as createStore } from 'redux'
 import { Provider } from 'react-redux';
-import { devToolsEnhancer } from 'redux-devtools-extension';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
 
 // const store = createStore(tasks);
 // const store = createStore(tasks, devToolsEnhancer());
-const store = createStore(tasks, applyMiddleware(thunk));
+const store = createStore(tasks, composeWithDevTools(applyMiddleware(thunk)));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
