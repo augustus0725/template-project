@@ -8,11 +8,19 @@ import {applyMiddleware, legacy_createStore as createStore } from 'redux'
 import { Provider } from 'react-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
+import createSagaMiddleware from '@redux-saga/core';
+import rootSaga from './sagas';
 
+
+// saga
+const sagaMiddleware = createSagaMiddleware();
 
 // const store = createStore(tasks);
 // const store = createStore(tasks, devToolsEnhancer());
-const store = createStore(tasks, composeWithDevTools(applyMiddleware(thunk)));
+const store = createStore(tasks, composeWithDevTools(applyMiddleware(thunk, sagaMiddleware)));
+
+// 运行root saga
+sagaMiddleware.run(rootSaga);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
