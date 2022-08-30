@@ -56,3 +56,7 @@ const store = createStore(counterReducer, devToolsEnhancer());
 # 异步action的解决方案 -> redux-thunk
 npm install --save-prod redux-thunk
 npm install --save-prod axios         -> js http client
+
+
+# 另一个异步action的解决方案 -> redux-saga, 解释为什么需要这个时候说是： 1. thunk的代码冗余比较多  2. thunk的代码不太好测试
+npm install --save-prod redux-saga
