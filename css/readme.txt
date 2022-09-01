@@ -1,3 +1,24 @@
+# 传统布局方法
+=> 块元素：<div>  内联元素: <a> <span>
+控制内联元素
+display: inline  -> 在一行显示
+display: block   -> 具有块元素属性, 一行显示一个
+
+=> position控制页面元素位置
+position: static (默认) ->遵循正常的文档流对象, block占用一行
+position: fixed 相对浏览器位置固定 （窗口滚动也不会移动）
+position: relative 相对正常位置设置一些偏移, 比如 left:-20px/left:20px
+position: absolute  在元素可达的范围，固定位置. 比如<html>范围, 或者某个<component>所占的空间
+position: sticky    滚动会上下移动, 但是应该不可见的时候也会显示在浏览器最上面
+
+=> 元素如何重叠在一起, 默认block之间是会流动的
+z-index: -1  -->  有z-index属性会导致流动停止, 采用重叠的策略，z-index 越大显示越靠前
+
+=> 控制元素的流动 float
+float: left/right
+clear: both  --> 清除浮动, 可以让非block元素变成block元素
+
+
 # flex layout
 
 display: flex; // webkit浏览器 -> -webkit-flex;
