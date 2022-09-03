@@ -19,8 +19,9 @@ export default {
   },
 
   reducers: {
-    save(state, action) {
-      return { ...state, ...action.payload };
+    clickData(state, action) {
+      console.log('State: ', state, ' action: ', action);
+      return { ...state, data: action.payload };
     },
   },
 
