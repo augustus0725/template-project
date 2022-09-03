@@ -13,8 +13,10 @@ export default {
   },
 
   effects: {
-    *fetch({ payload }, { call, put }) {  // eslint-disable-line
-      yield put({ type: 'save' });
+    *getData({ payload }, { call, put }) {  // eslint-disable-line
+      // 相当于sage里的订阅了  action: {type: "example/getData"}
+      // 所以其他地方可以通过 dispatch, 来激活
+      yield put({ type: 'example/clickData', payload: payload });
     },
   },
 

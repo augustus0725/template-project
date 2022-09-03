@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'dva';
 import styles from './IndexPage.css';
 
 function IndexPage({dispatch, data}) {
+  useEffect(() => {
+    // 用异步的初始化
+    dispatch({
+      type: "example/getData",
+      payload: 200
+    });
+  }, []);
+
+
   return (
     <div className={styles.normal}>
       <h1 className={styles.title}>Yay! Welcome to dva! Data is {data}</h1>
