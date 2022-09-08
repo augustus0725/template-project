@@ -1,26 +1,37 @@
 ---
 
+- name: Create user node_exporter if it not exist.
+  shell: "id -u node_exporter &>/dev/null || useradd node_exporter"
+
 - name: Create /opt/app/node_exporter if it does not exist
   file:
     path: /opt/app/node_exporter
     state: directory
-
-- name: Create /opt/log/node_exporter if it does not exist
-  file:
-    path: /opt/log/node_exporter
-    state: directory
+    owner: node_exporter
+    group: node_exporter
 
 - name: Extract node_exporter-1.3.1.linux-amd64.tar.gz into /opt/app/prometheus
   unarchive:
     src: "3rd-repo/monitor-system/node_exporter/node_exporter-1.3.1.linux-amd64.tar.gz"
     dest: /opt/app/node_exporter
     remote_src: no
+    owner: node_exporter
+    group: node_exporter
 
 - name: Create a node_exporter symbolic link
   file:
     src: /opt/app/node_exporter/node_exporter-1.3.1.linux-amd64
     dest: /opt/app/node_exporter/current
     state: link
+    owner: node_exporter
+    group: node_exporter
+
+- name: Create /opt/app/node_exporter/current/logs if it does not exist
+  file:
+    path: /opt/app/node_exporter/current/logs
+    state: directory
+    owner: node_exporter
+    group: node_exporter
 
 - name: Config suervisor to start node_exporter
   template:
