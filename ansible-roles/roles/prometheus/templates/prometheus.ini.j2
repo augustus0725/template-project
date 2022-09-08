@@ -2,4 +2,5 @@
 command           = /opt/app/prometheus/current/prometheus --config.file /opt/app/prometheus/current/prometheus.yml --storage.tsdb.path={{ prometheus.data | default("data") }} --web.enable-admin-api --web.listen-address=:{{ prometheus.port | default(9090) }}
 directory         = /opt/app/prometheus/current
 redirect_stderr   = true
-stdout_logfile    = /opt/log/prometheus/prometheus.out
+stdout_logfile    = /opt/app/prometheus/current/logs/prometheus.out
+user              = prometheus

@@ -1,0 +1,61 @@
+---
+
+- name: Create user alertmanager if it not exist.
+  shell: "id -u alertmanager &>/dev/null || useradd alertmanager"
+
+- name: Create /opt/app/alertmanager if it does not exist
+  file:
+    path: /opt/app/alertmanager
+    state: directory
+    owner: alertmanager
+    group: alertmanager
+
+- name: Extract alertmanager-0.23.0.linux-amd64.tar.gz into /opt/app/alertmanager
+  unarchive:
+    src: "3rd-repo/monitor-system/alertmanager/alertmanager-0.23.0.linux-amd64.tar.gz"
+    dest: /opt/app/alertmanager
+    remote_src: no
+    owner: alertmanager
+    group: alertmanager
+
+- name: Create a alertmanager symbolic link
+  file:
+    src: /opt/app/alertmanager/alertmanager-0.23.0.linux-amd64
+    dest: /opt/app/alertmanager/current
+    owner: alertmanager
+    group: alertmanager
+    state: link
+
+- name: Create /opt/app/alertmanager/current/logs if it does not exist
+  file:
+    path: /opt/app/alertmanager/current/logs
+    state: directory
+    owner: alertmanager
+    group: alertmanager
+
+- name: Create /opt/app/alertmanager/templates if it does not exist
+  file:
+    path: /opt/app/alertmanager/templates
+    state: directory
+    owner: alertmanager
+    group: alertmanager
+
+- name: Copy mail template to remote /opt/app/alertmanager/templates
+  copy:
+    src: 3rd-repo/monitor-system/alertmanager/templates/mail.tmpl
+    dest: /opt/app/alertmanager/templates
+    owner: alertmanager
+    group: alertmanager
+    mode: '0744'
+
+- name: Config suervisor to start alertmanager
+  template:
+    src: alertmanager.ini.j2
+    dest: /etc/supervisord.d/alertmanager.ini
+
+- name: Start alertmanager
+  command: supervisorctl update alertmanager
+
+# 保证运行的程序是最新的
+- name: Restart alertmanager
+  command: supervisorctl restart alertmanager

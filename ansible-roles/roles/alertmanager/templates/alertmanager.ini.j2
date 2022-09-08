@@ -1,0 +1,6 @@
+[program:alertmanager]
+command           = /opt/app/alertmanager/current/alertmanager --web.listen-address=":{{ alertmanager.port | default(9093) }}" --storage.path={{ alertmanager.data | default('data') }}
+directory         = /opt/app/alertmanager/current
+redirect_stderr   = true
+stdout_logfile    = /opt/app/alertmanager/current/logs/alertmanager.out
+user              = alertmanager

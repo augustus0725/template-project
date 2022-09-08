@@ -1,0 +1,56 @@
+global:
+  # 定义全局的配置, 比如 smtp的账户以及连接信息
+  # 持续5m没有收到告警, 认为问题解决了 -> 该参数的定义可能会影响到[告警恢复通知]的接收时间
+  # resolve_timeout: <duration> | default = 5m
+  resolve_timeout: 5m
+  # 发送邮件的配置, QQ邮箱的例子
+  {# smtp_from: "canbin.zhang@qq.com"
+  smtp_smarthost: "smtp.qq.com:465"
+  smtp_auth_username: "canbin.zhang@qq.com"
+  smtp_auth_password: "**********"
+  smtp_require_tls: false #}
+
+route:
+  # 根据警告的名字分组
+  group_by: ['alertname']
+  # 当来了一个报警之后, 等待30s, 可以让一个组内的报警打包发送, 提高报警效率
+  group_wait: 30s
+  # 组内一个报警发送之后, 等待5m再发送
+  group_interval: 5m
+  # 成功发送之后, 隔1h之后重新发送
+  repeat_interval: 1h
+  # 这个是默认的receiver
+  receiver: 'mail.hook'
+
+# critical 级别的报警发生了 warning级别的就被 静音了, 不需要产生太多的无用告警
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    {# 需要满足 lable 都在下面的列表里 #}
+    equal: ['alertname', 'dev', 'instance']
+
+templates:
+  - "/opt/app/alertmanager/templates/*.tmpl"
+
+# 邮件的示例 #
+receivers:
+- name: 'web.hook'
+  webhook_configs:
+  - url: 'http://127.0.0.1:5001/'
+# 配置邮件接收人
+- name: 'mail.hook'
+  email_configs:
+    - to: 'canbin.zhang@qq.com'
+      send_resolved: true
+      headers: { Subject: "监控告警 {{ .CommonLabels.alertname }} " }
+      # 可以使用邮件模板, 默认模板是 /opt/app/alertmanager/templates/mail.tmpl, 名字是email.default.html
+      #html: '{{ template "email.default.html" . }}'
+
+  
+  # 示例调用模板  
+  {# - name: 'slack-notifications'
+    slack_configs:
+      - channel: '#alerts'
+        text: '{{ template "slack.myorg.text" . }}' #}

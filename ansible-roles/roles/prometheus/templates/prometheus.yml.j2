@@ -9,15 +9,11 @@ alerting:
   alertmanagers:
   - static_configs:
     - targets:
-      # - alertmanager:9093
+      - "{{ alertmanager.host }}:{{ alertmanager.port }}"
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
-{% for rule in rules -%}
-- "{{ rule }}"
-{% endfor %}
-  # - "first_rules.yml"
-  # - "second_rules.yml"
+- "/opt/app/prometheus/rules/*_rule.yml"
 
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
