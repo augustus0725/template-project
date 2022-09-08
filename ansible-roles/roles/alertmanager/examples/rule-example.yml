@@ -1,0 +1,19 @@
+groups:
+- name: example
+  rules:
+  # 规则名称
+  - alert: HighErrorRate
+    # 规则表达式
+    expr: job:request_latency_seconds:mean5m{job="myjob"} > 0.5
+    # 当前条件持续10m才会触发告警
+    for: 10m
+    # 用户加一些标签在这个告警数据上
+    labels:
+      severity: page
+    # 告警信息的数据, 描述告警的内容
+    # 告警信息发给维护人员应该尽可能给出有用的信息, prometheus给了一些变量
+    # $labels.<labelname> --> 当前实例的label的值 {{ $labels.severity }} {{ $labels.instance }} <-- 要测试一下，指标相关的label能不能获取 #TODO
+    # $value --> 当前 表达式的 计算值  {{ $value }}
+    annotations:
+      summary: High request latency
+      description: description info

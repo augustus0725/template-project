@@ -14,7 +14,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // 产生异步action
+    // 产生异步action, 注意这里fetchTasks()返回的是函数
     this.props.dispatch(fetchTasks());
   }
 
