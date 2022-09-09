@@ -1,0 +1,7 @@
+[program:pg_exporter]
+environment       = DATA_SOURCE_NAME="postgresql://{{ pg_primary.db_user }}:{{ pg_primary.pgpass }}@{{ pg_primary.db_host }}:{{ pg_primary.pgport }}/postgres?sslmode=disable"
+command           = /opt/app/pg_exporter/current/postgres_exporter --web.listen-address=":{{ pg_exporter.port | default(9187) }}"
+directory         = /opt/app/pg_exporter/current
+redirect_stderr   = true
+stdout_logfile    = /opt/app/pg_exporter/current/logs/pg_exporter.out
+user              = pg_exporter

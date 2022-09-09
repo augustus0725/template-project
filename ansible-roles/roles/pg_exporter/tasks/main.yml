@@ -1,0 +1,46 @@
+---
+
+- name: Create user pg_exporter if it not exist.
+  shell: "id -u pg_exporter &>/dev/null || useradd pg_exporter"
+
+- name: Create /opt/app/pg_exporter if it does not exist
+  file:
+    path: /opt/app/pg_exporter
+    state: directory
+    owner: pg_exporter
+    group: pg_exporter
+
+- name: Extract postgres_exporter-0.11.1.linux-amd64.tar.gz into /opt/app/prometheus
+  unarchive:
+    src: "3rd-repo/monitor-system/pg_exporter/postgres_exporter-0.11.1.linux-amd64.tar.gz"
+    dest: /opt/app/pg_exporter
+    remote_src: no
+    owner: pg_exporter
+    group: pg_exporter
+
+- name: Create a pg_exporter symbolic link
+  file:
+    src: /opt/app/pg_exporter/postgres_exporter-0.11.1.linux-amd64
+    dest: /opt/app/pg_exporter/current
+    state: link
+    owner: pg_exporter
+    group: pg_exporter
+
+- name: Create /opt/app/pg_exporter/current/logs if it does not exist
+  file:
+    path: /opt/app/pg_exporter/current/logs
+    state: directory
+    owner: pg_exporter
+    group: pg_exporter
+
+- name: Config suervisor to start pg_exporter
+  template:
+    src: pg_exporter.ini.j2
+    dest: /etc/supervisord.d/pg_exporter.ini
+
+- name: Start pg_exporter
+  command: supervisorctl update pg_exporter
+
+# 保证运行的程序是最新的
+- name: Restart pg_exporter
+  command: supervisorctl restart pg_exporter

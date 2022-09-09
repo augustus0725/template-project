@@ -24,6 +24,7 @@ else
   exit -1
 fi
 
+# config source prometheus
 curl 'http://admin:admin@{{ grafana.host | default("127.0.0.1") }}:{{ grafana.port | default(3000) }}/grafana/api/datasources' \
   -X 'POST' \
   -H 'accept: application/json, text/plain, */*' \
@@ -32,10 +33,20 @@ curl 'http://admin:admin@{{ grafana.host | default("127.0.0.1") }}:{{ grafana.po
   --compressed \
   --insecure
 
+# add node monitor template.
 curl 'http://admin:admin@{{ grafana.host | default("127.0.0.1") }}:{{ grafana.port | default(3000) }}/grafana/api/dashboards/db' \
   -X 'POST' \
   -H 'accept: application/json' \
   -H 'content-type: application/json' \
   --data @dashboard.json \
+  --compressed \
+  --insecure
+
+# add postgresql monitor template.
+curl 'http://admin:admin@{{ grafana.host | default("127.0.0.1") }}:{{ grafana.port | default(3000) }}/grafana/api/dashboards/db' \
+  -X 'POST' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data @postgresql.json \
   --compressed \
   --insecure
