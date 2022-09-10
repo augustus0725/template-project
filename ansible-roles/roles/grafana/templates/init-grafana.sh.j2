@@ -43,7 +43,8 @@ curl 'http://admin:admin@{{ grafana.host | default("127.0.0.1") }}:{{ grafana.po
   --insecure
 
 # add postgresql monitor template.
-curl 'http://admin:admin@{{ grafana.host | default("127.0.0.1") }}:{{ grafana.port | default(3000) }}/grafana/api/dashboards/db' \
+# 用/grafana/api/dashboards/db导入会有变量找不到的错误
+curl 'http://admin:admin@{{ grafana.host | default("127.0.0.1") }}:{{ grafana.port | default(3000) }}/grafana/api/dashboards/import' \
   -X 'POST' \
   -H 'accept: application/json' \
   -H 'content-type: application/json' \
