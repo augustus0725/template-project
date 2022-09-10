@@ -130,6 +130,10 @@ alertmanager:
   host: 127.0.0.1
   port: 9093
 
+# postgresql
+pg_exporter:
+  port: 9187
+
 #################### 调度部分  ###############################################
 # 注意要确保role执行的次序
 # zookeeper-standalone dolphinscheduler2.0.0-pg
