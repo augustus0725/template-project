@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect, useContext, useReducer } from 'react';
+import { useState, useEffect, useContext, useReducer, useMemo } from 'react';
 import { ThemeContext } from './context';
 
 const initialState = {count: 0};
@@ -17,10 +17,23 @@ function reducer(state, action) {
 
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0);  
   const theme = useContext(ThemeContext);
   // reducer (redux way)
   const [state, dispatch] = useReducer(reducer, initialState);
+  // 新的内部状态 num
+  const [num, setNum] = useState(1000);
+
+  function getNum() {
+    console.log("getNum");
+    return num + 1;
+  }
+  // -> 变化 count 的时候也会触发 getNum 计算, 如果getNum 是效率比较低的函数，那是不是就有效率问题?
+  // 解决方式是使用hook -> useMemo  限定哪些状态变化触发自己重新计算
+  const getNumWithMemo = useMemo(() => {
+    console.log("getNumWithMemo");
+    return num + 1;
+  }, [num])
 
   useEffect(() => {
     // 修改 DOM
@@ -36,8 +49,12 @@ function App() {
       <div style={{ background: theme.background, color: theme.foreground }}> {count} </div>
       <div style={{ background: theme.background, color: theme.foreground }}> redux way count: {state.count} </div>
       <div> --------------------------- </div>
+      <div> num is { getNum() } </div>
+      <div> num with memo is { getNumWithMemo } </div>
+      <div> --------------------------- </div>
       <button onClick={() => setCount(count + 1)}> Click me! </button>
       <button onClick={() => dispatch({type: 'increment'})}> Click me with reducer! </button>
+      <button onClick={() => setNum(num + 1)}> Change Num </button>
     </div>
   );
 }
