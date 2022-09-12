@@ -1,8 +1,10 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { ThemeContext } from './context';
 
 function App() {
   const [count, setCount] = useState(0);
+  const theme = useContext(ThemeContext);
 
   useEffect(() => {
     // 修改 DOM
@@ -15,7 +17,7 @@ function App() {
     <div className="App">
       <div> Learn react hooks </div>
       <div> --------------------------- </div>
-      <div> {count} </div>
+      <div style={{ background: theme.background, color: theme.foreground }}> {count} </div>
       <div> --------------------------- </div>
       <button onClick={() => setCount(count + 1)}> Click me! </button>
     </div>
