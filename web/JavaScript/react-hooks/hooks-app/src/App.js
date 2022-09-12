@@ -1,6 +1,7 @@
 import './App.css';
 import { useState, useEffect, useContext, useReducer, useMemo } from 'react';
 import { ThemeContext } from './context';
+import Child from './Child';
 
 const initialState = {count: 0};
 
@@ -33,7 +34,11 @@ function App() {
   const getNumWithMemo = useMemo(() => {
     console.log("getNumWithMemo");
     return num + 1;
-  }, [num])
+  }, [num]);
+
+  // 现版本react， 无论是否修改到影响子组件的状态元素, 子组件都会渲染
+  // 应该限制一下, 比如说我只用到了 count， 那应该只有 count 变了， 才引起child渲染
+  // 方法： 使用高阶组件 memo， 可以看下Child 组件里的注释 和 用法
 
   useEffect(() => {
     // 修改 DOM
@@ -51,6 +56,8 @@ function App() {
       <div> --------------------------- </div>
       <div> num is { getNum() } </div>
       <div> num with memo is { getNumWithMemo } </div>
+      <div> --------------------------- </div>
+      <Child count={ count }></Child>
       <div> --------------------------- </div>
       <button onClick={() => setCount(count + 1)}> Click me! </button>
       <button onClick={() => dispatch({type: 'increment'})}> Click me with reducer! </button>
