@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect, useContext, useReducer, useMemo } from 'react';
+import { useState, useEffect, useContext, useReducer, useMemo, useCallback } from 'react';
 import { ThemeContext } from './context';
 import Child from './Child';
 
@@ -40,6 +40,13 @@ function App() {
   // 应该限制一下, 比如说我只用到了 count， 那应该只有 count 变了， 才引起child渲染
   // 方法： 使用高阶组件 memo， 可以看下Child 组件里的注释 和 用法
 
+  // 子组件依赖的 [变量] 可以用 memo来避免错误渲染
+  //             memo 对依赖的函数 没有作用
+  //          --> 解决方法是useCallback
+  const callback = useCallback(() => {},
+   []); // 这里可以定义 和 哪些状态 有关， 之后 变化会引起 子模块的重新计算
+  
+
   useEffect(() => {
     // 修改 DOM
     // 字符串里的变量采用ES6语法， 字符串模板
@@ -57,7 +64,7 @@ function App() {
       <div> num is { getNum() } </div>
       <div> num with memo is { getNumWithMemo } </div>
       <div> --------------------------- </div>
-      <Child count={ count }></Child>
+      <Child count={ count } callback = {callback}></Child>
       <div> --------------------------- </div>
       <button onClick={() => setCount(count + 1)}> Click me! </button>
       <button onClick={() => dispatch({type: 'increment'})}> Click me with reducer! </button>
