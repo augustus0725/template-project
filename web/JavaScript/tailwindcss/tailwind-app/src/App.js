@@ -45,13 +45,23 @@ function App() {
         <img src={logo} alt="logo"></img>
       </div>
       {/* break-after-x */}
-      <div>reak-after-x</div>
+      <div>break-after-x</div>
+      <div>  不加break ------------------------------------------------------------------------------------------------------------------------------------</div>
       <div className="columns-2">
         <p>Well, let me tell you something, ...</p>
-        <p >Sure, go ahead, laugh...</p>
+        <p >Sure, go ahead, laugh Sure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laugh</p>
         <p>Maybe we can live without...</p>
         <p>Look. If you think this is...</p>
       </div>
+      <div>--------------------------------------------------------------------------------------------------------------------------------------------------------</div>
+      <div className="columns-2">
+        <p>Well, let me tell you something, ...</p>
+        <p className="break-after-column">Sure, go ahead, laugh Sure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laughSure, go ahead, laugh</p>
+        <p>Maybe we can live without...</p>
+        <p>Look. If you think this is...</p>
+      </div>
+      <div>--------------------------------------------------------------------------------------------------------------------------------------------------------</div>
+
     </>
   );
 }
