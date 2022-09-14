@@ -9,7 +9,7 @@ function App() {
       </div>
       {/* 用column 数量来限定一行几列 */}
       <div>
-      用column 数量来限定一行几列
+        用column 数量来限定一行几列
       </div>
       <div className="columns-3">
         <img src={logo} alt="logo"></img>
@@ -29,6 +29,28 @@ function App() {
         <img src={logo} alt="logo"></img>
         <img src={logo} alt="logo"></img>
         <img src={logo} alt="logo"></img>
+      </div>
+      {/* 当hove的时候展示3列 */}
+      <div>当hover的时候展示3列</div>
+      <div className="columns-4 hover:columns-3">
+        <img src={logo} alt="logo"></img>
+        <img src={logo} alt="logo"></img>
+        <img src={logo} alt="logo"></img>
+      </div>
+      {/* 设备为指定的设备的时候, 显示不同的样式 */}
+      <div>设备为指定的设备的时候, 显示不同的样式</div>
+      <div className="columns-3 md:columns-2">
+        <img src={logo} alt="logo"></img>
+        <img src={logo} alt="logo"></img>
+        <img src={logo} alt="logo"></img>
+      </div>
+      {/* break-after-x */}
+      <div>reak-after-x</div>
+      <div className="columns-2">
+        <p>Well, let me tell you something, ...</p>
+        <p >Sure, go ahead, laugh...</p>
+        <p>Maybe we can live without...</p>
+        <p>Look. If you think this is...</p>
       </div>
     </>
   );
