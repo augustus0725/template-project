@@ -336,6 +336,18 @@ function App() {
         <div className="border-2 border-blue-500">03</div>
         <div className="border-2 border-blue-500">04</div>
       </div>
+      <br/>
+      {/* 控制box 的 space  */}
+      {/* <div> 控制padding, p{t|r|b|l}-{size} </div> */}
+      <div> 控制margin m/t/r/b/l/-size</div>
+      <div className="border-2 border-blue-500 w-1/3 mx-40 p-8">控制padding p/pt/pt/pb/pl-size</div>
+
+      <div className="border-2 border-blue-500 w-1/3"> 控制元素的宽 </div>
+      <div className="border-2 border-blue-500 w-fit mx-9"> 宽度适应内容 </div>
+      <div className="border-2 border-blue-500 w-max mx-9"> 最大内容宽度 </div>
+      <div className="border-2 border-blue-500 w-min mx-9"> 最小内容宽度 </div>
+      <div className="border-2 border-blue-500 w-full ml-9"> 最宽 </div>
+
 
 
     </>
