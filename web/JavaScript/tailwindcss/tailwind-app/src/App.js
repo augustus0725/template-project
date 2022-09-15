@@ -262,7 +262,80 @@ function App() {
         <div className="border-2 border-blue-500">03</div>
       </div>
 
-      {/*  */}
+      {/* 设置内容位置 */}
+      <div>设置内容位置 align left</div>
+      <div className="h-56 grid grid-cols-3 gap-4 content-start border-2 border-blue-500">
+        <div className="border-2 border-blue-500 h-8 w-16">01</div>
+        <div className="border-2 border-blue-500 h-8 w-16">02</div>
+        <div className="border-2 border-blue-500 h-8 w-16">03</div>
+        <div className="border-2 border-blue-500 h-8 w-16">04</div>
+        <div className="border-2 border-blue-500 h-8 w-16">05</div>
+      </div>
+      <div>设置内容位置 align center</div>
+      <div className="h-56 grid grid-cols-3 gap-4 content-center border-2 border-blue-500">
+        <div className="border-2 border-blue-500 h-8 w-16">01</div>
+        <div className="border-2 border-blue-500 h-8 w-16">02</div>
+        <div className="border-2 border-blue-500 h-8 w-16">03</div>
+        <div className="border-2 border-blue-500 h-8 w-16">04</div>
+        <div className="border-2 border-blue-500 h-8 w-16">05</div>
+        <div className="border-2 border-blue-500 h-8 w-16">06</div>
+      </div>
+
+      <div>设置内容位置  center</div>
+      <div className="grid grid-cols-2 gap-4 place-content-center h-48 border-2 border-blue-500">
+        <div className="border-2 border-blue-500 h-8 w-16">01</div>
+        <div className="border-2 border-blue-500 h-8 w-16">02</div>
+        <div className="border-2 border-blue-500 h-8 w-16">03</div>
+        <div className="border-2 border-blue-500 h-8 w-16">04</div>
+      </div>
+
+      <div>设置内容位置  start</div>
+      <div className="grid grid-cols-2 gap-4 place-content-start h-48 border-2 border-blue-500">
+        <div className="border-2 border-blue-500 h-8 w-16">01</div>
+        <div className="border-2 border-blue-500 h-8 w-16">02</div>
+        <div className="border-2 border-blue-500 h-8 w-16">03</div>
+        <div className="border-2 border-blue-500 h-8 w-16">04</div>
+      </div>
+
+      <div>设置内容位置  end</div>
+      <div className="grid grid-cols-2 gap-4 place-content-end h-48 border-2 border-blue-500">
+        <div className="border-2 border-blue-500 h-8 w-16">01</div>
+        <div className="border-2 border-blue-500 h-8 w-16">02</div>
+        <div className="border-2 border-blue-500 h-8 w-16">03</div>
+        <div className="border-2 border-blue-500 h-8 w-16">04</div>
+      </div>
+
+      <div>设置内容位置  between</div>
+      <div className="grid grid-cols-2 gap-4 place-content-between h-48 border-2 border-blue-500">
+        <div className="border-2 border-blue-500 h-8 w-16">01</div>
+        <div className="border-2 border-blue-500 h-8 w-16">02</div>
+        <div className="border-2 border-blue-500 h-8 w-16">03</div>
+        <div className="border-2 border-blue-500 h-8 w-16">04</div>
+      </div>
+
+      <div>设置内容位置  space around</div>
+      <div className="grid grid-cols-2 gap-4 place-content-around h-48 border-2 border-blue-500">
+        <div className="border-2 border-blue-500 h-8 w-16">01</div>
+        <div className="border-2 border-blue-500 h-8 w-16">02</div>
+        <div className="border-2 border-blue-500 h-8 w-16">03</div>
+        <div className="border-2 border-blue-500 h-8 w-16">04</div>
+      </div>
+
+      <div>设置内容位置  space evenly</div>
+      <div className="grid grid-cols-2 gap-4 place-content-evenly h-48 border-2 border-blue-500">
+        <div className="border-2 border-blue-500 h-8 w-16">01</div>
+        <div className="border-2 border-blue-500 h-8 w-16">02</div>
+        <div className="border-2 border-blue-500 h-8 w-16">03</div>
+        <div className="border-2 border-blue-500 h-8 w-16">04</div>
+      </div>
+
+      <div>设置内容位置  space stretch</div>
+      <div className="grid grid-cols-2 gap-4 place-content-stretch h-48 border-2 border-blue-500">
+        <div className="border-2 border-blue-500">01</div>
+        <div className="border-2 border-blue-500">02</div>
+        <div className="border-2 border-blue-500">03</div>
+        <div className="border-2 border-blue-500">04</div>
+      </div>
 
 
     </>
