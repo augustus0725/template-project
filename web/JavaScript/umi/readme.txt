@@ -7,3 +7,10 @@
   pnpm i                     --> 安装依赖
   pnpm start                 --> 测试
   
+
+
+
+# 也可以使用ant-design/pro-cli 脚手架来创建项目
+pnpm dlx @ant-design/pro-cli create ant-design-app
+-> 选择 umi4/umi3
+   这里选择的umi4
