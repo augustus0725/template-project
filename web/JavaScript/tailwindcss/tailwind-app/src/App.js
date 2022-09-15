@@ -336,7 +336,7 @@ function App() {
         <div className="border-2 border-blue-500">03</div>
         <div className="border-2 border-blue-500">04</div>
       </div>
-      <br/>
+      <br />
       {/* 控制box 的 space  */}
       {/* <div> 控制padding, p{t|r|b|l}-{size} </div> */}
       <div> 控制margin m/t/r/b/l/-size</div>
@@ -347,6 +347,44 @@ function App() {
       <div className="border-2 border-blue-500 w-max mx-9"> 最大内容宽度 </div>
       <div className="border-2 border-blue-500 w-min mx-9"> 最小内容宽度 </div>
       <div className="border-2 border-blue-500 w-full ml-9"> 最宽 </div>
+
+      {/*  文字内容的排版  */}
+      <div className="border-2 border-blue-500 w-1/3">文字内容的排版</div>
+      <div className="border-2 border-blue-500 w-1/3 text-center">文字内容的排版</div>
+      <div className="border-2 border-blue-500 w-1/3 text-center text-yellow-500">文字内容的排版</div>
+      <div className="border-2 border-blue-500 w-1/3 text-end">文字内容的排版</div>
+      <div className="border-2 border-blue-500 w-1/3 text-center decoration-red-500 underline decoration-wavy underline-offset-8">加波浪线， 并且设置offset， offset控制距离文字的距离</div>
+      <div className="border-2 border-blue-500 w-1/3 text-end line-through">文字内容的排版</div>
+      <div className="border-2 border-blue-500 w-1/3 text-center decoration-red-500 overline decoration-2">装饰的下划线之类的可以加颜色， 也可以控制粗细</div>
+
+      <p className="capitalize">The quick brown fox， 每个单词首字母大写</p>
+      <p>文字太多超过显示区域, 自动加...</p>
+      <p className="truncate border-2 border-blue-500 w-1/3"> Maybe we can live without libraries, people like you and me. Maybe. Sure, we're too old to change the world, but what about that kid, sitting down, opening a book, right now, in a branch at the local library and finding drawings of pee-pees and wee-wees on the Cat in the Hat and the Five Chinese Brothers? Doesn't HE deserve better? Look. If you think this is about overdue fines and missing books, you'd better think again. This is about that kid's right to read a book without getting his mind warped! Or: maybe that turns you on, Seinfeld; maybe that's how y'get your kicks. You and your good-time buddies.</p>
+      <p className="text-ellipsis border-2 border-blue-500 w-1/3"> Maybe we can live without libraries, people like you and me. Maybe. Sure, we're too old to change the world, but what about that kid, sitting down, opening a book, right now, in a branch at the local library and finding drawings of pee-pees and wee-wees on the Cat in the Hat and the Five Chinese Brothers? Doesn't HE deserve better? Look. If you think this is about overdue fines and missing books, you'd better think again. This is about that kid's right to read a book without getting his mind warped! Or: maybe that turns you on, Seinfeld; maybe that's how y'get your kicks. You and your good-time buddies.</p>
+      <br />
+      <p className="text-clip overflow-hidden border-2 border-blue-500 w-1/3 h-8"> Maybe we can live without libraries, people like you and me. Maybe. Sure, we're too old to change the world, but what about that kid, sitting down, opening a book, right now, in a branch at the local library and finding drawings of pee-pees and wee-wees on the Cat in the Hat and the Five Chinese Brothers? Doesn't HE deserve better? Look. If you think this is about overdue fines and missing books, you'd better think again. This is about that kid's right to read a book without getting his mind warped! Or: maybe that turns you on, Seinfeld; maybe that's how y'get your kicks. You and your good-time buddies.</p>
+
+      <div>文字缩进</div>
+      <p className="indent-8 border-2 border-blue-500 w-1/3">
+        So I started to walk into the water. I won't lie to you boys, I was
+        terrified. But I pressed on, and as I made my way past the breakers
+        a strange calm came over me. I don't know if it was divine intervention
+        or the kinship of all living things but I tell you Jerry at that moment,
+        I <em>was</em> a marine biologist.
+      </p>
+
+      <div className="flex gap-4">
+        <p>控制鼠标图案</p>
+        <button type="button" className="cursor-pointer border-2 border-blue-700">
+          Submit
+        </button>
+        <button type="button" className="cursor-progress border-2 border-blue-700">
+          Saving...
+        </button>
+        <button type="button" disabled className="cursor-not-allowed border-2 border-blue-700">
+          Confirm
+        </button>
+      </div>
 
 
 
