@@ -1,3 +1,24 @@
 .title {
   background: rgb(121, 242, 157);
 }
+
+.text_red {
+  color:red
+};
+
+@width: 100px;
+
+.w {
+  width: @width;
+}
+
+.bordered (@topW: 1px, @bottomW: 2px) {
+  border-top: dotted @topW black;
+  border-bottom: solid @bottomW black;
+}
+
+.a1 {
+  color:aqua;
+  .bordered(2px, 4px);
+}
+
