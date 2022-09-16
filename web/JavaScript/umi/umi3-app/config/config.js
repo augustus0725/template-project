@@ -1,13 +1,12 @@
 import { defineConfig } from 'umi';
+import routes from "./routes"
 
 export default defineConfig({
   // 定义编译过程, all会让依赖的包重新编译，all比较慢
   nodeModulesTransform: {
     type: 'none',
   },
-  routes: [
-    { path: '/', component: '@/pages/index' },
-  ],
+  routes: routes,
   // 能保持当前页面的数据
   fastRefresh: {},
   // 配置devServer
