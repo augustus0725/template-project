@@ -1,5 +1,6 @@
 import { defineConfig } from 'umi';
 import routes from "./routes"
+import theme from './theme';
 
 export default defineConfig({
   // 定义编译过程, all会让依赖的包重新编译，all比较慢
@@ -21,6 +22,8 @@ export default defineConfig({
   // 启动按需加载
   dynamicImport: {
     loading: '@/components/loading', // 按需加载过程中显示的页面
-  }
+  },
+  // 设置主题样式
+  theme,
 
 });
