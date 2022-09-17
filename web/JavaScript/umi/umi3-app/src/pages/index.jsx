@@ -8,6 +8,14 @@ export default function IndexPage({history}) {
   const [count, setCount] = useState(0);
   const hookHistory = useHistory();
 
+  const fetchData = () => {
+    let result = fetch('/umi/goods').then((response) => {
+      return response.json();
+    }).then((data) => {
+      console.log("data is :", data);
+    });
+  }
+
   return (
     <div>
       <h1 className={styles.title}>Page index</h1>
@@ -23,6 +31,10 @@ export default function IndexPage({history}) {
       <br/>
       <br/>
       <Button type="primary" onClick={() => hookHistory.push('/login', {a:3})}>login with history hooks</Button>
+      {/* fetch接口调用, fetch是js自带的 */}
+      <br/>
+      <br/>
+      <Button type="primary" onClick={fetchData}>Fetch data with fetch</Button>
     </div>
   );
 }
