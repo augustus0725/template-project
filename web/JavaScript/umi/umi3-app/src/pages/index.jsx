@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styles from './index.less';
 import { Button } from 'antd';
 import { Button as V2Button } from 'antd-mobile';
-import { useHistory } from 'umi';
+import { useHistory, request } from 'umi';
 
 export default function IndexPage({history}) {
   const [count, setCount] = useState(0);
@@ -33,6 +33,11 @@ export default function IndexPage({history}) {
     })
   }
 
+  const fetchDataWithRequest = async () => {
+    let data = await request('/umi/goods');
+    console.log('data: ', data);
+  }
+
   return (
     <div>
       <h1 className={styles.title}>Page index</h1>
@@ -55,6 +60,9 @@ export default function IndexPage({history}) {
       <br/>
       <br/>
       <Button type="primary" onClick={login}>Login</Button>
+      <br/>
+      <br/>
+      <Button type="primary" onClick={fetchDataWithRequest}>Fetch data with umi request</Button>
     </div>
   );
 }
