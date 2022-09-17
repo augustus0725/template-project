@@ -1,10 +1,10 @@
 import Nav from '@/components/nav';
+import styles from './index.less';
 
 const BaseLayouts = (props) => {
   return (
     <>
-      <Nav></Nav>
-      <div>It's base layout.</div>
+      <div className={styles.nav}><Nav></Nav></div>
       { props.children }
     </>
   );

@@ -1,6 +1,8 @@
 const Menu = () => {
   return (
-    <div>It's Menu!</div>
+    <>
+    It's Menu!
+    </>
   );
 };
 

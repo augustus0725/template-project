@@ -1,6 +1,14 @@
-const AsideLayout = () => {
+import Menu from '@/components/menu';
+import styles from './index.less'
+
+const AsideLayout = (props) => {
   return (
-    <div>It's base layout.</div>
+    <div>
+      <div className={styles.left}>
+        <Menu></Menu>
+        </div>
+      <div>{ props.children }</div>
+    </div>
   );
 }
 

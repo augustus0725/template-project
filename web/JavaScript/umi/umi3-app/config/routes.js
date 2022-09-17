@@ -8,6 +8,22 @@ export default [
       { path: '/login', component: '@/pages/login'},
       { path: '/reg', component: '@/pages/reg'},
       { path: '/', component: '@/pages/index' },
+      // 内容展示区
+      {
+        path: '/goods',
+        component: '@/layouts/aside-layouts',
+        routes: [
+          {
+            path: '/goods/list',
+            component: '@/pages/goods/list',
+          },
+          {
+            path: '/goods',
+            component: '@/pages/goods',
+          },
+        ],
+      }
+
     ]
   },
 
