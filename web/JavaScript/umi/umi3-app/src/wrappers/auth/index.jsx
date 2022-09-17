@@ -1,7 +1,7 @@
 import {Redirect} from 'umi';
 
 export default (props) => {
-  if (false) {
+  if (true) {
     return (
       <div>{props.children}</div>
     );

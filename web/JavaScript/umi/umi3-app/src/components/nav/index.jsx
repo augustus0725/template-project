@@ -1,6 +1,14 @@
+import { NavLink } from 'umi';
+
 const Nav = () => {
   return (
-    <div>It's Nav!</div>
+    <>
+      <NavLink to="/login"> login </NavLink>
+      <NavLink to="/goods"> goods </NavLink>
+      <NavLink to={{ pathname: '/goods/4', query: { a: 1, b: 2 } }}>
+        goods-detail
+      </NavLink>
+    </>
   );
 };
 
