@@ -14,7 +14,7 @@ export default function IndexPage({history}) {
     }).then((data) => {
       console.log("data is :", data);
     });
-  }
+  };
 
   const login = () => {
     fetch('/umi/login', {
@@ -31,11 +31,23 @@ export default function IndexPage({history}) {
     }).then((data) => {
       console.log("Login result: ", data);
     })
-  }
+  };
 
   const fetchDataWithRequest = async () => {
     let data = await request('/umi/goods');
     console.log('data: ', data);
+  };
+
+  const loginWithRequest = async () => {
+    let data = await request('/umi/login', {
+      method: 'post',
+      // headers 自动加了 application/json
+      data: {
+        username: 'sabo',
+        password: '123',
+      }
+    });
+    console.log("Login data is :", data);
   }
 
   return (
@@ -63,6 +75,9 @@ export default function IndexPage({history}) {
       <br/>
       <br/>
       <Button type="primary" onClick={fetchDataWithRequest}>Fetch data with umi request</Button>
+      <br/>
+      <br/>
+      <Button type="primary" onClick={loginWithRequest}>Login with umi request</Button>
     </div>
   );
 }
