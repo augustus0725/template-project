@@ -1,9 +1,9 @@
 // https://umijs.org/config/
-import { defineConfig } from '@umijs/max';
-import { join } from 'path';
-import defaultSettings from './defaultSettings';
-import proxy from './proxy';
-import routes from './routes';
+import { defineConfig } from "@umijs/max";
+import { join } from "path";
+import defaultSettings from "./defaultSettings";
+import proxy from "./proxy";
+import routes from "./routes";
 
 const { REACT_APP_ENV } = process.env;
 
@@ -39,8 +39,9 @@ export default defineConfig({
   theme: {
     // 如果不想要 configProvide 动态设置主题需要把这个设置为 default
     // 只有设置为 variable， 才能使用 configProvide 动态设置主色调
-    'root-entry-name': 'variable',
+    "root-entry-name": "variable",
   },
+
   /**
    * @name moment 的国际化配置
    * @description 如果对国际化没有要求，打开之后能减少js的包大小
@@ -54,7 +55,7 @@ export default defineConfig({
    * @doc 代理介绍 https://umijs.org/docs/guides/proxy
    * @doc 代理配置 https://umijs.org/docs/api/config#proxy
    */
-  proxy: proxy[REACT_APP_ENV || 'dev'],
+  proxy: proxy[REACT_APP_ENV || "dev"],
   /**
    * @name 快速热更新配置
    * @description 一个不错的热更新组件，更新时可以保留 state
@@ -80,17 +81,19 @@ export default defineConfig({
     locale: true,
     ...defaultSettings,
   },
+
   /**
    * @name 国际化插件
    * @doc https://umijs.org/docs/max/i18n
    */
   locale: {
     // default zh-CN
-    default: 'zh-CN',
+    default: "zh-CN",
     antd: true,
     // default true, when it is true, will use `navigator.language` overwrite default
     baseNavigator: true,
   },
+
   /**
    * @name antd 插件
    * @description 内置了 babel import 插件
@@ -110,7 +113,7 @@ export default defineConfig({
    */
   access: {},
   //================ pro 插件配置 =================
-  presets: ['umi-presets-pro'],
+  presets: ["umi-presets-pro"],
   /**
    * @name openAPI 插件的配置
    * @description 基于 openapi 的规范生成serve 和mock，能减少很多样板代码
@@ -121,13 +124,16 @@ export default defineConfig({
       requestLibPath: "import { request } from '@umijs/max'",
       // 或者使用在线的版本
       // schemaPath: "https://gw.alipayobjects.com/os/antfincdn/M%24jrzTTYJN/oneapi.json"
-      schemaPath: join(__dirname, 'oneapi.json'),
+      schemaPath: join(__dirname, "oneapi.json"),
       mock: false,
     },
+
     {
       requestLibPath: "import { request } from '@umijs/max'",
-      schemaPath: 'https://gw.alipayobjects.com/os/antfincdn/CA1dOm%2631B/openapi.json',
-      projectName: 'swagger',
+      schemaPath:
+        "https://gw.alipayobjects.com/os/antfincdn/CA1dOm%2631B/openapi.json",
+      projectName: "swagger",
     },
   ],
+  dva: {},
 });

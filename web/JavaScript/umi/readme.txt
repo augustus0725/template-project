@@ -8,9 +8,13 @@
   pnpm start                 --> 测试
   
 
+# (官网) 用create-umi脚手架程序创建umi4项目
+mkdir umi4-app && cd umi4-app
+pnpm dlx create-umi@4.0.20 --no-git --no-install
 
 
 # 也可以使用ant-design/pro-cli 脚手架来创建项目
 pnpm dlx @ant-design/pro-cli create ant-design-app
 -> 选择 umi4/umi3
-   这里选择的umi4
+   这里选择的umi4 -> 选择umi4 只能用ant-design pro的脚手架，不能选Simple
+   
