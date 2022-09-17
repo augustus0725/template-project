@@ -8,7 +8,9 @@ export default function IndexPage() {
   return (
     <div>
       <h1 className={styles.title}>Page index</h1>
-      <div>{count}</div>
+      <div className='mylink'>count is : {count}</div>
+      <div className={styles.text_red}>count is : {count}</div>
+      <div className={styles.a1}>count is : {count}</div>
       <Button type="primary" onClick={() => setCount(count+1)}>Add</Button>
       <V2Button type="primary" size="small" inline>V2-Mobile</V2Button>
     </div>
