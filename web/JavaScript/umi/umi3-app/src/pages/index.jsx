@@ -2,11 +2,30 @@ import { useState } from 'react';
 import styles from './index.less';
 import { Button } from 'antd';
 import { Button as V2Button } from 'antd-mobile';
-import { useHistory, request } from 'umi';
+import { useHistory, request, useRequest } from 'umi';
 
 export default function IndexPage({history}) {
   const [count, setCount] = useState(0);
   const hookHistory = useHistory();
+
+  const {data, error, loading} = useRequest('/mock/list');
+
+  if(error) {
+    console.log(error);
+    return (
+      <div>error: ......... </div>
+    );
+  }
+
+  if(loading) {
+    return (
+      <div>Loading..........</div>
+    );
+  }
+
+  if(data) {
+    console.log(data);
+  }
 
   const fetchData = () => {
     fetch('/umi/goods').then((response) => {

@@ -1,6 +1,8 @@
 import Mock from 'mockjs';
+import { delay } from 'roadhog-api-doc'; // 模拟延迟
 
-export default {
+
+export default delay({
   '/mock/list': (req, res) => {
     res.send(Mock.mock(
       {
@@ -38,5 +40,6 @@ export default {
       }
     }));
   },
-}
+},
+1000);
 //  另外如果要求高可以考虑用 jsonserver 来做mock
