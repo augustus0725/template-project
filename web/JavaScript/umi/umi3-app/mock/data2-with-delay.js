@@ -8,7 +8,7 @@ export default delay(
 
     ],
 
-    'POST /api/login': (req, res) => {
+    'POST /umi/login': (req, res) => {
       const {username, password} = req.body;
 
       if (username === "sabo" && password === "123") {

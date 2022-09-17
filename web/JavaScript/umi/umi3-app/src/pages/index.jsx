@@ -9,11 +9,28 @@ export default function IndexPage({history}) {
   const hookHistory = useHistory();
 
   const fetchData = () => {
-    let result = fetch('/umi/goods').then((response) => {
+    fetch('/umi/goods').then((response) => {
       return response.json();
     }).then((data) => {
       console.log("data is :", data);
     });
+  }
+
+  const login = () => {
+    fetch('/umi/login', {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: 'admin',
+        password: '123',
+      }),
+    }).then((response) => {
+      return response.json();
+    }).then((data) => {
+      console.log("Login result: ", data);
+    })
   }
 
   return (
@@ -35,6 +52,9 @@ export default function IndexPage({history}) {
       <br/>
       <br/>
       <Button type="primary" onClick={fetchData}>Fetch data with fetch</Button>
+      <br/>
+      <br/>
+      <Button type="primary" onClick={login}>Login</Button>
     </div>
   );
 }
