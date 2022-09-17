@@ -11,6 +11,10 @@ export default [
       // 内容展示区
       {
         path: '/goods',
+        // 授权
+        wrappers: [
+          '@/wrappers/auth',
+        ],
         component: '@/layouts/aside-layouts',
         routes: [
           {
