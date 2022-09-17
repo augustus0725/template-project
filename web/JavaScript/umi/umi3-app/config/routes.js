@@ -21,6 +21,14 @@ export default [
             path: '/goods',
             component: '@/pages/goods',
           },
+          {
+            path: '/goods/:id',
+            component: '@/pages/goods/goods-detail',
+          },
+          {
+            path: '/goods/:id/comment',
+            component: '@/pages/goods/goods-detail/comment',
+          }
         ],
       }
 
