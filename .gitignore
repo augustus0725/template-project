@@ -40,3 +40,4 @@ hs_err_pid*
 
 # web
 **/node_modules
+**/pnpm-lock.yaml

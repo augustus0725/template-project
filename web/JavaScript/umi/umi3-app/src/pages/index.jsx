@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import { Button as V2Button } from 'antd-mobile';
 import { useHistory, request, useRequest, connect } from 'umi';
 
-const IndexPage = ({history, title, dispatch}) => {
+const IndexPage = (/*{history, title, login, dispatch}*/props) => {
   const [count, setCount] = useState(0);
   const hookHistory = useHistory();
 
@@ -35,7 +35,7 @@ const IndexPage = ({history, title, dispatch}) => {
     });
   };
 
-  const login = () => {
+  const loginCallback = () => {
     fetch('/umi/login', {
       method: 'post',
       headers: {
@@ -80,7 +80,7 @@ const IndexPage = ({history, title, dispatch}) => {
       {/* 使用编程做跳转 */}
       <br/>
       <br/>
-      <Button type="primary" onClick={() => history.push('/login')}>login with history</Button>
+      <Button type="primary" onClick={() => props.history.push('/login')}>login with history</Button>
       <br/>
       <br/>
       <Button type="primary" onClick={() => hookHistory.push('/login', {a:3})}>login with history hooks</Button>
@@ -90,7 +90,7 @@ const IndexPage = ({history, title, dispatch}) => {
       <Button type="primary" onClick={fetchData}>Fetch data with fetch</Button>
       <br/>
       <br/>
-      <Button type="primary" onClick={login}>Login</Button>
+      <Button type="primary" onClick={loginCallback}>Login</Button>
       <br/>
       <br/>
       <Button type="primary" onClick={fetchDataWithRequest}>Fetch data with umi request</Button>
@@ -99,14 +99,28 @@ const IndexPage = ({history, title, dispatch}) => {
       <Button type="primary" onClick={loginWithRequest}>Login with umi request</Button>
       <br/>
       <br/>
-      <div> dva state.title : {title} </div>
+      <div> dva state.title : {props.title} </div>
       <br/>
       <br/>
       <Button type="primary" onClick={() => {
-        dispatch({
+        props.dispatch({
           type: 'global/setTitle'
         });
       }}>change dva title</Button>
+      <br/>
+      <br/>
+
+      {/* Boolean 变量在页面上显示要变成string, 不然显示不了 */}
+      <div> Login is : {props.login.toString()} </div>
+      <Button type="primary" onClick={() => {
+        props.dispatch({
+          type: 'global/login',
+          payload: {
+            username: 'admin',
+            password: '123',
+          }
+        });
+      }}>Login async</Button>
     </div>
   );
 }
@@ -115,5 +129,6 @@ const IndexPage = ({history, title, dispatch}) => {
 export default connect((state) => {
   return {
     title: state.global.title,
+    login: state.global.login,
   };  
 })(IndexPage);
