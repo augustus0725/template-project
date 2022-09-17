@@ -7,6 +7,30 @@ export default delay(
       {id:2, name: 'apple'},
 
     ],
+
+    'POST /api/login': (req, res) => {
+      const {username, password} = req.body;
+
+      if (username === "sabo" && password === "123") {
+        res.send({
+          err: 0,
+          msg: '成功',
+          role: 'user',
+        });
+      } else if (username === "admin" && password === "123") {
+        res.send({
+          err: 0,
+          msg: '成功',
+          role: 'admin',
+        });
+      }  else {
+        res.send({
+          err: 1,
+          msg: '失败',
+          role: 'anonymous',
+        });
+      }
+    }
   },
-  2000, // ms
+  1000, // ms
 );
