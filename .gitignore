@@ -37,3 +37,6 @@ hs_err_pid*
 
 # Python
 *.py[co]
+
+# web
+**/node_modules
