@@ -2,9 +2,9 @@ import { useState } from 'react';
 import styles from './index.less';
 import { Button } from 'antd';
 import { Button as V2Button } from 'antd-mobile';
-import { useHistory, request, useRequest } from 'umi';
+import { useHistory, request, useRequest, connect } from 'umi';
 
-export default function IndexPage({history}) {
+const IndexPage = ({history, title, dispatch}) => {
   const [count, setCount] = useState(0);
   const hookHistory = useHistory();
 
@@ -97,6 +97,23 @@ export default function IndexPage({history}) {
       <br/>
       <br/>
       <Button type="primary" onClick={loginWithRequest}>Login with umi request</Button>
+      <br/>
+      <br/>
+      <div> dva state.title : {title} </div>
+      <br/>
+      <br/>
+      <Button type="primary" onClick={() => {
+        dispatch({
+          type: 'global/setTitle'
+        });
+      }}>change dva title</Button>
     </div>
   );
 }
+
+// 用connect关联 dva的全局状态
+export default connect((state) => {
+  return {
+    title: state.global.title,
+  };  
+})(IndexPage);
