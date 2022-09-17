@@ -1,6 +1,7 @@
 import { defineConfig } from 'umi';
 import routes from "./routes"
 import theme from './theme';
+import proxy from './proxy';
 
 export default defineConfig({
   // 定义编译过程, all会让依赖的包重新编译，all比较慢
@@ -25,5 +26,7 @@ export default defineConfig({
   },
   // 设置主题样式
   theme,
+  // 设置反向代理
+  proxy,
 
 });
