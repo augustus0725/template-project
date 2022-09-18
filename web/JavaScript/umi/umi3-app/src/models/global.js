@@ -44,7 +44,41 @@ export default {
                 payload: data,
             });
         }
+    },
+
+    // 监听事件： 路由，数据源, 键盘... -> 改变web app状态
+    subscriptions: {
+        // 路由变化
+        listenRoute({dispatch, history}) {
+            history.listen(({pathname, query}) => {
+                console.log('Events of routes: ', pathname, query);
+            });
+        },
+        // 键盘
+        // listenKeyboard() {
+        //     // 要引入包, keymaster
+        //     key('ctrl+i', () => {
+
+        //     });
+        // },
+
+        // 窗口变化
+        listenResize() {
+            window.onresize = function () {
+                //
+            }
+        },
+
+        // 滚动条
+        listenSroll() {
+            window.onscroll = function() {
+                //
+            }
+        }
+
+
     }
+
 
 
 }
