@@ -18,3 +18,6 @@ pnpm dlx @ant-design/pro-cli create ant-design-app
 -> 选择 umi4/umi3
    这里选择的umi4 -> 选择umi4 只能用ant-design pro的脚手架，不能选Simple
    
+-> mock要生效注意看 运行脚本, mock=none 会导致mock不启动, 所以 pnpm start 会启动mock
+   
+   
