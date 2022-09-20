@@ -19,5 +19,11 @@ pnpm dlx @ant-design/pro-cli create ant-design-app
    这里选择的umi4 -> 选择umi4 只能用ant-design pro的脚手架，不能选Simple
    
 -> mock要生效注意看 运行脚本, mock=none 会导致mock不启动, 所以 pnpm start 会启动mock
+
+
+# ant-design pro
+=> 整体页面的布局可以 
+   到 https://preview.pro.ant.design/dashboard/analysis/?primaryColor=daybreak
+   通过可视化的方式选择, 好了之后, 点击复制配置, 然后修改我们的配置文件 -->  defaultSettings.ts
    
    
