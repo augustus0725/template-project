@@ -388,9 +388,41 @@ function App() {
 
       {/*  div 形状  */}
       <div className="flex justify-center place-items-center  w-16 h-16 rounded-full bg-red-500"> 
-      <div className="w-fit h-fit">爱心</div>
-      
+      <div className="w-fit h-fit">爱心</div>      
       </div>
+
+      <div>  动画 旋转 </div>
+      <div className="border-2 border-red-500 w-5 h-5 transform rotate-45"></div>
+
+      <div>  动画 缩小75% </div>
+      <div className="border-2 border-red-500 w-5 h-5 transform scale-75"></div>
+
+      <div>  动画 x 平移 16px </div>
+      <div className="border-2 border-red-500 w-5 h-5 transform translate-x-4"></div>
+
+      <div>  动画 倾斜 </div>
+      <div className="border-2 border-red-500 w-5 h-5 transform skew-x-12"></div>
+
+      <div>  动画 原点不变换 </div>
+      <div className="border-2 border-red-500 w-32 h-5 transform -rotate-45"></div>
+
+      <div>  动画 原点变换 </div>
+      <div className="border-2 border-red-500 w-32 h-5 origin-top-left transform -rotate-45"></div>
+
+      <div>  动画 hover 放大 </div>
+      <div className="border-2 border-red-500 w-5 h-5 transition duration-150 ease-in-out hover:scale-150"></div>
+
+      <div>  动画 一直在旋转 </div>
+      <div className="border-2 border-red-500 w-5 h-5 animate-spin"></div>
+
+      <div>  动画 一直在闪 </div>
+      <div className="bg-rose-600 w-5 h-5 animate-ping"></div>
+
+      <div>  动画 pulse </div>
+      <div className="bg-rose-600 w-5 h-5 animate-pulse"></div>
+
+      <div>  动画 反弹 </div>
+      <div className="bg-rose-600 w-5 h-5 animate-bounce"></div>
 
 
 
