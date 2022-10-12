@@ -112,6 +112,7 @@ const IndexPage = (/*{history, title, login, dispatch}*/props) => {
 
       {/* Boolean 变量在页面上显示要变成string, 不然显示不了 */}
       <div> Login is : {props.login.toString()} </div>
+      <div className={styles.wrapper_btn}>
       <Button type="primary" onClick={() => {
         props.dispatch({
           type: 'global/login',
@@ -120,7 +121,7 @@ const IndexPage = (/*{history, title, login, dispatch}*/props) => {
             password: '123',
           }
         });
-      }}>Login async</Button>
+      }}>Login async</Button></div>
     </div>
   );
 }
@@ -130,5 +131,5 @@ export default connect((state) => {
   return {
     title: state.global.title,
     login: state.global.login,
-  };  
+  };
 })(IndexPage);

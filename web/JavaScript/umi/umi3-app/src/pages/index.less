@@ -3,8 +3,8 @@
 }
 
 .text_red {
-  color:red
-};
+  color: red;
+}
 
 @width: 100px;
 
@@ -18,7 +18,14 @@
 }
 
 .a1 {
-  color:aqua;
+  color: aqua;
   .bordered(2px, 4px);
 }
 
+.wrapper_btn {
+  :global {
+    .ant-btn-primary {
+      background: yellow;
+    }
+  }
+}
