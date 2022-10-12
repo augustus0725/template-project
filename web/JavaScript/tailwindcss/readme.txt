@@ -12,3 +12,12 @@ pnpx tailwindcss init -p
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  
+  
+# 学习笔记
+- flex 布局 和 grid 布局是 两种不同的布局
+- justify-* (justify-start/justify-end...) 同时可以操作 flex items 和 grid items
+  justify-items 只用来控制 grid items
+  align content-* (content-center/content-start ...) 控制多行（flex & grid）
+  align item-* 控制单行 竖直方向 start center end （flex & grid）
+  place content/items (基本是操作 grid的)

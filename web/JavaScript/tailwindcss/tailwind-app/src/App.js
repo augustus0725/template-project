@@ -387,8 +387,8 @@ function App() {
       </div>
 
       {/*  div 形状  */}
-      <div className="flex justify-center place-items-center  w-16 h-16 rounded-full bg-red-500"> 
-      <div className="w-fit h-fit">爱心</div>      
+      <div className="flex justify-center items-center w-16 h-16 rounded-full bg-red-500">
+        <div className="w-fit h-fit">爱心</div>
       </div>
 
       <div>  动画 旋转 </div>
@@ -423,6 +423,27 @@ function App() {
 
       <div>  动画 反弹 </div>
       <div className="bg-rose-600 w-5 h-5 animate-bounce"></div>
+
+      <h1> 还是要练习布局, flex justify-content 控制flex item水平方向的摆放方式  align-items 控制cross方向摆放方式 align-content 多根main axis的行为</h1>
+      <h1> flex item 默认不放大 flex-grow:0  flex item 默认会缩小 flex-shrink:1</h1>
+      <h1> align-self 可以覆盖align-items的设置，设置独立的参数</h1>
+
+      {/*  flex item 的空间够大， 然后具体的元素怎么摆放？  */}
+      <div class="grid grid-cols-3 gap-4 place-items-center h-56">
+        <div>01</div>
+        <div>02</div>
+        <div>03</div>
+        <div>04</div>
+        <div>05</div>
+        <div>06</div>
+      </div>
+
+      <div className="flex flex-row h-9">
+        <div className="flex items-center justify-center w-28 rounded-l-full border border-r-0 border-black bg-gray-200 hover:bg-blue-500"><span>SpringBoot</span></div>
+        <div className="flex items-center justify-center w-28 border border-r-0 border-black bg-gray-200 hover:bg-blue-500"><span>Golang</span></div>
+        <div className="flex items-center justify-center w-28 border border-r-0 border-black bg-gray-200 hover:bg-blue-500"><span>Nodejs</span></div>
+        <div className="flex items-center justify-center w-28 rounded-r-full border border-black bg-gray-200 hover:bg-blue-500"><span>Python Flask</span></div>
+      </div>
 
 
 
