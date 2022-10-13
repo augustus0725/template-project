@@ -33,6 +33,13 @@
     group: nifi
     state: link
 
+- name: Create /opt/app/nifi/current/logs if it does not exist
+  file:
+    path: /opt/app/nifi/current/logs
+    state: directory
+    owner: nifi
+    group: nifi
+
 - name: Config nifi
   template:
     src:  "{{ item }}.j2"
