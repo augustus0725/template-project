@@ -144,3 +144,9 @@
     state: started
     enabled: True
   ignore_errors: True
+
+- name: Modify default password policy.
+  shell: |
+    echo 'ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;' | sqlplus / as sysdba
+  become: yes
+  become_user: oracle
