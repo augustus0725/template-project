@@ -21,3 +21,7 @@ console.log('[1, 2, 3] 3 in it: ', _.some([1, 2, 3], v => v===3))
 console.log('[1, 2, 3] 4 in it: ', _.some([1, 2, 3], v => v===4))
 
 console.log('{a:1, b:2} omit a is : ', _.omit({a:1, b:2}, ['a']))
+
+console.log('{a: 1, b: 2} has a -> ', _.has({a:1, b:2}, ['a']))
+
+console.log(_.create({ 'a': _.create({ 'b': 2 }) }))

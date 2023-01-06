@@ -7,9 +7,16 @@
     <meta name="author" content="Runoob">
     <meta http-equiv="refresh" content="30">
     <title>Title</title>
+    
+    <script type="text/javascript">
+      function f00 (event) {
+        alert("offsetX: " + event.offsetX + ", offsetY: " + event.offsetY);
+        console.log(event);
+      }
+    </script>
 </head>
 <body>
-<div id="container" style="width:500px">
+<div id="container" style="width:500px; margin: 0 auto;">
 
     <div id="header" style="background-color:#FFA500;">
         <h1 style="margin-bottom:0;">主要的网页标题</h1></div>
@@ -29,6 +36,8 @@
         版权 © runoob.com
     </div>
 </div>
+
+<input type='text' onclick="f00(event)"/>
 
 </body>
 </html>
