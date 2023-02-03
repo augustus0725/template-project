@@ -13,6 +13,7 @@ set(LIB_SOURCES
 
 # lib
 add_library(c_link_lib_so STATIC ${LIB_SOURCES})
+#add_library(c_link_lib_so SHARED ${LIB_SOURCES})
 
 # exe
 add_executable(c_link_lib main.c)
