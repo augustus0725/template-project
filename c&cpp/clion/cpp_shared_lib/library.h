@@ -1,0 +1,6 @@
+#ifndef CPP_SHARED_LIB_LIBRARY_H
+#define CPP_SHARED_LIB_LIBRARY_H
+
+void hello();
+
+#endif //CPP_SHARED_LIB_LIBRARY_H
