@@ -1,11 +1,9 @@
 #
-mkdir build
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake .. -DCMAKE_BUILD_TYPE=Debug
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake -B build -DCMAKE_BUILD_TYPE=Debug
 
 # ±àÒë
-cmake --build . --target c_app_inst
+cmake --build ./build
 
 # °²×°
-cmake --build . --target install
+cmake --build ./build -t install

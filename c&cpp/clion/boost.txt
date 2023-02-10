@@ -1,0 +1,8 @@
+使用find_package 找到boost的条件
+
+1. 下载boost的库
+2. 构建 (事件比较久, 可以选择一些模块编译)
+   ./bootstrap.bat
+   ./b2
+3. cmake -B build -DBOOST_ROOT='path to boost dir'
+   # 也可以设置环境变量
