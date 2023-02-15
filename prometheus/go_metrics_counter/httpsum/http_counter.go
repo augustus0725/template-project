@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"net/http"
@@ -19,6 +20,11 @@ func main() {
 	reg.MustRegister(httpReqs)
 
 	httpReqs.WithLabelValues("404", "POST").Add(100)
+	// Add go runtime metrics and process collectors.
+	reg.MustRegister(
+		collectors.NewGoCollector(),
+		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
+	)
 
 	http.Handle("/metrics", promhttp.HandlerFor(
 		reg, promhttp.HandlerOpts{Registry: reg}))
