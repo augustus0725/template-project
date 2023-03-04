@@ -49,6 +49,7 @@
   with_items:
     - login-identity-providers.xml
     - nifi.properties
+    - bootstrap.conf
     - state-management.xml
 
 - name: create replica user repuser

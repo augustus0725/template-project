@@ -97,6 +97,9 @@ nifi:
   # content的IO最高
   dir_content: "./content_repository"
   dir_provenance: "./provenance_repository"
+  # 单个node节点最多使用的内存, 单位是MB
+  # 加工过程中的FlowFile, ProcessGroup, Processor这些对象都用堆存着, 任务越多应该, 数据量越大, 下面的值就要调整
+  memory: "2048"
 
 
 #################### 监控部分  ###############################################
