@@ -1,0 +1,3 @@
+项目可以用nifi项目自带的脚手架来做
+
+idea 新建maven项目 基于nifi的archtype
