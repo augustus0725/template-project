@@ -1,0 +1,4 @@
+{% for sdw in gp.sdws -%}
+{{ sdw['ip'] }} {{ sdw['hostname'] }}  
+{% endfor %}
+{{ gp.mdw.ip }} {{ gp.mdw.hostname }}

@@ -1,0 +1,4 @@
+{% for p in gp.primary_data_directory -%}
+[ ! -e {{ p }} ] && mkdir -p {{ p }}
+chown -R gpadmin:gpadmin {{ p }}
+{% endfor %}

@@ -36,4 +36,4 @@
   become_user: gpadmin
 
 - name: Add more master env
-  shell: echo 'export MASTER_DATA_DIRECTORY=/opt/data/master/gpseg-1' >> /home/gpadmin/.bashrc
+  shell: echo 'export MASTER_DATA_DIRECTORY={{ gp.master_data_directory }}/gpseg-1' >> /home/gpadmin/.bashrc

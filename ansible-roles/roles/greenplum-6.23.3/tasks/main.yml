@@ -1,0 +1,86 @@
+---
+
+# Passwordless SSH
+- name: Enabling Passwordless SSH
+  shell: |
+    # ssh Passwordless 1-n
+    while read -r line
+    do
+      SSHPASS="{{ gp.password }}" sshpass -e ssh-copy-id -o "StrictHostKeyChecking=no" "${line}"
+    done < /home/gpadmin/hostfile_exkeys
+    # build n-n Passwordless
+    source /usr/local/greenplum-db/greenplum_path.sh
+    gpssh-exkeys -f /home/gpadmin/hostfile_exkeys
+    # end
+    exit 0
+  args:
+    executable: /bin/bash
+    chdir: /tmp
+  become: yes
+  become_user: gpadmin
+
+- name: Config hostfile_gpinitsys & gpinitsystem_config
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/home/gpadmin/{{ item }}"
+  with_items:
+    - hostfile_gpinitsys
+    - gpinitsystem_config
+    - gp_init.sh
+  become: yes
+  become_user: gpadmin
+
+- name: Init Greenplum
+  shell: bash /home/gpadmin/gp_init.sh
+  become: yes
+  become_user: gpadmin
+
+- name: Add gpdb env
+  shell: echo 'export MASTER_DATA_DIRECTORY={{ gp.master_data_directory }}/gpseg-1' >> /home/gpadmin/.bashrc
+
+- name: Extract greenplum-cc-web-6.8.4-gp6-rhel7-x86_64.tar.gz
+  unarchive:
+    src: "3rd-repo/greenplum/greenplum-cc-web-6.8.4-gp6-rhel7-x86_64.tar.gz"
+    dest: "/home/gpadmin"
+    remote_src: no
+    owner: gpadmin
+    group: gpadmin
+
+- name: Config hostfile_gpinitsys & gpinitsystem_config
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/home/gpadmin/greenplum-cc-web-6.8.4-gp6-rhel7-x86_64/{{ item }}"
+  with_items:
+    - gpcc.conf
+  become: yes
+  become_user: gpadmin
+
+- name: Install gpcc
+  shell: |
+    source /usr/local/greenplum-db/greenplum_path.sh
+    export MASTER_DATA_DIRECTORY={{ gp.master_data_directory }}/gpseg-1
+    ./gpccinstall-6.8.4 -c ./gpcc.conf
+    exit 0
+  become: yes
+  become_user: gpadmin
+  args:
+    executable: /bin/bash
+    chdir: /home/gpadmin/greenplum-cc-web-6.8.4-gp6-rhel7-x86_64
+
+- name: Start gpcc
+  shell: |
+    source /usr/local/greenplum-cc/gpcc_path.sh
+    gpcc start
+    exit 0
+  become: yes
+  become_user: gpadmin
+  args:
+    executable: /bin/bash
+    chdir: /usr/local/greenplum-cc
+
+- name: Add gpcc env
+  shell: |
+    echo 'source /usr/local/greenplum-cc/gpcc_path.sh' >> /home/gpadmin/.bashrc
+    cat /home/gpadmin/.pgpass
+  become: yes
+  become_user: gpadmin
