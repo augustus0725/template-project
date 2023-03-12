@@ -1,0 +1,19 @@
+---
+
+- name: Prepare java path -> /usr/local/java
+  file:
+    path: "/usr/local/java"
+    state: directory
+
+- name: Extract amazon-corretto-8.362.08.1-linux-x64.tar.gz to /usr/local/java/amazon-corretto-8.362.08.1-linux-x64
+  unarchive:
+    src: "3rd-repo/jdk/amazon-corretto-8.362.08.1-linux-x64.tar.gz"
+    dest: "/usr/local/java"
+    remote_src: no
+
+- name: Config JAVA_HOME path
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/etc/profile.d/{{ item }}"
+  with_items:
+    - aws-jdk8.sh

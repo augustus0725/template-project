@@ -88,6 +88,12 @@
     dest: /tmp/greenplum-db-6.23.3-rhel7-x86_64.rpm
     mode: '0744'
 
+- name: Copy pxf-gp6-6.5.0-2.el7.x86_64.rpm to remote /tmp
+  copy:
+    src: 3rd-repo/greenplum/pxf-gp6-6.5.0-2.el7.x86_64.rpm
+    dest: /tmp/pxf-gp6-6.5.0-2.el7.x86_64.rpm
+    mode: '0744'
+
 - name: Install necessary software with yum.
   yum:
     name: "{{ item }}"
@@ -96,9 +102,12 @@
     - expect
     - sshpass
     - /tmp/greenplum-db-6.23.3-rhel7-x86_64.rpm
+    - /tmp/pxf-gp6-6.5.0-2.el7.x86_64.rpm
 
 - name: Grant gpadmin to binary.
-  shell: chown -R gpadmin:gpadmin /usr/local/greenplum*
+  shell: |
+    chown -R gpadmin:gpadmin /usr/local/greenplum*
+    chown -R gpadmin:gpadmin /usr/local/pxf-gp*
 
 - name: Config GP tools env.
   shell: echo 'source /usr/local/greenplum-db/greenplum_path.sh' >> /home/gpadmin/.bashrc
@@ -151,6 +160,12 @@
     state: link
     owner: gpadmin
     group: gpadmin
+
+- name: Add gpcc env
+  shell: |
+    echo 'export PATH=$PATH:/usr/local/pxf-gp6/bin' >> /home/gpadmin/.bashrc
+  become: yes
+  become_user: gpadmin
 
 # - name: Prepare mirror data directory
 #   file:
