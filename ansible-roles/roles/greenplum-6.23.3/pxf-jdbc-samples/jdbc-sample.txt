@@ -1,0 +1,59 @@
+# 创建server, 其实就是一个目录, 里面是一些
+ssh gpadmin@<gpmaster>
+mkdir -p $PXF_BASE/servers/<server_name>
+mkdir $PXF_BASE/servers/pg_user1_testdb
+
+# 拷贝模板,修改配置
+gpadmin@gpmaster$ cp <PXF_INSTALL_DIR>/templates/jdbc-site.xml $PXF_BASE/servers/pg_user1_testdb/
+--------------------------------------------------------------------------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+ <property>
+ <name>jdbc.driver</name>
+ <value>org.postgresql.Driver</value>
+ </property>
+ <property>
+ <name>jdbc.url</name>
+ <value>jdbc:postgresql://pgserverhost:5432/testdb</value>
+ </property>
+ <property>
+ <name>jdbc.user</name>
+ <value>user1</value>
+ </property>
+ <property>
+ <name>jdbc.password</name>
+ <value>changeme</value>
+ </property>
+</configuration>
+--------------------------------------------------------------------------------------------------------------
+
+# 创建命名的SQL
+比如 $PXF_BASE/servers/<server_name>/event.sql
+
+# 拷贝驱动
+postgresql驱动不需要拷贝
+其他驱动需要拷贝到$PXF_BASE/lib
+
+# 同步配置
+pxf cluster sync
+
+# 配置好了之后 启动pxf
+gpadmin@gpmaster$ pxf cluster start
+
+# 让数据库开启pxf
+create extension pxf;  / DROP EXTENSION pxf; 删除的时候不能存在外表
+
+
+# 创建外部表
+CREATE [WRITABLE] EXTERNAL TABLE <table_name>
+ ( <column_name> <data_type> [, ...] | LIKE <other_table> )
+LOCATION('pxf://<path-to-data>?PROFILE=<profile_name>[&SERVER=<server_name>][&<customoption>=<value>[...]]')
+FORMAT '[TEXT|CSV|CUSTOM]' (<formatting-properties>);
+
+CREATE EXTERNAL TABLE external_events(uuid text, analysis_uuid text, name text, category text, description text) 
+LOCATION ('pxf://query:events?PROFILE=jdbc&SERVER=pg185')
+FORMAT 'TEXT'
+
+
+
+

@@ -84,3 +84,11 @@
     cat /home/gpadmin/.pgpass
   become: yes
   become_user: gpadmin
+
+- name: register pxf extension
+  shell: |
+    source /usr/local/greenplum-db/greenplum_path.sh
+    export PATH=$PATH:/usr/local/pxf-gp6/bin
+    pxf cluster register
+  become: yes
+  become_user: gpadmin
