@@ -13,7 +13,7 @@ greenlet==1.1.1
 importlib-metadata==4.6.4
 itsdangerous==2.0.1
 Jinja2==3.0.1
-Mako==1.1.4
+Mako==1.2.2
 MarkupSafe==2.0.1
 python-dateutil==2.8.2
 python-editor==1.0.4
