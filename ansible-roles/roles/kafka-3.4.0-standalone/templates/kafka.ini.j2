@@ -1,0 +1,8 @@
+[program:kafka340_broker]
+command           = /opt/app/kafka/current/bin/kafka-server-start.sh config/server.properties
+directory         = /opt/app/kafka/current
+redirect_stderr   = true
+stdout_logfile    = /opt/app/kafka/current/logs/kafka-3.4.0.out
+stopsignal        = INT
+user              = kafka
+environment       = JAVA_HOME=/usr/java/default,KAFKA_HEAP_OPTS="-Xmx{{ kafka.standalone.heap | default('512M') }}"

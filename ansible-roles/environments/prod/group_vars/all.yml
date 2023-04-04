@@ -88,6 +88,14 @@ gp:
     - hostname: sdw2
       ip: 192.168.0.37
 
+# Kafka
+kafka:
+  standalone:
+    host: 192.168.0.16
+    port: 9092
+    heap: 4096M
+    zk: 192.168.0.17:2181
+    data_dirs: /opt/app/kafka/data
 #################### ETL部分  ###############################################
 # Nifi
 nifi:

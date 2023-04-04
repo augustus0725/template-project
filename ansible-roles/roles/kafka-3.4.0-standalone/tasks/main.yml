@@ -1,0 +1,62 @@
+---
+
+- name: Create user kafka if it not exist.
+  shell: "id -u kafka &>/dev/null || useradd --shell /usr/sbin/nologin -M kafka"
+
+- name: Prepare kafka path -> /opt/app/kafka  (default)
+  file:
+    path: "{{ kafka.base | default('/opt/app/kafka') }}"
+    state: directory
+    owner: kafka
+    group: kafka
+
+- name: Extract kafka_2.13-3.4.0.tgz to {{ kafka.base | default('/opt/app/kafka') }}
+  unarchive:
+    src: "3rd-repo/apache/kafka/kafka_2.13-3.4.0.tgz"
+    dest: "{{ kafka.base | default('/opt/app/kafka') }}"
+    remote_src: no
+    owner: kafka
+    group: kafka
+
+- name: Create a kafka symbolic link
+  file:
+    src: "{{ kafka.base | default('/opt/app/kafka') }}/kafka_2.13-3.4.0"
+    dest: "{{ kafka.base | default('/opt/app/kafka') }}/current"
+    state: link
+    owner: kafka
+    group: kafka
+
+- name: Prepare kafka logs
+  file:
+    path: "{{ kafka.base | default('/opt/app/kafka') }}/current/logs"
+    state: directory
+    owner: kafka
+    group: kafka
+
+- name: Add kafka env
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/etc/profile.d/{{ item }}"
+  with_items:
+    - kafka.sh
+
+- name: Config kafka
+  template:
+    src:  "{{ item }}.j2"
+    dest: "{{ kafka.base | default('/opt/app/kafka') }}/current/config/{{ item }}"
+  with_items:
+    - server.properties
+
+- name: Config suervisor to start kafka
+  template:
+    src: kafka.ini.j2
+    dest: /etc/supervisord.d/kafka340.ini
+    owner: kafka
+    group: kafka
+
+- name: Start kafka340_broker
+  command: supervisorctl update kafka340_broker
+
+# 保证运行的程序是最新的
+- name: Restart kafka340_broker
+  command: supervisorctl restart kafka340_broker
