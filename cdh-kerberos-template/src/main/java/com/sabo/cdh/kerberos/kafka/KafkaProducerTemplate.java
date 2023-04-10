@@ -1,5 +1,6 @@
 package com.sabo.cdh.kerberos.kafka;
 
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -12,7 +13,7 @@ import java.util.Properties;
  * date: 2019/11/29
  */
 public class KafkaProducerTemplate {
-    private Producer<Long, String> initKafkaProducer(String brokerList){
+    private Producer<Long, String> initKafkaProducer(String brokerList) {
         System.setProperty("java.security.auth.login.config", "kafka-conf/kafka-jaas.conf");
         System.setProperty("java.security.krb5.conf", "kafka-conf/krb5.conf");
 
@@ -24,12 +25,17 @@ public class KafkaProducerTemplate {
         props.put("key.serializer", StringSerializer.class.getName());
         props.put("value.serializer", StringSerializer.class.getName());
         props.put("security.protocol", "SASL_PLAINTEXT");
-        return new org.apache.kafka.clients.producer.KafkaProducer<>(props);
+        KafkaProducer<Long, String> producer = new KafkaProducer<>(props);
+        // 会话期间, 开启事务
+        producer.initTransactions();
+        return producer;
     }
 
     private void runProducer() {
         Producer<Long, String> producer = initKafkaProducer("cdh01.hw.com:9092,cdh03.hw.com:9092");
         try {
+            // 开始事务
+            producer.beginTransaction();
             for (int i = 0; i < 100000; i++) {
                 producer.send(new ProducerRecord<>("hongwang-trade", "{\n" +
                         "\t\"name\": \"sabo" + i + "\",\n" +
@@ -39,6 +45,11 @@ public class KafkaProducerTemplate {
                     System.out.println("hello");
                 });
             }
+            // 完成事务
+            producer.commitTransaction();
+        } catch (Exception e) {
+            // 终止事务
+            producer.abortTransaction();
         } finally {
             producer.close();
         }
