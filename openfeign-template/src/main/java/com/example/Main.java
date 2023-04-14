@@ -124,7 +124,6 @@ public class Main {
                         .build()
         );
         System.out.println(resp);
-
     }
 
     static void listSnapshot() {
@@ -147,13 +146,79 @@ public class Main {
         System.out.println(resp);
     }
 
+    static void funcManageInstanceStart() {
+        ManageInstance manageInstance = Feign.builder()
+                .encoder(new FormEncoder())
+                .decoder(new GsonDecoder())
+                .target(ManageInstance.class, "http://192.168.0.59:12345");
+        ManageInstance.ManageInstanceResp resp = manageInstance.start(
+                Collections.singletonMap(
+                        "token",
+                        "b29bc87c05911c7aefde0724231155aa"
+                ),
+                "feign-demo",
+                ImmutableMap.of("id", "1534")
+        );
+        System.out.println(resp);
+    }
+
+    static void funcManageInstanceStop() {
+        ManageInstance manageInstance = Feign.builder()
+                .encoder(new FormEncoder())
+                .decoder(new GsonDecoder())
+                .target(ManageInstance.class, "http://192.168.0.59:12345");
+        ManageInstance.ManageInstanceResp resp = manageInstance.stop(
+                Collections.singletonMap(
+                        "token",
+                        "b29bc87c05911c7aefde0724231155aa"
+                ),
+                "feign-demo",
+                ImmutableMap.of("id", "1534")
+        );
+        System.out.println(resp);
+    }
+
+    static void startOnce() {
+        ManageInstance manageInstance = Feign.builder()
+                .encoder(new FormEncoder())
+                .decoder(new GsonDecoder())
+                .target(ManageInstance.class, "http://192.168.0.59:12345");
+        ManageInstance.ManageInstanceResp resp = manageInstance.startOnce(
+                Collections.singletonMap(
+                        "token",
+                        "b29bc87c05911c7aefde0724231155aa"
+                ),
+                "feign-demo",
+                ManageInstance.DolphinScheduler.builder()
+                        .processDefinitionId("51027")
+                        .scheduleTime("")
+                        .failureStrategy("END")
+                        .warningType("NONE")
+                        .warningGroupId("0")
+                        .execType("")
+                        .startNodeList("")
+                        .taskDependType("TASK_POST")
+                        .runMode("RUN_MODE_SERIAL")
+                        .processInstancePriority("MEDIUM")
+                        .receivers("")
+                        .receiversCc("")
+                        .workerGroup("default")
+                        .build()
+        );
+        System.out.println(resp);
+    }
+
     public static void main(String[] args) {
 //        funcCreateNamespace();
 //        funcDeleteNamespace();
-//        funcImportDefinition();
+        funcImportDefinition();
 //        funcListDefinitions();
         // => 导入模板看不到实例id, 查找实例号用另外一个请求  不是原子的 有风险 TODO 修改下ds的代码
 //        funcMarkDefinition();
-        listSnapshot();
+//        listSnapshot();
+//        funcManageInstanceStart();
+//        startOnce();
+//        funcManageInstanceStop();
     }
+
 }
