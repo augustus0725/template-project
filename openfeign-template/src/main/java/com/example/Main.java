@@ -127,13 +127,33 @@ public class Main {
 
     }
 
+    static void listSnapshot() {
+        ListSnapshot listSnapshot = Feign.builder()
+                .decoder(new GsonDecoder())
+                .target(ListSnapshot.class, "http://192.168.0.59:12345");
+        ListSnapshot.ListSnapshotResp resp = listSnapshot.snapshots(
+                Collections.singletonMap(
+                        "token",
+                        "b29bc87c05911c7aefde0724231155aa"
+                ),
+                "feign-demo",
+                ImmutableMap.of(
+                        "processDefinitionId", "51027",
+                        "searchVal", "",
+                        "pageNo", "0",
+                        "pageSize", "1"
+                )
+        );
+        System.out.println(resp);
+    }
+
     public static void main(String[] args) {
 //        funcCreateNamespace();
 //        funcDeleteNamespace();
 //        funcImportDefinition();
 //        funcListDefinitions();
-        // => 导入模板看不到实例id, 查找实例号用另外一个请求  不是原子的 有风险 TODO
+        // => 导入模板看不到实例id, 查找实例号用另外一个请求  不是原子的 有风险 TODO 修改下ds的代码
 //        funcMarkDefinition();
-        funcConfigDefinitionSchedule();
+        listSnapshot();
     }
 }
