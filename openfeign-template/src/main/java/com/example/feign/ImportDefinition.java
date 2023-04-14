@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.Map;
 
 public interface ImportDefinition {
-    @RequestLine("POST /projects/import-definition")
+    @RequestLine("POST /dolphinscheduler/projects/import-definition")
     @Headers("Content-Type: multipart/form-data")
     ImportDefinitionResp importDefinition(@HeaderMap Map<String, String> headers, @Param("projectName") String namespace,
                           @Param("file") File definition);
