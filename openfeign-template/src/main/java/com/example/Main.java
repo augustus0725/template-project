@@ -14,6 +14,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 
 public class Main {
+
+    public static final String TOKEN_ORIG = "b29bc87c05911c7aefde0724231155aa";
+    public static final String DS_HOST_ORIG = "http://192.168.0.59:12345";
+
+    public static final String TOKEN = "811e7cb2b21973a1f849dcbe204dd508";
+    public static final String DS_HOST = "http://192.168.0.16:12345";
+
     static void funcMyApi() {
         MyApi myApi = Feign.builder()
                 .decoder(new GsonDecoder())
@@ -27,25 +34,25 @@ public class Main {
         CreateNamespace createNamespace = Feign.builder()
                 .encoder(new FormEncoder())
                 .decoder(new GsonDecoder())
-                .target(CreateNamespace.class, "http://192.168.0.59:12345");
+                .target(CreateNamespace.class, DS_HOST);
 
         CreateNamespace.CreateNamespaceResp resp = createNamespace.create(Collections.singletonMap(
                 "token",
-                "b29bc87c05911c7aefde0724231155aa"
-        ), "myprj01", "it's nice.");
+                TOKEN
+        ), "feign-demo", "it's nice.");
         System.out.println(resp);
     }
 
     static void funcDeleteNamespace() {
         DeleteNamespace deleteNamespace = Feign.builder()
                 .decoder(new GsonDecoder())
-                .target(DeleteNamespace.class, "http://192.168.0.59:12345");
+                .target(DeleteNamespace.class, DS_HOST);
 
         DeleteNamespace.DeleteNamespaceResp resp = deleteNamespace.delete(Collections.singletonMap(
                 "token",
-                "b29bc87c05911c7aefde0724231155aa"
+                TOKEN
         ), ImmutableMap.of(
-                "projectId", 12
+                "projectId", 2
         ));
         System.out.println(resp);
     }
@@ -54,11 +61,11 @@ public class Main {
         ImportDefinition importDefinition = Feign.builder()
                 .encoder(new FormEncoder())
                 .decoder(new GsonDecoder())
-                .target(ImportDefinition.class, "http://192.168.0.59:12345");
+                .target(ImportDefinition.class, DS_HOST);
 
         ImportDefinition.ImportDefinitionResp resp = importDefinition.importDefinition(Collections.singletonMap(
                 "token",
-                "b29bc87c05911c7aefde0724231155aa"
+                TOKEN
         ), "feign-demo", Paths.get("dag01.json").toFile());
         System.out.println(resp);
     }
@@ -66,11 +73,11 @@ public class Main {
     static void funcListDefinitions() {
         ListDefinition listDefinition = Feign.builder()
                 .decoder(new GsonDecoder())
-                .target(ListDefinition.class, "http://192.168.0.59:12345");
+                .target(ListDefinition.class, DS_HOST);
 
         ListDefinition.ListDefinitionResp resp = listDefinition.listDefinitions(Collections.singletonMap(
                 "token",
-                "b29bc87c05911c7aefde0724231155aa"
+                TOKEN
         ), "feign-demo");
         System.out.println(resp);
     }
@@ -79,12 +86,12 @@ public class Main {
         MarkInstanceStatus markInstanceStatus = Feign.builder()
                 .encoder(new FormEncoder())
                 .decoder(new GsonDecoder())
-                .target(MarkInstanceStatus.class, "http://192.168.0.59:12345");
+                .target(MarkInstanceStatus.class, DS_HOST);
 
         MarkInstanceStatus.MarkInstanceStatusResp resp = markInstanceStatus.mark(Collections.singletonMap(
                 "token",
-                "b29bc87c05911c7aefde0724231155aa"
-        ), "feign-demo", 51027, 1);
+                TOKEN
+        ), "feign-demo", 2, 1);
         System.out.println(resp);
     }
 
@@ -92,11 +99,11 @@ public class Main {
         ConfigDefinitionSchedule sched = Feign.builder()
                 .encoder(new FormEncoder())
                 .decoder(new GsonDecoder())
-                .target(ConfigDefinitionSchedule.class, "http://192.168.0.59:12345");
+                .target(ConfigDefinitionSchedule.class, DS_HOST);
 
         ConfigDefinitionSchedule.ConfigDefinitionScheduleResp resp = sched.sched(Collections.singletonMap(
                         "token",
-                        "b29bc87c05911c7aefde0724231155aa"
+                        TOKEN
                 ), "feign-demo",
                 ConfigDefinitionSchedule.DolphinScheduler.builder()
                         .schedule(
@@ -120,7 +127,7 @@ public class Main {
                         .receivers("")
                         .receiversCc("")
                         .workerGroup("default")
-                        .processDefinitionId("51027")
+                        .processDefinitionId("2")
                         .build()
         );
         System.out.println(resp);
@@ -129,15 +136,15 @@ public class Main {
     static void listSnapshot() {
         ListSnapshot listSnapshot = Feign.builder()
                 .decoder(new GsonDecoder())
-                .target(ListSnapshot.class, "http://192.168.0.59:12345");
+                .target(ListSnapshot.class, DS_HOST);
         ListSnapshot.ListSnapshotResp resp = listSnapshot.snapshots(
                 Collections.singletonMap(
                         "token",
-                        "b29bc87c05911c7aefde0724231155aa"
+                        TOKEN
                 ),
                 "feign-demo",
                 ImmutableMap.of(
-                        "processDefinitionId", "51027",
+                        "processDefinitionId", "2",
                         "searchVal", "",
                         "pageNo", "0",
                         "pageSize", "1"
@@ -150,14 +157,14 @@ public class Main {
         ManageInstance manageInstance = Feign.builder()
                 .encoder(new FormEncoder())
                 .decoder(new GsonDecoder())
-                .target(ManageInstance.class, "http://192.168.0.59:12345");
+                .target(ManageInstance.class, DS_HOST);
         ManageInstance.ManageInstanceResp resp = manageInstance.start(
                 Collections.singletonMap(
                         "token",
-                        "b29bc87c05911c7aefde0724231155aa"
+                        TOKEN
                 ),
                 "feign-demo",
-                ImmutableMap.of("id", "1534")
+                ImmutableMap.of("id", "1")
         );
         System.out.println(resp);
     }
@@ -166,14 +173,14 @@ public class Main {
         ManageInstance manageInstance = Feign.builder()
                 .encoder(new FormEncoder())
                 .decoder(new GsonDecoder())
-                .target(ManageInstance.class, "http://192.168.0.59:12345");
+                .target(ManageInstance.class, DS_HOST);
         ManageInstance.ManageInstanceResp resp = manageInstance.stop(
                 Collections.singletonMap(
                         "token",
-                        "b29bc87c05911c7aefde0724231155aa"
+                        TOKEN
                 ),
                 "feign-demo",
-                ImmutableMap.of("id", "1534")
+                ImmutableMap.of("id", "1")
         );
         System.out.println(resp);
     }
@@ -182,15 +189,15 @@ public class Main {
         ManageInstance manageInstance = Feign.builder()
                 .encoder(new FormEncoder())
                 .decoder(new GsonDecoder())
-                .target(ManageInstance.class, "http://192.168.0.59:12345");
+                .target(ManageInstance.class, DS_HOST);
         ManageInstance.ManageInstanceResp resp = manageInstance.startOnce(
                 Collections.singletonMap(
                         "token",
-                        "b29bc87c05911c7aefde0724231155aa"
+                        TOKEN
                 ),
                 "feign-demo",
                 ManageInstance.DolphinScheduler.builder()
-                        .processDefinitionId("51027")
+                        .processDefinitionId("2")
                         .scheduleTime("")
                         .failureStrategy("END")
                         .warningType("NONE")
@@ -211,14 +218,15 @@ public class Main {
     public static void main(String[] args) {
 //        funcCreateNamespace();
 //        funcDeleteNamespace();
-        funcImportDefinition();
+//        funcImportDefinition();
 //        funcListDefinitions();
         // => 导入模板看不到实例id, 查找实例号用另外一个请求  不是原子的 有风险 TODO 修改下ds的代码
 //        funcMarkDefinition();
 //        listSnapshot();
+//        funcConfigDefinitionSchedule();
 //        funcManageInstanceStart();
 //        startOnce();
-//        funcManageInstanceStop();
+        funcManageInstanceStop();
     }
 
 }

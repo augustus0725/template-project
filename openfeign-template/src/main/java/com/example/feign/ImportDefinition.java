@@ -6,6 +6,7 @@ import feign.Param;
 import feign.RequestLine;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 public interface ImportDefinition {
@@ -17,7 +18,7 @@ public interface ImportDefinition {
     class ImportDefinitionResp {
         private Integer code;
         private String msg;
-        private Integer data;
+        private List<Integer> data;
 
         @Override
         public String toString() {
