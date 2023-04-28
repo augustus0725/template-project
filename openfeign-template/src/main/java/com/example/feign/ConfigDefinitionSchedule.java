@@ -13,16 +13,6 @@ import lombok.experimental.SuperBuilder;
 import java.util.Map;
 
 public interface ConfigDefinitionSchedule {
-//        long templateId, String cron
-//        body.add("schedule", createSchedule(cron));
-//        body.add("failureStrategy", "END"); // CONTINUE
-//        body.add("warningType", "NONE");
-//        body.add("processInstancePriority", "MEDIUM");
-//        body.add("warningGroupId", "0");
-//        body.add("receivers", "");
-//        body.add("receiversCc", "");
-//        body.add("workerGroup", "default");
-//        body.add("processDefinitionId", "" + templateId);
     @Getter
     @Setter
     @NoArgsConstructor
