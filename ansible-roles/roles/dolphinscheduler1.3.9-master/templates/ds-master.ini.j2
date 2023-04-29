@@ -1,7 +1,7 @@
 [program:ds-master]
-command           = /opt/app/dolphinscheduler/current/bin/dolphinscheduler-daemon.sh start master-server
-directory         = /opt/app/dolphinscheduler/current
+command           = {{ APP_ROOT }}/app/dolphinscheduler/current/bin/dolphinscheduler-daemon.sh start master-server
+directory         = {{ APP_ROOT }}/app/dolphinscheduler/current
 redirect_stderr   = true
-stdout_logfile    = /opt/app/dolphinscheduler/current/logs/ds-master.out
+stdout_logfile    = {{ APP_ROOT }}/app/dolphinscheduler/current/logs/ds-master.out
 user              = dolphinscheduler
 stopasgroup       = true

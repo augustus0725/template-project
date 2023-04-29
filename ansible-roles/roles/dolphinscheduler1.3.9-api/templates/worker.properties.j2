@@ -18,6 +18,9 @@
 # worker listener port
 worker.listen.port={{ ds.port | default(1234) }}
 
+# exclude ip
+worker.ip.prefix.excludes=10.0.,127.0.
+
 # worker execute thread number to limit task instances in parallel
 #worker.exec.threads=100
 

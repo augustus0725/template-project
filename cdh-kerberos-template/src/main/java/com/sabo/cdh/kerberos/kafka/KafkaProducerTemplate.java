@@ -19,12 +19,20 @@ public class KafkaProducerTemplate {
 
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerList);
-        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 1024);
-        props.put(ProducerConfig.LINGER_MS_CONFIG, 10);
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put("key.serializer", StringSerializer.class.getName());
         props.put("value.serializer", StringSerializer.class.getName());
         props.put("security.protocol", "SASL_PLAINTEXT");
+
+        // 性能方面的参数
+
+        // 单次请求最大的bytes: 8L * 1024 * 1024 * 1024 == 8MB
+        props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 8L * 1024 * 1024);
+        props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
+        props.put(ProducerConfig.LINGER_MS_CONFIG, 10);
+        // 事务
+        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "txId-01");
+
         KafkaProducer<Long, String> producer = new KafkaProducer<>(props);
         // 会话期间, 开启事务
         producer.initTransactions();

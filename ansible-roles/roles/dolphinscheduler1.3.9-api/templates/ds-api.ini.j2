@@ -1,7 +1,7 @@
 [program:ds-api]
-command           = /opt/app/dolphinscheduler/current/bin/dolphinscheduler-daemon.sh start api-server
-directory         = /opt/app/dolphinscheduler/current
+command           = {{ APP_ROOT }}/app/dolphinscheduler/current/bin/dolphinscheduler-daemon.sh start api-server
+directory         = {{ APP_ROOT }}/app/dolphinscheduler/current
 redirect_stderr   = true
-stdout_logfile    = /opt/app/dolphinscheduler/current/logs/ds-api.out
+stdout_logfile    = {{ APP_ROOT }}/app/dolphinscheduler/current/logs/ds-api.out
 user              = dolphinscheduler
 stopasgroup       = true

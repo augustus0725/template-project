@@ -1,0 +1,7 @@
+[program:ds-logger]
+command           = {{ APP_ROOT }}/app/dolphinscheduler/current/bin/dolphinscheduler-daemon.sh start logger-server
+directory         = {{ APP_ROOT }}/app/dolphinscheduler/current
+redirect_stderr   = true
+stdout_logfile    = {{ APP_ROOT }}/app/dolphinscheduler/current/logs/logger-server.out
+user              = dolphinscheduler
+stopasgroup       = true

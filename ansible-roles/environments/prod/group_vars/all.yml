@@ -116,6 +116,8 @@ prometheus:
   host: 127.0.0.1
   port: 9090
 
+# TODO 配置一些报警规则，暂时不用修改
+rules: []
 jobs:
   - name: job1
     targets:
@@ -151,8 +153,6 @@ pg_exporter:
 # dolphinscheduler2.0.0-api dolphinscheduler2.0.0-alert dolphinscheduler2.0.0-master dolphinscheduler2.0.0-worker
 
 ds:
-  # hostnames: ips="ds1,ds2,ds3,ds4,ds5", Example for IPs: ips="192.168.8.1,192.168.8.2,192.168.8.3,192.168.8.4,192.168.8.5"
-  ips: "127.0.0.1"
   # hostnames: masters="ds1,ds2", Example for IPs: masters="192.168.8.1,192.168.8.2"
   masters: "127.0.0.1"
   # hostnames: workers="ds1:default,ds2:default,ds3:default", Example for IPs: workers="192.168.8.1:default,192.168.8.2:default,192.168.8.3:default"

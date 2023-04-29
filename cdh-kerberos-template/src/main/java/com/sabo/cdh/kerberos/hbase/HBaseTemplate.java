@@ -97,7 +97,7 @@ public class HBaseTemplate {
         config.addResource(new Path("hbase-conf", "hbase-site.xml"));
         config.addResource(new Path("hbase-conf", "core-site.xml"));
         UserGroupInformation.setConfiguration(config);
-        UserGroupInformation.loginUserFromKeytab("vagrant@hongwang.com",
+        UserGroupInformation.loginUserFromKeytab("vagrant@hw.com",
                 "hbase-conf/vagrant.keytab");
 
         createSchemaTables(config);

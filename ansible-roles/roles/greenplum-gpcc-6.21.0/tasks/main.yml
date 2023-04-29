@@ -1,0 +1,60 @@
+---
+
+- name: Create user prometheus if it not exist.
+  shell: "id -u prometheus &>/dev/null || useradd prometheus"
+
+- name: Create /opt/app/prometheus if it does not exist
+  file:
+    path: /opt/app/prometheus
+    state: directory
+    owner: prometheus
+    group: prometheus
+
+- name: Extract prometheus-2.18.1.linux-amd64.tar.gz into /opt/app/prometheus
+  unarchive:
+    src: "3rd-repo/monitor-system/prometheus/prometheus-2.18.1.linux-amd64.tar.gz"
+    dest: /opt/app/prometheus
+    remote_src: no
+    owner: prometheus
+    group: prometheus
+
+- name: Create a prometheus symbolic link
+  file:
+    src: /opt/app/prometheus/prometheus-2.18.1.linux-amd64
+    dest: /opt/app/prometheus/current
+    state: link
+    owner: prometheus
+    group: prometheus
+
+- name: Create /opt/app/prometheus/current/logs if it does not exist
+  file:
+    path: /opt/app/prometheus/current/logs
+    state: directory
+    owner: prometheus
+    group: prometheus
+
+- name: Create /opt/app/prometheus/rules path if it does not exist
+  file:
+    path: /opt/app/prometheus/rules
+    state: directory
+    owner: prometheus
+    group: prometheus
+
+- name: Config prometheus
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/app/prometheus/current/prometheus.yml
+    owner: prometheus
+    group: prometheus
+
+- name: Config suervisor to start prometheus
+  template:
+    src: prometheus.ini.j2
+    dest: /etc/supervisord.d/prometheus.ini
+
+- name: Start prometheus
+  command: supervisorctl update prometheus
+
+# 保证运行的程序是最新的
+- name: Restart prometheus
+  command: supervisorctl restart prometheus

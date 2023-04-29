@@ -38,7 +38,7 @@ password="{{ ds.db_pass }}"
 zkQuorum="{{ ds.zk }}"
 
 # Note: the target installation path for dolphinscheduler, please not config as the same as the current path (pwd)
-installPath="/opt/app/dolphinscheduler/current"
+installPath="{{ APP_ROOT }}/app/dolphinscheduler/current"
 
 # deployment user
 # Note: the deployment user needs to have sudo privileges and permissions to operate hdfs. If hdfs is enabled, the root directory needs to be created by itself
@@ -119,11 +119,6 @@ kerberosExpireTime="2"
 
 # api server port
 apiServerPort="{{ ds.api_port | default(12345) }}"
-
-
-# install hosts
-# Note: install the scheduled hostname list. If it is pseudo-distributed, just write a pseudo-distributed hostname
-ips="{{ ds.ips }}"
 
 # ssh port, default 22
 # Note: if ssh port is not default, modify here

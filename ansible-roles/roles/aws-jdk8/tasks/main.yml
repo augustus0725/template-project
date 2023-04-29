@@ -11,6 +11,17 @@
     dest: "/usr/local/java"
     remote_src: no
 
+- name: create path for java default link
+  file:
+    path: "/usr/java"
+    state: directory
+
+- name: Create default jave symbol link
+  file:
+    src: "/usr/local/java/amazon-corretto-8.362.08.1-linux-x64"
+    dest: "/usr/java/default"
+    state: link
+
 - name: Config JAVA_HOME path
   template:
     src:  "{{ item }}.j2"

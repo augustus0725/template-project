@@ -18,10 +18,11 @@
 # master listen port
 #master.listen.port=5678
 
-#master.ip.prefix.excludes=
+# exclude ip prefix
+master.ip.prefix.excludes=10.0.,127.0.
 
 # master execute thread number to limit process instances in parallel
-master.exec.threads=100
+#master.exec.threads=100
 
 # master execute task number in parallel per process instance
 #master.exec.task.num=20

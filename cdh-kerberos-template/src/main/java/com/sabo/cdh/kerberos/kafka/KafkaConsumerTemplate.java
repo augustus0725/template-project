@@ -21,10 +21,13 @@ public class KafkaConsumerTemplate {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "hongwang-001");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1024);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put("security.protocol", "SASL_PLAINTEXT");
+
+        // 性能方面的配置
+        props.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 8L * 1024 * 1024);
+        props.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, 8L * 1024 * 1024);
 
         Consumer<String, String> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Collections.singletonList("hongwang-trade"));

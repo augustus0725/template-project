@@ -89,14 +89,14 @@
   become: yes
   become_user: dolphinscheduler
 
-- name: Config suervisor to start ds-worker
+- name: Config suervisor to start ds-logger
   template:
-    src: ds-worker.ini.j2
-    dest: /etc/supervisord.d/ds-worker.ini
+    src: ds-logger.ini.j2
+    dest: /etc/supervisord.d/ds-logger.ini
 
-- name: Start ds-worker
-  command: supervisorctl update ds-worker
+- name: Start ds-logger
+  command: supervisorctl update ds-logger
 
 # 保证运行的程序是最新的
-- name: Restart ds-worker
-  command: supervisorctl restart ds-worker
+- name: Restart ds-logger
+  command: supervisorctl restart ds-logger
