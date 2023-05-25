@@ -1,0 +1,17 @@
+1. c++处理字符集的问题
+    std::string is used for standard ascii and utf-8 strings. 
+    std::wstring is used for wide-character/unicode (utf-16) strings.
+    
+    # 定义
+    typedef basic_string<char> string;
+    typedef basic_string<wchar_t> wstring;
+    
+    # 方案
+    字符串都可以采用utf-8编码, 但是有些控制台不支持 setlocale(LC_ALL, "en_US.UTF-8");
+    不支持的有：MinGW64
+2. grpc
+3. 协程
+4. rabbitmq
+5. 进程间通讯
+6. sqlite
+7. cmake应用ninjia
