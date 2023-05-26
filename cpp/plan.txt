@@ -14,4 +14,12 @@
 4. rabbitmq
 5. 进程间通讯
 6. sqlite
-7. cmake应用ninjia
+7. cmake应用ninjia (ok)
+8. gtest (ok)
+
+
+# 指定clang构建程序, ninja 用来构建build 文件
+/usr/local/bin/cmake -B ninja-clang -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+
+# 加上静态代码检测 (yum install -y clang-analyzer)
+scan-build /usr/local/bin/cmake -B ninja-clang -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
