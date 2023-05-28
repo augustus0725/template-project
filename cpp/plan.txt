@@ -1,4 +1,4 @@
-1. c++处理字符集的问题
+1. c++处理字符集的问题 (ok)
     std::string is used for standard ascii and utf-8 strings. 
     std::wstring is used for wide-character/unicode (utf-16) strings.
     
@@ -16,6 +16,8 @@
 6. sqlite
 7. cmake应用ninjia (ok)
 8. gtest (ok)
+9. 日志 (ok)
+10. 试一下apache的 apr
 
 
 # 指定clang构建程序, ninja 用来构建build 文件
