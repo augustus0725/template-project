@@ -15,8 +15,8 @@ import java.sql.Statement;
  * date: 2019/12/12
  */
 public class ImpalaTemplate {
-    private final static String CONNECTION_URL = "jdbc:impala://192.168.0.184:21050/default;AuthMech=1" +
-             ";KrbRealm=hongwang.com;KrbHostFQDN=bd04.hw.com;KrbServiceName=impala;principal=impala";
+    private final static String CONNECTION_URL = "jdbc:impala://192.168.0.3:21050/default;AuthMech=1" +
+             ";KrbRealm=hw.com;KrbHostFQDN=cdh01.hw.bd.com;KrbServiceName=impala;principal=impala";
 
     public static void main(String[] args) throws Exception{
         System.setProperty("java.security.krb5.conf", "hive-conf/krb5.conf");
@@ -34,7 +34,7 @@ public class ImpalaTemplate {
             @Override
             public Connection run() {
                 try {
-                    Class.forName("com.cloudera.impala.jdbc41.Driver");
+                    Class.forName("com.cloudera.impala.jdbc.Driver");
                     return DriverManager.getConnection(CONNECTION_URL);
                 } catch (Exception e) {
                     e.printStackTrace();

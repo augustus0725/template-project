@@ -48,9 +48,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.cloudera</groupId>
-            <artifactId>ImpalaJDBC41</artifactId>
-            <version>2.6.3</version>
+            <groupId>Impala</groupId>
+            <artifactId>ImpalaJDBC42</artifactId>
+            <version>2.6.26.1031</version>
         </dependency>
 
 
