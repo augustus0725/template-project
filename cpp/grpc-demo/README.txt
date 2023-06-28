@@ -28,7 +28,7 @@ vcpkg的方式:
 # linux       
 cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake
 # windows
-cmake -B build2 -S . -DCMAKE_TOOLCHAIN_FILE=D:/workspace/remote-github/vcpkg/scripts/buildsystems/vcpkg.cmake
+cmake -B build2 -S . -DCMAKE_TOOLCHAIN_FILE=D:/workspace/vcpkg/centos7-devtoolset8/vcpkg/scripts/buildsystems/vcpkg.cmake -DENABLE_TEST=on
 
 Stored binaries in 1 destinations.
 Elapsed time to handle grpc:x64-linux: 1.4 h

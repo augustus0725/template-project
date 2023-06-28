@@ -10,7 +10,7 @@
     字符串都可以采用utf-8编码, 但是有些控制台不支持 setlocale(LC_ALL, "en_US.UTF-8");
     不支持的有：MinGW64
 2. grpc (ok)
-3. 协程
+3. 协程 (ok)
 4. rabbitmq
 5. 进程间通讯
 6. sqlite
