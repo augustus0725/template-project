@@ -1,0 +1,43 @@
+# centos 7升级gcc4.8.5 -> gcc8
+yum install -y centos-release-scl
+yum install -y devtoolset-8
+scl enable devtoolset-8 bash
+
+# 基础软件
+yum install -y vim curl wget zip unzip
+
+# redhat 基础开发套件
+yum group install "Development Tools" -y
+
+# openssl 需要
+yum install perl-IPC-Cmd perl-Data-Dumper -y
+# 升级git
+yum -y install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm
+yum install git -y
+
+# apr
+find_package(unofficial-apr CONFIG REQUIRED)
+target_link_libraries(main PRIVATE unofficial::apr::libapr-1 unofficial::apr::libaprapp-1)
+
+# gRPC
+yum install -y build-essential autoconf libtool pkg-config
+
+# absl
+find_package(absl CONFIG REQUIRED)
+# Note: 118 target(s) were omitted.
+target_link_libraries(main PRIVATE absl::any absl::base absl::bits absl::city)
+
+# rabbitmq: amqpcpp
+find_package(amqpcpp CONFIG REQUIRED)
+target_link_libraries(main PRIVATE amqpcpp)
+
+# sqlite3
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)
+
+# windows 对新版本boost的警告
+-DBoost_NO_WARN_NEW_VERSIONS=1
+
+# yaml-cpp
+find_package(yaml-cpp CONFIG REQUIRED)
+target_link_libraries(main PRIVATE yaml-cpp)
