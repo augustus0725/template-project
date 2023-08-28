@@ -1,3 +1,12 @@
+ docker run -ti -e "TZ=Asia/Shanghai" -e "LANG=en_US.UTF-8" --name cdev8 -v C:\workspace:/opt -v D:\data\store\vcpkg:/vcpkg centos bash
+
+#
+[h-extras]
+name=h-extras
+baseurl=http://192.168.0.18x:8081/repository/centos7-extras/
+gpgcheck=0
+enabled=1
+
 # centos 7升级gcc4.8.5 -> gcc8
 yum install -y centos-release-scl
 yum install -y devtoolset-8
@@ -5,9 +14,6 @@ scl enable devtoolset-8 bash
 
 # 基础软件
 yum install -y vim curl wget zip unzip
-
-# redhat 基础开发套件
-yum group install "Development Tools" -y
 
 # openssl 需要
 yum install perl-IPC-Cmd perl-Data-Dumper -y
