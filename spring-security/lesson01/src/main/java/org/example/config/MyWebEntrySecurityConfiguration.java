@@ -13,6 +13,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfToken;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -51,8 +53,20 @@ public class MyWebEntrySecurityConfiguration extends WebSecurityConfigurerAdapte
             System.out.println("Before BasicAuthenticationFilter");
             filterChain.doFilter(servletRequest, servletResponse);
         }, BasicAuthenticationFilter.class);
+        http.addFilterAfter(new Filter() {
+            @Override
+            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+                Object o = request.getAttribute("_csrf");
+                CsrfToken token = (CsrfToken) o;
 
-        http.formLogin()
+                System.out.println(token.getToken());
+                chain.doFilter(request, response);
+            }
+        }, CsrfFilter.class);
+
+        // http.oauth2Login()
+
+        http.formLogin().and().httpBasic();
                 /*
                 .successHandler((request, response, authentication) -> {
                     System.out.println("登录成功之后跳转");
