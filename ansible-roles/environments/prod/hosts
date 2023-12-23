@@ -2,5 +2,5 @@
 #mdw ansible_ssh_host=192.168.0.34 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant ansible_sudo_pass=vagrant
 #sdw1 ansible_ssh_host=192.168.0.35 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant ansible_sudo_pass=vagrant
 #sdw2 ansible_ssh_host=192.168.0.37 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant ansible_sudo_pass=vagrant
-ora01 ansible_ssh_host=192.168.30.150 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant ansible_sudo_pass=vagrant
+bd21 ansible_ssh_host=192.168.30.182 ansible_ssh_port=22 ansible_ssh_user=redapp ansible_ssh_pass=hongwang_001 ansible_sudo_pass=hongwang_001
 # 可能需要ansible_sudo_pass
