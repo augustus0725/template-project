@@ -1,16 +1,15 @@
 import { memo } from "react";
 
-const Child = ({count, callback}) => {
+const Child = ({num, callback}) => {
+    console.log("render.........");
     const show = () => {
         console.log("callBack()");
-
     };
 
     return (
         <>
-            {show()}
             {callback()}
-            <div> This is child, count is : {count} </div>
+            <div> This is child, num is : {num} </div>
         </>
     );
 };
