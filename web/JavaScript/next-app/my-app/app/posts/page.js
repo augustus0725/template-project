@@ -1,3 +1,17 @@
+// 静态的metadata
+// export const metadata = {
+//     title: 'post'
+// }
+
+// 动态的metadata
+export async function generateMetadata({params, searchParams}) {
+    const res = await fetch('http://localhost:3000/api/hello',
+        {next: {revalidate: 10}})
+    const data = await res.json();
+
+    return { title: data[0].name}
+}
+
 export default async function page() {
     const res = await fetch('http://localhost:3000/api/hello',
         {next: {revalidate: 10}})
