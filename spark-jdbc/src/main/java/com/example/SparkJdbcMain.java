@@ -45,7 +45,7 @@ public class SparkJdbcMain {
 
     private static void loadBig700w(int limit) {
         ResultSet rs = null;
-        try (Connection con = DriverManager.getConnection("jdbc:hive2://192.168.30.248:10000");
+        try (Connection con = DriverManager.getConnection("jdbc:hive2://192.168.0.5:10001");
              Statement stmt = con.createStatement();
         ) {
             stmt.execute("create temporary view big700w\n" +
@@ -149,9 +149,9 @@ public class SparkJdbcMain {
     public static void main(String[] args) throws Exception {
         Class.forName("org.apache.hive.jdbc.HiveDriver");
 
-//        loadBig700w(100);
+        loadBig700w(100);
 //        queryWithYarn();
-        createHiveTable();
+//        createHiveTable();
     }
 
 }
