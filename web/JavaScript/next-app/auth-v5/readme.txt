@@ -23,7 +23,6 @@ db.js
 - 运行 pnxp prisma db pull 将数据库里的schema写到prisma schema
 - 运行 pnxp prisma generate 生成 prisma client 执行数据库操作
 - 运行 pnxp prisma db push 在数据库内生成表结构
-- 运行 pnxp prisma studio 可以启动一个web,查看数据库的结构
 
 ==> bcrypt: 对密码加密
 pnpm add @types/bcrypt
@@ -33,3 +32,36 @@ pnpm add @types/bcrypt
 使用next-auth v5 的版本 
 --------------------------------
 pnpm add next-auth@beta 
+
+--------------------------------
+独立学习 prisma 
+--------------------------------
+pnpm add prisma
+pnpx prisma init --database-provider postgresql
+
+==> 添加一些model之后
+pnpx prisma migrate dev --name init
+// 删掉数据重置
+pnpx prisma migrate reset
+// 可以启动一个web,查看数据库的结构
+pnpx prisma studio
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
