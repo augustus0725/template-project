@@ -32,4 +32,4 @@ pnpm add @types/bcrypt
 --------------------------------
 使用next-auth v5 的版本 
 --------------------------------
- 
+pnpm add next-auth@beta 
