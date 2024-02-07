@@ -9,8 +9,6 @@ pnpm add @auth/prisma-adapter
 
 db.js
 
-
-
 ==> pnxp prisma init 生成数据库的配置
 - 在.env文件里设置 DATABASE_URL
 - 在schema.prisma 里设置 database block
@@ -26,7 +24,6 @@ db.js
 
 ==> bcrypt: 对密码加密
 pnpm add @types/bcrypt
-
 
 --------------------------------
 使用next-auth v5 的版本 
@@ -57,8 +54,62 @@ pnpm add react-hook-form
 pnpm add @hookform/resolvers
 
 
+---------------------------------------
+独立学习 tailwindcss -> tailwind-merge
+---------------------------------------
+// 安装
+pnpm add tailwindcss-merge
+// 子组件通过下面的方法覆盖样式
+const className = twMerge('border rounded px-2 py-1', props.className)
+return <input {...props} className={className} />
 
+---------------------------------------------
+独立学习 tailwindcss -> tailwindcss-animate
+---------------------------------------------
+// 安装
+pnpm add tailwindcss-animate
+// 配置 tailwind.config.js
+module.exports = {
+	theme: {
+		// ...
+	},
+	plugins: [
+		require("tailwindcss-animate"),
+		// ...
+	],
+}
 
+// 有一些动画效果
+<!-- Add an animated fade and zoom entrance -->
+<div class="animate-in fade-in zoom-in">...</div>
+
+<!-- Add an animated slide to top-left exit -->
+<div class="animate-out slide-out-to-top slide-out-to-left">...</div>
+
+<!-- Control animation duration -->
+<div class="... duration-300">...</div>
+
+<!-- Control animation delay -->
+<div class="... delay-150">...</div>
+
+----------------------------------------------------------------
+独立学习 clsx
+utils方法, 合并css属性用的, 可以和tailwindcss结合
+----------------------------------------------------------------
+clsx('foo', [1 && 'bar', { baz:false, bat:null }, ['hello', ['world']]], 'cya');
+//=> 'foo bar hello world cya'
+
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
+----------------------------------------------------------------
+next-auth里和github对接
+----------------------------------------------------------------
+callback的url应该是: http://localhost:3001/api/auth/callback/github
 
 
 
