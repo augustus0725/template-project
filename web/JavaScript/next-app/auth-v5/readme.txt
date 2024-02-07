@@ -9,7 +9,7 @@ pnpm add @auth/prisma-adapter
 
 db.js
 
-==> zod 对输入的数据进行验证
+
 
 ==> pnxp prisma init 生成数据库的配置
 - 在.env文件里设置 DATABASE_URL
@@ -46,6 +46,15 @@ pnpx prisma migrate reset
 // 可以启动一个web,查看数据库的结构
 pnpx prisma studio
 
+
+--------------------------------
+独立学习 zod  (对输入的数据进行验证)
+--------------------------------
+pnpm add zod
+// 这个也具有基础的validate能力, 但是功能没有zod全, 比如email的检测
+pnpm add react-hook-form
+// 适配 zod & react-hook-form
+pnpm add @hookform/resolvers
 
 
 
