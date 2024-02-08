@@ -1,13 +1,9 @@
 "use client";
 
-import { useForm } from "react-hook-form"
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from "zod"
-
-const schema = z.object({
-    email: z.string().email({message: "Should be email!"}).min(5, { message: 'Required' }),
-    password: z.string().min(6, {message: "At least 6 characters."}).default("******"),
-});
+import {useForm} from "react-hook-form"
+import {zodResolver} from '@hookform/resolvers/zod';
+import {LoginSchema} from "@/schemas";
+import {login} from "@/actions/login";
 
 const LoginForm = () => {
     const {
@@ -17,13 +13,13 @@ const LoginForm = () => {
         formState: { errors },
     } = useForm(
         {
-            resolver: zodResolver(schema),
+            resolver: zodResolver(LoginSchema),
         }
     )
 
-    const onSubmit = (data) => {
-        console.log(data);
-        console.log(errors);
+    const onSubmit = async (data) => {
+        const response = await login(data);
+        console.log(response);
     }
 
     // console.log(watch("email")) // watch input value by passing the name of it

@@ -1,14 +1,9 @@
 "use client";
 
-import { useForm } from "react-hook-form"
-import { zodResolver } from '@hookform/resolvers/zod';
-import bcrypt from "bcryptjs"
-import * as z from "zod"
-
-const schema = z.object({
-    email: z.string().email({message: "Should be email!"}).min(5, { message: 'Required' }),
-    password: z.string().min(6, {message: "At least 6 characters."}).default("******"),
-});
+import {useForm} from "react-hook-form";
+import {zodResolver} from '@hookform/resolvers/zod';
+import bcrypt from "bcryptjs";
+import {LoginSchema} from "@/schemas";
 
 const RegisterForm = () => {
     const {
@@ -18,7 +13,7 @@ const RegisterForm = () => {
         formState: { errors },
     } = useForm(
         {
-            resolver: zodResolver(schema),
+            resolver: zodResolver(LoginSchema),
         }
     )
 
