@@ -13,15 +13,24 @@ export const {
     },
     events: {
         // github 登录会更新emailVerified的时间
-        async linkAccount({ user }) {
+        async linkAccount({user}) {
             console.log({current: user});
             await PrismaContext.db.user.update({
-                where: { id: user.id },
-                data: { emailVerified: new Date() }
+                where: {id: user.id},
+                data: {emailVerified: new Date()}
             })
         }
     },
     callbacks: {
+        async signIn({user, account}) {
+            // Allow OAuth without email verification
+            if (account?.provider !== "credentials") return true;
+            // TODO 邮件认证
+            // TODO 多因子
+
+            return true;
+
+        },
         async jwt({token}) {
             console.log({token});
             return token;
