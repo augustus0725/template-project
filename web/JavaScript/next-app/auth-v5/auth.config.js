@@ -60,6 +60,16 @@ const authConfig = {
 
             },
         }),
+        // 自定义
+        {
+            id: "my-oidc-provider",
+            name: "my-oidc-provider",
+            type: "oidc",
+            issuer: "http://localhost:9090",
+            clientId: "client",
+            clientSecret: "secret",
+            authorization: { params: { scope: "openid profile" } },
+        },
     ],
 }
 
