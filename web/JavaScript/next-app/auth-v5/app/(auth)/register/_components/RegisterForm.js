@@ -2,6 +2,7 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod';
+import bcrypt from "bcryptjs"
 import * as z from "zod"
 
 const schema = z.object({
@@ -9,7 +10,7 @@ const schema = z.object({
     password: z.string().min(6, {message: "At least 6 characters."}).default("******"),
 });
 
-const LoginForm = () => {
+const RegisterForm = () => {
     const {
         register,
         handleSubmit,
@@ -21,9 +22,21 @@ const LoginForm = () => {
         }
     )
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log(data);
         console.log(errors);
+
+        const hashPassword = await bcrypt.hash(data.password, 10);
+        const authResponse = await fetch("/api/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                ...data,
+                password: hashPassword,
+            }),
+        })
     }
 
     // console.log(watch("email")) // watch input value by passing the name of it
@@ -40,9 +53,9 @@ const LoginForm = () => {
             {/* errors will return when field validation fails  */}
             {errors.password?.message && <span>{errors.password?.message}</span>}<br/>
 
-            <button type={"submit"}> 登录 </button>
+            <button type={"submit"}> 注册 </button>
         </form>
     )
 }
 
-export default LoginForm
+export default RegisterForm

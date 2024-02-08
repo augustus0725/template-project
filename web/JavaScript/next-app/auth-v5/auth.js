@@ -1,8 +1,11 @@
 import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
 import CredentialsProvider from "next-auth/providers/credentials"
+import PrismaContext from "@/lib/db";
+import {PrismaAdapter} from "@auth/prisma-adapter";
 
 export const config = {
+    adapter: PrismaAdapter(PrismaContext.db),
     providers: [
         // 第三方
         GitHub,
@@ -10,8 +13,8 @@ export const config = {
         CredentialsProvider({
             name: "用户密码登录",
             credentials: {
-                username: { label: "Username" },
-                password: {  label: "Password", type: "password" }
+                username: {label: "Username"},
+                password: {label: "Password", type: "password"}
             },
             async authorize(credentials) {
                 console.log("credentials: ", credentials)
@@ -34,14 +37,14 @@ export const config = {
         }),
     ],
     callbacks: {
-      authorized({request, auth}) {
-          const { pathname } = request.nextUrl;
-          console.log("authorized: ", pathname);
-          return true;
-      }
+        authorized({request, auth}) {
+            const {pathname} = request.nextUrl;
+            console.log("authorized: ", pathname);
+            return true;
+        }
     },
     session: {
-      strategy: "jwt",
+        strategy: "jwt",
     },
 }
 

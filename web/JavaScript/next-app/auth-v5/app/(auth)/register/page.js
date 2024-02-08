@@ -1,7 +1,8 @@
-export default function Setting() {
+import RegisterForm from "@/app/(auth)/register/_components/RegisterForm";
+
+
+export default function Login() {
     return (
-        <>
-            <p>Setting page...</p>
-        </>
+        <RegisterForm />
     )
 }
