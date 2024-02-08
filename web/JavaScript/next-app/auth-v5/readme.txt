@@ -110,7 +110,7 @@ export function cn(...inputs: ClassValue[]) {
 next-auth里和github对接
 ----------------------------------------------------------------
 callback的url应该是: http://localhost:3001/api/auth/callback/github
-
+==> 所有的callback url可以从 http://localhost:3001/api/auth/providers 获取
 
 ----------------------------------------------------------------
 next-auth里自己自定义的credentials

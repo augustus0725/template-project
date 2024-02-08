@@ -1,17 +1,16 @@
-import {auth, signIn} from "@/auth";
+"use client"
 
-const GithubLogin = async ({provider}) => {
-    const session = await auth()
+import {signIn} from "next-auth/react";
 
-    console.log("session: ", session);
+const GithubLogin = () => {
     return (
         <div>
-            <form action={async () => {
-                "use server"
-                await signIn(provider)
-            }}>
-                <button type={"submit"}> sign in</button>
-            </form>
+            <button onClick={(e) => {
+                signIn("github", {
+                    callbackUrl: "http://localhost:3001/oauth/github/",
+                })
+            }}> sign in
+            </button>
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import GitHub from "next-auth/providers/github"
+import Github from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import {LoginSchema} from "@/schemas";
 import PrismaContext from "@/lib/db";
@@ -6,7 +6,10 @@ import bcrypt from "bcryptjs";
 
 const authConfig = {
     providers: [
-        GitHub,
+        Github({
+            clientId: process.env.AUTH_GITHUB_ID,
+            clientSecret: process.env.AUTH_GITHUB_SECRET,
+        }),
         // 表单方式
         CredentialsProvider({
             // name: "用户密码登录",
