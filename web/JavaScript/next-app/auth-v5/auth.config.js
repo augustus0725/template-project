@@ -70,6 +70,16 @@ const authConfig = {
             clientSecret: "secret",
             authorization: { params: { scope: "openid profile" } },
         },
+        // baidu
+        {
+            id: "baidudisk-provider",
+            name: "baidudisk-provider",
+            type: "oidc",
+            issuer: "https://openapi.baidu.com/oauth/2.0",
+            clientId: "Ov48YYNZLsQMiLp7FcB1V2ft9S2ZXiBt",
+            clientSecret: "5J0mXF9Co4yfmCjutOJFQWLKP7WczjwG",
+            authorization: { params: { scope: "basic,netdisk" } },
+        },
     ],
 }
 

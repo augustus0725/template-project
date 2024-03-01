@@ -1,7 +1,9 @@
 import {PrismaClient} from "@prisma/client";
 
 const PrismaContext = {
-    db: new PrismaClient(),
+    db: new PrismaClient({
+        log: ['query', 'info', 'warn', 'error'],
+    }),
 }
 
 const db = PrismaContext.db || new PrismaClient();

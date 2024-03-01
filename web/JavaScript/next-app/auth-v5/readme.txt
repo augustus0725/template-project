@@ -1,74 +1,74 @@
-# ormÄ£ĞÍ
+# ormæ¨¡å‹
 pnpm add prisma
 pnpm add prisma/client
 
-# ´´½¨libÄ¿Â¼, ÀïÃæ·ÅÒ»Ğ©util
+# åˆ›å»ºlibç›®å½•, é‡Œé¢æ”¾ä¸€äº›util
 pnpm add prisma
 pnpm add @prisma/client
 pnpm add @auth/prisma-adapter
 
 db.js
 
-==> pnxp prisma init Éú³ÉÊı¾İ¿âµÄÅäÖÃ
-- ÔÚ.envÎÄ¼şÀïÉèÖÃ DATABASE_URL
-- ÔÚschema.prisma ÀïÉèÖÃ database block
+==> pnxp prisma init ç”Ÿæˆæ•°æ®åº“çš„é…ç½®
+- åœ¨.envæ–‡ä»¶é‡Œè®¾ç½® DATABASE_URL
+- åœ¨schema.prisma é‡Œè®¾ç½® database block
   - postgresql
   - mysql
   - sqlite
   - sqlserver
   - mongodb
   - cockroachdb
-- ÔËĞĞ pnxp prisma db pull ½«Êı¾İ¿âÀïµÄschemaĞ´µ½prisma schema
-- ÔËĞĞ pnxp prisma generate Éú³É prisma client Ö´ĞĞÊı¾İ¿â²Ù×÷
-- ÔËĞĞ pnxp prisma db push ÔÚÊı¾İ¿âÄÚÉú³É±í½á¹¹
+- è¿è¡Œ pnxp prisma db pull å°†æ•°æ®åº“é‡Œçš„schemaå†™åˆ°prisma schema
+- è¿è¡Œ pnxp prisma generate ç”Ÿæˆ prisma client æ‰§è¡Œæ•°æ®åº“æ“ä½œ
+- è¿è¡Œ pnxp prisma db push åœ¨æ•°æ®åº“å†…ç”Ÿæˆè¡¨ç»“æ„
 
-==> bcrypt: ¶ÔÃÜÂë¼ÓÃÜ
+==> bcrypt: å¯¹å¯†ç åŠ å¯†
 pnpm add @types/bcrypt
 
 --------------------------------
-Ê¹ÓÃnext-auth v5 µÄ°æ±¾ 
+ä½¿ç”¨next-auth v5 çš„ç‰ˆæœ¬ 
 --------------------------------
 pnpm add next-auth@beta 
 
 --------------------------------
-¶ÀÁ¢Ñ§Ï° prisma 
+ç‹¬ç«‹å­¦ä¹  prisma 
 --------------------------------
 pnpm add prisma
 pnpx prisma init --database-provider postgresql
 
-==> Ìí¼ÓÒ»Ğ©modelÖ®ºó
+==> æ·»åŠ ä¸€äº›modelä¹‹å
 pnpx prisma migrate dev --name init
-// É¾µôÊı¾İÖØÖÃ
+// åˆ æ‰æ•°æ®é‡ç½®
 pnpx prisma migrate reset
-// ¿ÉÒÔÆô¶¯Ò»¸öweb,²é¿´Êı¾İ¿âµÄ½á¹¹
+// å¯ä»¥å¯åŠ¨ä¸€ä¸ªweb,æŸ¥çœ‹æ•°æ®åº“çš„ç»“æ„
 pnpx prisma studio
 
 
 --------------------------------
-¶ÀÁ¢Ñ§Ï° zod  (¶ÔÊäÈëµÄÊı¾İ½øĞĞÑéÖ¤)
+ç‹¬ç«‹å­¦ä¹  zod  (å¯¹è¾“å…¥çš„æ•°æ®è¿›è¡ŒéªŒè¯)
 --------------------------------
 pnpm add zod
-// Õâ¸öÒ²¾ßÓĞ»ù´¡µÄvalidateÄÜÁ¦, µ«ÊÇ¹¦ÄÜÃ»ÓĞzodÈ«, ±ÈÈçemailµÄ¼ì²â
+// è¿™ä¸ªä¹Ÿå…·æœ‰åŸºç¡€çš„validateèƒ½åŠ›, ä½†æ˜¯åŠŸèƒ½æ²¡æœ‰zodå…¨, æ¯”å¦‚emailçš„æ£€æµ‹
 pnpm add react-hook-form
-// ÊÊÅä zod & react-hook-form
+// é€‚é… zod & react-hook-form
 pnpm add @hookform/resolvers
 
 
 ---------------------------------------
-¶ÀÁ¢Ñ§Ï° tailwindcss -> tailwind-merge
+ç‹¬ç«‹å­¦ä¹  tailwindcss -> tailwind-merge
 ---------------------------------------
-// °²×°
+// å®‰è£…
 pnpm add tailwindcss-merge
-// ×Ó×é¼şÍ¨¹ıÏÂÃæµÄ·½·¨¸²¸ÇÑùÊ½
+// å­ç»„ä»¶é€šè¿‡ä¸‹é¢çš„æ–¹æ³•è¦†ç›–æ ·å¼
 const className = twMerge('border rounded px-2 py-1', props.className)
 return <input {...props} className={className} />
 
 ---------------------------------------------
-¶ÀÁ¢Ñ§Ï° tailwindcss -> tailwindcss-animate
+ç‹¬ç«‹å­¦ä¹  tailwindcss -> tailwindcss-animate
 ---------------------------------------------
-// °²×°
+// å®‰è£…
 pnpm add tailwindcss-animate
-// ÅäÖÃ tailwind.config.js
+// é…ç½® tailwind.config.js
 module.exports = {
 	theme: {
 		// ...
@@ -79,7 +79,7 @@ module.exports = {
 	],
 }
 
-// ÓĞÒ»Ğ©¶¯»­Ğ§¹û
+// æœ‰ä¸€äº›åŠ¨ç”»æ•ˆæœ
 <!-- Add an animated fade and zoom entrance -->
 <div class="animate-in fade-in zoom-in">...</div>
 
@@ -93,8 +93,8 @@ module.exports = {
 <div class="... delay-150">...</div>
 
 ----------------------------------------------------------------
-¶ÀÁ¢Ñ§Ï° clsx
-utils·½·¨, ºÏ²¢cssÊôĞÔÓÃµÄ, ¿ÉÒÔºÍtailwindcss½áºÏ
+ç‹¬ç«‹å­¦ä¹  clsx
+utilsæ–¹æ³•, åˆå¹¶csså±æ€§ç”¨çš„, å¯ä»¥å’Œtailwindcssç»“åˆ
 ----------------------------------------------------------------
 clsx('foo', [1 && 'bar', { baz:false, bat:null }, ['hello', ['world']]], 'cya');
 //=> 'foo bar hello world cya'
@@ -107,20 +107,20 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 ----------------------------------------------------------------
-next-authÀïºÍgithub¶Ô½Ó
+next-authé‡Œå’Œgithubå¯¹æ¥
 ----------------------------------------------------------------
-callbackµÄurlÓ¦¸ÃÊÇ: http://localhost:3001/api/auth/callback/github
-==> ËùÓĞµÄcallback url¿ÉÒÔ´Ó http://localhost:3001/api/auth/providers »ñÈ¡
+callbackçš„urlåº”è¯¥æ˜¯: http://localhost:3001/api/auth/callback/github
+==> æ‰€æœ‰çš„callback urlå¯ä»¥ä» http://localhost:3001/api/auth/providers è·å–
 
 ----------------------------------------------------------------
-next-authÀï×Ô¼º×Ô¶¨ÒåµÄcredentials
+next-authé‡Œè‡ªå·±è‡ªå®šä¹‰çš„credentials
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
-next-auth ºÍ prismaµÄ°ó¶¨, ÊµÏÖÍ¨¹ı±íµ¥À´ÑéÖ¤Éí·İ
+next-auth å’Œ prismaçš„ç»‘å®š, å®ç°é€šè¿‡è¡¨å•æ¥éªŒè¯èº«ä»½
 ----------------------------------------------------------------
 pnpm add @auth/prisma-adapter
-// ¶Ô±íµ¥ÉÏµÄÃÜÂë½øĞĞ¼ÓÃÜ
+// å¯¹è¡¨å•ä¸Šçš„å¯†ç è¿›è¡ŒåŠ å¯†
 pnpm add bcryptjs
 
 

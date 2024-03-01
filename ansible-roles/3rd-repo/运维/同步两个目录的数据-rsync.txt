@@ -1,0 +1,6 @@
+rsync -avu --delete "/home/user/A/" "/home/user/B"
+
+-a Do the sync preserving all filesystem attributes
+-v run verbosely
+-u only copy files with a newer modification time (or size difference if the times are equal)
+--delete delete the files in target folder that do not exist in the source

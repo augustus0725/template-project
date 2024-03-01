@@ -31,17 +31,25 @@ export const {
             return true;
 
         },
-        async jwt({token}) {
-            console.log({token});
+        async jwt({token, account}) {
+            if (account) {
+                token.accessToken = account.access_token
+                token.refreshToken = account.refresh_token
+            }
             return token;
         },
         async session({token, session}) {
-            console.log({session: session});
-            console.log({jwt: token});
+            if (token.accessToken) {
+                session.accessToken = token.accessToken;
+            }
+            if (token.refreshToken) {
+                session.refreshToken = token.refreshToken;
+            }
             return session;
         },
     },
-    adapter: PrismaAdapter(PrismaContext.db),
+    // 可以把通过oauth2/google/...认证的信息放到数据库里
+    // adapter: PrismaAdapter(PrismaContext.db),
     session: {strategy: "jwt"},
     ...authConfig
 })
