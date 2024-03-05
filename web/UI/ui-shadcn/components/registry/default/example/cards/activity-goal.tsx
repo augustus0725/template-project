@@ -5,7 +5,7 @@ import { Minus, Plus } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Bar, BarChart, ResponsiveContainer } from "recharts"
 
-import { useConfig } from "@/hooks/use-config"
+import { useConfig } from "@/components/hooks/use-config"
 import { Button } from "@/components/registry/default/ui/button"
 import {
   Card,

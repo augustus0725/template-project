@@ -1,7 +1,7 @@
 import { useTheme } from "next-themes"
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer } from "recharts"
 
-import { useConfig } from "@/hooks/use-config"
+import { useConfig } from "@/components/hooks/use-config"
 import {
   Card,
   CardContent,

@@ -5,7 +5,7 @@ import { MinusIcon, PlusIcon } from "@radix-ui/react-icons"
 import { useTheme } from "next-themes"
 import { Bar, BarChart, ResponsiveContainer } from "recharts"
 
-import { useConfig } from "@/hooks/use-config"
+import { useConfig } from "@/components/hooks/use-config"
 import { Button } from "@/components/registry/new-york/ui/button"
 import {
   Card,

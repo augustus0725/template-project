@@ -20,7 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/registry/new-york/ui/popover"
 
-import { Preset } from "../data/presets"
+import { Preset } from "../_data/presets"
 
 interface PresetSelectorProps extends PopoverProps {
   presets: Preset[]

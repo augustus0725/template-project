@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { useMediaQuery } from "@/hooks/use-media-query"
+import { useMediaQuery } from "@/components/hooks/use-media-query"
 import { Button } from "@/components/registry/default/ui/button"
 import {
   Dialog,
