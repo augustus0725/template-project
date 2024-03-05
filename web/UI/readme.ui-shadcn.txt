@@ -28,7 +28,17 @@ pnpm add @radix-ui/react-slider
 pnpm add @tanstack/react-table
 pnpm add @radix-ui/react-avatar
 pnpm add @radix-ui/react-tooltip
+pnpm add @radix-ui/react-accordion
+pnpm add @radix-ui/react-aspect-ratio
+pnpm add @radix-ui/react-collapsible
+pnpm add @radix-ui/react-navigation-menu
+pnpm add @radix-ui/react-progress
+pnpm add @radix-ui/react-toast
+pnpm add @radix-ui/react-toggle-group
+pnpm add @radix-ui/react-toggle
 pnpm add react-resizable-panels
+pnpm add embla-carousel-react
+pnpm add vaul
 pnpm add jotai
 pnpm add recharts
 pnpm add cmdk
@@ -37,3 +47,7 @@ pnpm add date-fns
 pnpm add react-hook-form
 pnpm add zod
 pnpm add @hookform/resolvers
+pnpm add @faker-js/faker
+pnpm add next-themes
+pnpm add sonner
+pnpm add embla-carousel-autoplay
