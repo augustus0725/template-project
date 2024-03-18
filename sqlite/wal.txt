@@ -1,0 +1,5 @@
+ # 激活wal
+ PRAGMA journal_mode=WAL;  // 默认是delete
+ 
+ # 共享内存是用来多个进程能共享 wal-index, 帮助reader在wal里快速定位有效的page
+ a data structure called the "wal-index" is maintained in shared memory which helps readers locate pages in the WAL quickly and with a minimum of I/O.

@@ -1,0 +1,102 @@
+# A complete page cache is an instance of this structure.
+# 可以认为是 页 cache的管理者, 管理的具体对象是 PgHdr
+struct PCache {
+  PgHdr *pDirty, *pDirtyTail;         /* List of dirty pages in LRU order */
+  PgHdr *pSynced;                     /* Last synced page in dirty page list */
+  i64 nRefSum;                        /* Sum of ref counts over all pages */
+  int szCache;                        /* Configured cache size */
+  int szSpill;                        /* Size before spilling occurs */
+  int szPage;                         /* Size of every page in this cache */
+  int szExtra;                        /* Size of extra space for each page */
+  u8 bPurgeable;                      /* True if pages are on backing store */
+  u8 eCreate;                         /* eCreate value for for xFetch() */
+  int (*xStress)(void*,PgHdr*);       /* Call to try make a page clean */
+  void *pStress;                      /* Argument to xStress */
+  sqlite3_pcache *pCache;             /* Pluggable cache module */
+};
+
+
+/*
+** Every page in the cache is controlled by an instance of the following
+** structure.
+*/
+
+struct PgHdr {
+  sqlite3_pcache_page *pPage;    /* Pcache object page handle */
+  void *pData;                   /* Page data */
+  void *pExtra;                  /* Extra content */
+  PCache *pCache;                /* PRIVATE: Cache that owns this page */
+  PgHdr *pDirty;                 /* Transient list of dirty sorted by pgno */
+  Pager *pPager;                 /* The pager this page is part of */
+  Pgno pgno;                     /* Page number for this page */
+#ifdef SQLITE_CHECK_PAGES
+  u32 pageHash;                  /* Hash of page content */
+#endif
+  u16 flags;                     /* PGHDR flags defined below */
+
+  /**********************************************************************
+  ** Elements above, except pCache, are public.  All that follow are
+  ** private to pcache.c and should not be accessed by other modules.
+  ** pCache is grouped with the public elements for efficiency.
+  */
+  i64 nRef;                      /* Number of users of this page */
+  PgHdr *pDirtyNext;             /* Next element in list of dirty pages */
+  PgHdr *pDirtyPrev;             /* Previous element in list of dirty pages */
+                          /* NB: pDirtyNext and pDirtyPrev are undefined if the
+                          ** PgHdr object is not dirty */
+};
+
+
+typedef struct sqlite3_pcache_methods2 sqlite3_pcache_methods2;
+struct sqlite3_pcache_methods2 {
+  int iVersion;
+  void *pArg;
+  int (*xInit)(void*);
+  void (*xShutdown)(void*);
+  sqlite3_pcache *(*xCreate)(int szPage, int szExtra, int bPurgeable);
+  void (*xCachesize)(sqlite3_pcache*, int nCachesize);
+  int (*xPagecount)(sqlite3_pcache*);
+  sqlite3_pcache_page *(*xFetch)(sqlite3_pcache*, unsigned key, int createFlag);
+  void (*xUnpin)(sqlite3_pcache*, sqlite3_pcache_page*, int discard);
+  void (*xRekey)(sqlite3_pcache*, sqlite3_pcache_page*,
+      unsigned oldKey, unsigned newKey);
+  void (*xTruncate)(sqlite3_pcache*, unsigned iLimit);
+  void (*xDestroy)(sqlite3_pcache*);
+  void (*xShrink)(sqlite3_pcache*);
+};
+
+// void sqlite3PCacheSetDefault(void) => 设置默认的cache实现
+  static const sqlite3_pcache_methods2 defaultMethods = {
+    1,                       /* iVersion */
+    0,                       /* pArg */
+    pcache1Init,             /* xInit */
+    pcache1Shutdown,         /* xShutdown */
+    pcache1Create,           /* xCreate */
+    pcache1Cachesize,        /* xCachesize */
+    pcache1Pagecount,        /* xPagecount */
+    pcache1Fetch,            /* xFetch */
+    pcache1Unpin,            /* xUnpin */
+    pcache1Rekey,            /* xRekey */
+    pcache1Truncate,         /* xTruncate */
+    pcache1Destroy,          /* xDestroy */
+    pcache1Shrink            /* xShrink */
+  };
+  
+// 研究一下 fetch
+static sqlite3_pcache_page *pcache1Fetch
+-> static PgHdr1 *pcache1FetchNoMutex
+   1) 输入页号iKey， 找cache page
+   2) 找到返回这一页
+      放到LRU链
+	  需要创建, 就进入下一阶段
+   3) static SQLITE_NOINLINE PgHdr1 *pcache1FetchStage2
+      // abort if full
+	  // try to recycle a page  (当前有内存压力)
+	     从LRU里找一个干净的可重用的page
+	  // 内存充裕，直接malloc 一块
+	     pcache1AllocPage(pCache, createFlag==1);
+		 static PgHdr1 *pcache1AllocPage(PCache1 *pCache, int benignMalloc)
+		 static void *pcache1Alloc(int nByte)
+		 -> pcache1.szSolt 里有没有空闲内存，有就看能不能利用
+		 -> 失败就用 sqlite3Malloc 直接分内存
+	    

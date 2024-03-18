@@ -1,0 +1,143 @@
+# class
+struct Pager {
+  sqlite3_vfs *pVfs;          /* OS functions to use for IO */
+  u8 exclusiveMode;           /* Boolean. True if locking_mode==EXCLUSIVE */
+  u8 journalMode;             /* One of the PAGER_JOURNALMODE_* values */
+  u8 useJournal;              /* Use a rollback journal on this file */
+  u8 noSync;                  /* Do not sync the journal if true */
+  u8 fullSync;                /* Do extra syncs of the journal for robustness */
+  u8 extraSync;               /* sync directory after journal delete */
+  u8 syncFlags;               /* SYNC_NORMAL or SYNC_FULL otherwise */
+  u8 walSyncFlags;            /* See description above */
+  u8 tempFile;                /* zFilename is a temporary or immutable file */
+  u8 noLock;                  /* Do not lock (except in WAL mode) */
+  u8 readOnly;                /* True for a read-only database */
+  u8 memDb;                   /* True to inhibit all file I/O */
+  u8 memVfs;                  /* VFS-implemented memory database */
+
+  /**************************************************************************
+  ** The following block contains those class members that change during
+  ** routine operation.  Class members not in this block are either fixed
+  ** when the pager is first created or else only change when there is a
+  ** significant mode change (such as changing the page_size, locking_mode,
+  ** or the journal_mode).  From another view, these class members describe
+  ** the "state" of the pager, while other class members describe the
+  ** "configuration" of the pager.
+  */
+  u8 eState;                  /* Pager state (OPEN, READER, WRITER_LOCKED..) */
+  u8 eLock;                   /* Current lock held on database file */
+  u8 changeCountDone;         /* Set after incrementing the change-counter */
+  u8 setSuper;                /* Super-jrnl name is written into jrnl */
+  u8 doNotSpill;              /* Do not spill the cache when non-zero */
+  u8 subjInMemory;            /* True to use in-memory sub-journals */
+  u8 bUseFetch;               /* True to use xFetch() */
+  u8 hasHeldSharedLock;       /* True if a shared lock has ever been held */
+  Pgno dbSize;                /* Number of pages in the database */
+  Pgno dbOrigSize;            /* dbSize before the current transaction */
+  Pgno dbFileSize;            /* Number of pages in the database file */
+  Pgno dbHintSize;            /* Value passed to FCNTL_SIZE_HINT call */
+  int errCode;                /* One of several kinds of errors */
+  int nRec;                   /* Pages journalled since last j-header written */
+  u32 cksumInit;              /* Quasi-random value added to every checksum */
+  u32 nSubRec;                /* Number of records written to sub-journal */
+  Bitvec *pInJournal;         /* One bit for each page in the database file */
+  sqlite3_file *fd;           /* File descriptor for database */
+  sqlite3_file *jfd;          /* File descriptor for main journal */
+  sqlite3_file *sjfd;         /* File descriptor for sub-journal */
+  i64 journalOff;             /* Current write offset in the journal file */
+  i64 journalHdr;             /* Byte offset to previous journal header */
+  sqlite3_backup *pBackup;    /* Pointer to list of ongoing backup processes */
+  PagerSavepoint *aSavepoint; /* Array of active savepoints */
+  int nSavepoint;             /* Number of elements in aSavepoint[] */
+  u32 iDataVersion;           /* Changes whenever database content changes */
+  char dbFileVers[16];        /* Changes whenever database file changes */
+
+  int nMmapOut;               /* Number of mmap pages currently outstanding */
+  sqlite3_int64 szMmap;       /* Desired maximum mmap size */
+  PgHdr *pMmapFreelist;       /* List of free mmap page headers (pDirty) */
+  /*
+  ** End of the routinely-changing class members
+  ***************************************************************************/
+
+  u16 nExtra;                 /* Add this many bytes to each in-memory page */
+  i16 nReserve;               /* Number of unused bytes at end of each page */
+  u32 vfsFlags;               /* Flags for sqlite3_vfs.xOpen() */
+  u32 sectorSize;             /* Assumed sector size during rollback */
+  Pgno mxPgno;                /* Maximum allowed size of the database */
+  Pgno lckPgno;               /* Page number for the locking page */
+  i64 pageSize;               /* Number of bytes in a page */
+  i64 journalSizeLimit;       /* Size limit for persistent journal files */
+  char *zFilename;            /* Name of the database file */
+  char *zJournal;             /* Name of the journal file */
+  int (*xBusyHandler)(void*); /* Function to call when busy */
+  void *pBusyHandlerArg;      /* Context argument for xBusyHandler */
+  int aStat[4];               /* Total cache hits, misses, writes, spills */
+#ifdef SQLITE_TEST
+  int nRead;                  /* Database pages read */
+#endif
+  void (*xReiniter)(DbPage*); /* Call this routine when reloading pages */
+  int (*xGet)(Pager*,Pgno,DbPage**,int); /* Routine to fetch a patch */
+  char *pTmpSpace;            /* Pager.pageSize bytes of space for tmp use */
+  PCache *pPCache;            /* Pointer to page cache object */
+#ifndef SQLITE_OMIT_WAL
+  Wal *pWal;                  /* Write-ahead log used by "journal_mode=wal" */
+  char *zWal;                 /* File name for write-ahead log */
+#endif
+};
+# api
+# 分析一下获取一页数据的全流程
+int sqlite3PagerOpen(
+  sqlite3_vfs*,
+  Pager **ppPager,
+  const char*,
+  int,
+  int,
+  int,
+  void(*)(DbPage*)
+);
+
+int sqlite3PagerGet(Pager *pPager, Pgno pgno, DbPage **ppPage, int clrFlag);
+-> pPager->xGet(pPager, pgno, ppPage, flags)
+// xGet 是在setGetterMethod里被设置
+static void setGetterMethod(Pager *pPager){
+  if( pPager->errCode ){
+    pPager->xGet = getPageError;
+#if SQLITE_MAX_MMAP_SIZE>0
+  }else if( USEFETCH(pPager) ){
+    pPager->xGet = getPageMMap;
+#endif /* SQLITE_MAX_MMAP_SIZE>0 */
+  }else{
+    pPager->xGet = getPageNormal;
+  }
+}
+// sqlitevfs 
+sqlite-vfs -> unix-vfs -> 具体的fs (ext4/xfs...)
+             // os_unix.c
+  struct unixFile {
+    sqlite3_io_methods const *pMethod;  /* Always the first entry */
+  }
+// 所以看是不是支持内存映射, 采用两种方法
+-> getPageMMap // 内存映射的方法
+  1) 条件: 页号要大于1, 没有写事务, 并且非临时库和内存库
+  2) 根据是不是开了wal, 分两种情况
+     - wal: sqlite3WalFindFrame
+     - delete: sqlite3OsFetch
+	   -> pMethods->xFetch
+	   -> 只看linux的实现: static int unixFetch
+// --- unixFetch 核心的部分
+  if( pFd->mmapSizeMax>0 ){
+    if( pFd->pMapRegion==0 ){
+      int rc = unixMapfile(pFd, -1);
+      if( rc!=SQLITE_OK ) return rc;
+    }
+    if( pFd->mmapSize >= iOff+nAmt ){
+	  // 规定的内存映射大小够用, 直接返回映射的内存指针
+      *pp = &((u8 *)pFd->pMapRegion)[iOff];
+      pFd->nFetchOut++;
+    }
+  }
+  // 看下初始化mmap: unixMapfile(pFd, -1)
+  pNew = osMmap(0, nNew, flags, MAP_SHARED, h, 0);
+  
+// --- unixFetch 核心的部分结束
+

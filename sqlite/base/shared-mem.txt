@@ -1,0 +1,2 @@
+# 想共享内存不做持久化用shm_open
+If you just need to share a memory region, without the need to persist the data, which incurs extra I/O overhead, use shm_open().
