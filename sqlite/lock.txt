@@ -1,0 +1,78 @@
+# 从错误码上来理解
+1. SQLITE_BUSY
+
+进程A在事务中, 进程B准备读写文件
+tip: 
+  +1 事务begin immediate会直接获取写锁
+  +2 和SQLITE_LOCKED的差异是, 参与的个体是 database_connection
+
+2. SQLITE_LOCKED
+   写操作不能继续因为单个 database_connection里有冲突
+                 或者多个 database_connection （如果开启了共享缓存）
+   
+
+# 共享缓存模式下的 锁机制
+表级read/write lock在不同的事务之间被使用
+
+// 在读/写表时候, 会先获取对应的锁
+在 sqlite3_step 阶段锁条件不满足会返回 SQLITE_LOCKED
+
+// 获取 schema 表时也可能SQLITE_LOCKED
+sqlite3_prepare/sqlite3_prepare_v2
+
+# 隔离性 
+// (先不考虑share-cache)
+不同的conn在不同线程进程, 只能看到committed 内容
+// 考虑share-cache, 但是 read uncommitted没开启效果和上面的是一样的
+
+# 事务
+【rollback mode】
+SQLite 锁住文件，阻止其他的读写
+时机： 在写flush数据到文件之前, 读仍然可以活跃
+
+【wal mode】
+读和写可以并发, 因为写是写在 wal 日志里
+
+# 文件级别的锁 (5个级别)
+       (0) 没有锁
+**     (1) SHARED_LOCK
+**     (2) RESERVED_LOCK
+**     (3) PENDING_LOCK
+**     (4) EXCLUSIVE_LOCK
+
+sqlite3OsUnlock   锁降级
+sqlite3OsLock     锁升级
+
+**   Transition                        | Invokes xBusyHandler
+**   --------------------------------------------------------
+**   NO_LOCK       -> SHARED_LOCK      | Yes
+**   SHARED_LOCK   -> RESERVED_LOCK    | No
+**   SHARED_LOCK   -> EXCLUSIVE_LOCK   | No
+**   RESERVED_LOCK -> EXCLUSIVE_LOCK   | Yes
+
+#define NO_LOCK         0
+#define SHARED_LOCK     1
+#define RESERVED_LOCK   2
+#define PENDING_LOCK    3
+#define EXCLUSIVE_LOCK  4
+
+==> sqlite3BtreeTxnState(pDb->pBt)==SQLITE_TXN_NONE  // 查看事务状态
+struct Db {
+  char *zDbSName;      /* Name of this database. (schema name, not filename) */
+  Btree *pBt;          /* The B*Tree structure for this database file */
+  u8 safety_level;     /* How aggressive at syncing data to disk */
+  u8 bSyncSet;         /* True if "PRAGMA synchronous=N" has been run */
+  Schema *pSchema;     /* Pointer to database schema (possibly shared) */
+};
+
+**      写事务可能会用到的方法
+**      这些方法需要在执行之前获取合适的锁
+**      sqlite3BtreeCreateTable()
+**      sqlite3BtreeCreateIndex()
+**      sqlite3BtreeClearTable()
+**      sqlite3BtreeDropTable()
+**      sqlite3BtreeInsert()
+**      sqlite3BtreeDelete()
+**      sqlite3BtreeUpdateMeta()
+
+
